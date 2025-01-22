@@ -1,54 +1,63 @@
 #include "../includes/minishell.h"
 
 const char *token_type_str[] = {
-    "COMMAND",
-    "FILE_IN",
-    "FILE_OUT",
-    "FILE_OUT_APPEND",
-    "PIPE",
-    "ARGUMENT"
+    RED"COMMAND"RESET,
+    YELLOW"FILE_IN"RESET,
+    YELLOW"FILE_OUT"RESET,
+    YELLOW"FILE_OUT_APPEND"RESET,
+	yellow"FILE_NAME"RESET,
+    BLUE"PIPE"RESET,
+    red"ARGUMENT"RESET,
+	GREEN"PATH"RESET
 };
 
-
-void define_type(t_token *new)
+void define_type(t_token *node)
 {
-	if (new->word[0] == '<')
-		new->type = FILE_IN;
-	else if (new->word[0] == '>' && new->word[1] && new->word[1] == '>')
-		new->type = FILE_OUT_APPEND;
-	else if (new->word[0] == '>')
-		new->type = FILE_OUT;
-	else if (new->word[0] == '|')
-		new->type = PIPE;
-	else if (new->prev && new->prev->type == COMMAND)
-		new->type = ARGUMENT;
-	else if (new->prev && new->prev->type == ARGUMENT)
-		new->type = ARGUMENT;
+	if (node->word[0] == '.' || node->word[0] == '/')
+		node->type = PATH;
+	else if (node->word[0] == '<')
+		node->type = FILE_IN;
+	else if (node->word[0] == '>' && node->word[1] && node->word[1] == '>')
+		node->type = FILE_OUT_APPEND;
+	else if (node->word[0] == '>')
+		node->type = FILE_OUT;
+	else if (node->word[0] == '|')
+		node->type = PIPE;
+	else if (node->prev && (ft_strcmp(node->prev->word, "<") == 0 || ft_strcmp(node->prev->word, ">") == 0 || ft_strcmp(node->prev->word, ">>") == 0))
+		node->type = FILE_NAME;
+	else if (node->prev && node->prev->type == COMMAND)
+		node->type = ARGUMENT;
+	else if (node->prev && node->prev->type == ARGUMENT)
+		node->type = ARGUMENT;
 	else
-		new->type = COMMAND;
+		node->type = COMMAND;
 }
 
 
 void parse(t_token **token_list, char **split)
 {
+	int		i;
 	t_token	*new;
-	t_token	*first_token;
+	t_token	*current;
 
-	int i = 0;
-
+	i = 0;
 	while (split[i])
 	{
 		new = create_new_token(split[i]);
+		if (!new)
+		{
+			ft_lstclear_ms(token_list, &del_content);
+			return;
+		}
 		ft_lstadd_back_ms(token_list, new);
 		define_type(new);
 		i++;
 	}
-
 	free(split);
-	first_token = *token_list;
-	while (first_token)
+	current = *token_list;
+	while (current)
 	{
-		printf("%s	-->	%s\n", first_token->word, token_type_str[first_token->type]);
-		first_token = first_token->next;
+		printf("%s	-->	%s\n", current->word, token_type_str[current->type]);
+		current = current->next;
 	}
 }

@@ -3,7 +3,7 @@ NAME = minishell
 LIBFTDIR := libft
 LIBSRCS := $(LIBFTDIR)/src
 
-SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/parsing.c $(SRCSDIR)/ft_list.c
+SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/minishell_utils.c $(SRCSDIR)/parsing.c $(SRCSDIR)/ft_list.c
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
 LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c \
