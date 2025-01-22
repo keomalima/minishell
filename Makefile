@@ -10,7 +10,7 @@ OBJDIR := objects
 LIBFTDIR := libft
 LIBSRCS := $(LIBFTDIR)/src
 
-SRCS := $(SRCSDIR)/main.c
+SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ft_list.c $(SRCSDIR)/minishell.c
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
 LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c \
