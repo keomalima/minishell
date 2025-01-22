@@ -56,4 +56,28 @@ char	*ft_strchr_set(char *set, int c);
 void	exit_handler(t_ms *ms, int exit_code);
 char	*type_to_string(t_type type);
 
+typedef enum
+{
+	COMMAND,
+	FILE_IN,
+	FILE_OUT,
+	FILE_OUT_APPEND,
+	PIPE,
+	ARGUMENT,
+}			e_type;
+
+typedef struct s_token
+{
+	char	*word;
+	e_type	type;
+	struct s_token	*next;
+	struct s_token	*prev;
+}				t_token;
+
+void	ft_lstadd_back_ms(t_token **token_list, t_token *new);
+t_token	*ft_lstlast_ms(t_token *lst);
+t_token *create_new_token(char *str);
+void parse(t_token **token_list, char **split);
+
+
 #endif

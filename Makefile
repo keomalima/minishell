@@ -3,18 +3,7 @@ NAME = minishell
 LIBFTDIR := libft
 LIBSRCS := $(LIBFTDIR)/src
 
-CC := cc
-CFLAGS := -Wall -Wextra -Werror -Iincludes -I$(LIBFTDIR)/includes -g3
-RM := rm -f
-LDFLAGS := -lreadline
-
-SRCSDIR := srcs
-OBJDIR := objects
-
-TOKENDIR := $(SRCSDIR)/token
-
-SRCS := $(SRCSDIR)/main.c $(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
-		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_exit.c
+SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/parsing.c $(SRCSDIR)/ft_list.c
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
 LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c \
