@@ -7,36 +7,11 @@ int is_quote(char c)
 	return (0);
 }
 
-void	cw_in_case_quote(const char *s, size_t *index, size_t *word)
-{
-	int	i;
-	int	nb_word;
-	char quote;
-
-	i = *index;
-	nb_word = *word;
-	quote = s[i];
-	i++;
-	if (s[i] == quote)
-	{
-		nb_word++;
-		i++;
-	}
-	else
-	{
-		while (s[i] && s[i] != quote)
-			i++;
-		nb_word++;
-		i++;
-	}
-	*index = i;
-	*word = nb_word;
-}
-
 size_t	count_words_ms(char *s)
 {
 	size_t	nb_word;
 	size_t	i;
+	char	quote;
 
 	i = 0;
 	nb_word = 0;
@@ -44,15 +19,25 @@ size_t	count_words_ms(char *s)
 	{
 		while (s[i] && s[i] == ' ')
 			i++;
-		if (is_quote(s[i]) && s[i + 1])
-			cw_in_case_quote(s, &i, &nb_word);
-		else
+		nb_word++;
+		if (!is_quote(s[i]))
 		{
 			while (s[i] && s[i] != ' ')
 				i++;
 		}
-		if (s[i - 1] != ' ' && !is_quote(s[i - 1]))
-			nb_word++;
+		else
+		{
+			quote = s[i];
+			while (s[i])
+			{
+				i++;
+				if (s[i] == quote && s[i + 1] == ' ')
+				{
+					i++;
+					break;
+				}
+			}
+		}
 	}
 	return (nb_word);
 }
