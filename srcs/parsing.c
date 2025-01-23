@@ -1,16 +1,5 @@
 #include "../includes/minishell.h"
 
-const char *token_type_str[] = {
-    RED"COMMAND"RESET,
-    YELLOW"FILE_IN"RESET,
-    YELLOW"FILE_OUT"RESET,
-    YELLOW"FILE_OUT_APPEND"RESET,
-	yellow"FILE_NAME"RESET,
-    BLUE"PIPE"RESET,
-    red"ARGUMENT"RESET,
-	GREEN"PATH"RESET
-};
-
 void define_type(t_token *node)
 {
 	if (node->word[0] == '.' || node->word[0] == '/')
@@ -34,11 +23,10 @@ void define_type(t_token *node)
 }
 
 
-void parse(t_token **token_list, char **split)
+void parse_lex(t_token **token_list, char **split)
 {
 	int		i;
 	t_token	*new;
-	t_token	*current;
 
 	i = 0;
 	while (split[i])
@@ -53,11 +41,6 @@ void parse(t_token **token_list, char **split)
 		define_type(new);
 		i++;
 	}
-	free(split);
-	current = *token_list;
-	while (current)
-	{
-		printf("%s	-->	%s\n", current->word, token_type_str[current->type]);
-		current = current->next;
-	}
+	// free(split);
+	print_list(*token_list);
 }

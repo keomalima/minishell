@@ -1,9 +1,17 @@
 NAME = minishell
 
+CC := cc
+CFLAGS := -Wall -Wextra -Werror -Iincludes -I$(LIBFTDIR)/includes -g3
+LDFLAGS := -lreadline
+RM := rm -f
+
+SRCSDIR := srcs
+OBJDIR := objects
+
 LIBFTDIR := libft
 LIBSRCS := $(LIBFTDIR)/src
 
-SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/minishell_utils.c $(SRCSDIR)/parsing.c $(SRCSDIR)/ft_list.c
+SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/minishell_utils.c $(SRCSDIR)/parsing.c $(SRCSDIR)/ft_list.c $(SRCSDIR)/print_test.c $(SRCSDIR)/split_ms_1.c $(SRCSDIR)/split_ms_2.c
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
 LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c \
@@ -36,10 +44,17 @@ HEADERS := includes/minishell.h  $(LIBFT_HEADERS)
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
+<<<<<<< HEAD
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT)  $(LDFLAGS) -o $(NAME)
 
 $(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token
 	$(CC) $(CFLAGS) -c $< -o $@
+=======
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
+
+$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+>>>>>>> 96291bc (lysha // improved split for parsing)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)

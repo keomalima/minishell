@@ -16,3 +16,11 @@ int	ft_strcmp(const char *s1, const char *s2)
 	else
 		return ((unsigned char) s1[i] - (unsigned char) s2[i]);
 }
+
+void	*ft_free(void *data)
+{
+	if (data)
+		free(data);
+	data = NULL;
+	return (NULL);
+}

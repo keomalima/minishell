@@ -5,25 +5,25 @@ void	initialize_var(t_ms *ms)
 	ms->token = NULL;
 }
 
+
 int main (int arc, char **arv)
 {
 	char	**split;
-	(void)arc;
+	char	*rl;
 
-	split = ft_split(arv[1], ' ');
+	(void)arc;
+	(void)arv;
+	// print_split(arv + 1);
+	rl = readline("Prompt > ");
+	split = ft_split_ms(rl);
 	if (!split)
 		return (1);
-	// int i = 0;
-	// while (split[i])
-	// {
-	// 	printf("%d --> |%s|\n", i, split[i]);
-	// 	i++;
-	// }
-	// printf("------------------\n\n");
+	print_split(split);
 
 	t_token	*token_list;
 	token_list = NULL;
-	parse(&token_list, split);
+	parse_lex(&token_list, split);
+
 
 	return (0);
 }
