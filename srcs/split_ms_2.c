@@ -47,6 +47,7 @@ char	**ft_split_ms(char const *s)
 			return (ft_free(tab));
 		return (tab);
 	}
+	printf(yellow"nb_words = %zu\n"RESET, count_words_ms((char *)s));
 	tab = malloc ((count_words_ms((char *)s) + 1) * sizeof(char *));
 	if (!tab)
 		return (NULL);
@@ -55,3 +56,4 @@ char	**ft_split_ms(char const *s)
 		clear_split_ms(tab, k);
 	return (tab);
 }
+

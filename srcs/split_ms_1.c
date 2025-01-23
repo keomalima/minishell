@@ -13,6 +13,7 @@ size_t	count_words_ms(char *s)
 	size_t	i;
 	char	quote;
 
+
 	i = 0;
 	nb_word = 0;
 	while (s[i])
@@ -20,17 +21,27 @@ size_t	count_words_ms(char *s)
 		while (s[i] && s[i] == ' ')
 			i++;
 		nb_word++;
-		if (!is_quote(s[i]))
+		if (s[i] && !is_quote(s[i]))
 		{
 			while (s[i] && s[i] != ' ')
-				i++;
+			{
+				if (is_quote(s[i]))
+				{
+					quote = s[i];
+					i++;
+					while (s[i] && s[i] != quote)
+						i++;
+					i++;
+				}
+				else
+					i++;
+			}
 		}
-		else
+		else if (s[i])
 		{
 			quote = s[i];
-			while (s[i])
+			while (s[i++])
 			{
-				i++;
 				if (s[i] == quote && s[i + 1] == ' ')
 				{
 					i++;
