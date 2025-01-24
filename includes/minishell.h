@@ -29,6 +29,7 @@ typedef enum
 	PIPE,
 	ARGUMENT,
 	PATH,
+	OPERATOR,
 }			e_type;
 
 typedef struct s_token

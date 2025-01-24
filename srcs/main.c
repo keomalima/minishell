@@ -14,11 +14,25 @@ int main (int arc, char **arv)
 	(void)arc;
 	(void)arv;
 	print_split(arv + 1);
+
+	
 	rl = readline("Prompt > ");
 	split = ft_split_ms(rl);
 	if (!split)
 		return (1);
+	printf("==	SPLIT INPUT	==\n");
 	print_split(split);
+
+	int i = 0;
+	while (split[i])
+	{
+		split[i] = ft_clean_quote(split[i]);
+		i++;
+	}
+	printf("==	CLEAN INPUT	==\n");
+	print_split(split);
+	
+
 
 	t_token	*token_list;
 	token_list = NULL;

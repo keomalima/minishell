@@ -14,6 +14,8 @@ void define_type(t_token *node)
 		node->type = PIPE;
 	else if (node->prev && (ft_strcmp(node->prev->word, "<") == 0 || ft_strcmp(node->prev->word, ">") == 0 || ft_strcmp(node->prev->word, ">>") == 0))
 		node->type = FILE_NAME;
+	else if (node->word[0] == '$')
+		node->type = OPERATOR;
 	else if (node->prev && node->prev->type == COMMAND)
 		node->type = ARGUMENT;
 	else if (node->prev && node->prev->type == ARGUMENT)

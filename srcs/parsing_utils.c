@@ -46,6 +46,8 @@ char *ft_clean_quote(char *s)
 	while (s[i] && !ft_is_quote(s[i]))
 		i++;
 	quote = s[i];
+	if (!ft_strchr(&s[i + 1], quote))
+		return (s);
 	i = 0;
 	len = 0;
 	while (s[i])

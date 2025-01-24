@@ -1,7 +1,7 @@
 #include "../includes/minishell.h"
 
 
-size_t	count_words_ms(char *s)
+size_t	ft_count_words_ms(char *s)
 {
 	size_t	nb_word;
 	size_t	i;
@@ -21,8 +21,7 @@ size_t	count_words_ms(char *s)
 			{
 				if (ft_is_quote(s[i]))
 				{
-					quote = s[i];
-					i++;
+					quote = s[i++];
 					while (s[i] && s[i] != quote)
 						i++;
 					i++;
@@ -34,8 +33,9 @@ size_t	count_words_ms(char *s)
 		else if (s[i])
 		{
 			quote = s[i];
-			while (s[i++])
+			while (s[i])
 			{
+				i++;
 				if (s[i] == quote && s[i + 1] == ' ')
 				{
 					i++;
@@ -59,11 +59,11 @@ char	*ft_strdup_ms(char *s, size_t *i)
 	{
 		if (ft_is_quote(s[j]))
 		{
-			quote = s[j];
-			j++;
+			quote = s[j++];
 			while (s[j] && s[j] != quote)
 				j++;
-			j++;
+			if (s[j])
+				j++;
 		}
 		else
 			j++;
@@ -72,13 +72,9 @@ char	*ft_strdup_ms(char *s, size_t *i)
 	str = ft_calloc ((len + 1), sizeof(char));
 	if (!str)
 		return (NULL);
-	j = -1;
-	while (++j < len)
-	{
-		str[j] = s[*i];
-		*i += 1;
-	}
-	str = ft_clean_quote(str);
+	j = 0;
+	while (j < len)
+		str[j++] = s[(*i)++];
 	return (str);
 }
 
@@ -91,7 +87,7 @@ char	*ft_strdup_quote_ms(char *s, char quote, size_t *i)
 	j = *i;
 	while (s[j] && s[j + 1] && (s[j] != quote || (s[j] == quote && s[j + 1] != ' ')))
 		j++;
-	if (s[j] == quote)
+	if (s[j])
 		j++;
 	len = j - *i + 1;
 	str = ft_calloc ((len + 1), sizeof(char));
@@ -105,6 +101,5 @@ char	*ft_strdup_quote_ms(char *s, char quote, size_t *i)
 		*i = *i + 1;
 		j++;
 	}
-	str = ft_clean_quote(str);
 	return (str);
 }

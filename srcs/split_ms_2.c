@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-size_t	count_words_ms(char *s);
+size_t	ft_count_words_ms(char *s);
 char	*ft_strdup_ms(char *s, size_t *i);
 char	*ft_strdup_quote_ms(char *s, char quote, size_t *i);
 
@@ -61,7 +61,7 @@ int	populate_split(char ***tab, size_t *k, char *s)
 	size_t	i;
 
 	i = 0;
-	while (*k < count_words_ms((char *)s))
+	while (*k < ft_count_words_ms((char *)s))
 	{
 		while (s[i] && s[i] == ' ')
 			i++;
@@ -96,8 +96,8 @@ char	**ft_split_ms(char const *s)
 			return (ft_free(tab));
 		return (tab);
 	}
-	printf(yellow"nb_words = %zu\n"RESET, count_words_ms((char *)s));
-	tab = ft_calloc ((count_words_ms((char *)s) + 1), sizeof(char *));
+	printf(yellow"nb_words = %zu\n"RESET, ft_count_words_ms((char *)s));
+	tab = ft_calloc ((ft_count_words_ms((char *)s) + 1), sizeof(char *));
 	if (!tab)
 		return (NULL);
 	k = 0;

@@ -8,7 +8,8 @@ const char *token_type_str[] = {
 	yellow"FILE_NAME"RESET,
     BLUE"PIPE"RESET,
     red"ARGUMENT"RESET,
-	GREEN"PATH"RESET
+	GREEN"PATH"RESET,
+	PURPLE"OPERATOR"RESET
 };
 
 void print_list(t_token *list)

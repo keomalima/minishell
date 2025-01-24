@@ -1,1 +1,5 @@
-<in cmd1 | cmd2 arg "a'r'g" a"r"g > out | cmd3 a'r'g arg >out >>append
+<in cmd1 | cmd2 $arg "a'r'g" a"r"g > out | cmd3 a'r'g arg >out >>append | "bad_cmd" $ arg
+
+00 "111" '222' "3"3"3" '4'4'4' "5'5'5" '6"6"6' 77"  88"8
+
+$'HOME' $"HOME" $HOME $ HOME $(HOME) HO$ME 'HO$ME'
