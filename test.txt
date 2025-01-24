@@ -1,1 +1,1 @@
-<in cmd1 | cmd2 arg "arg" arg > out | cmd3 a'r'g arg >out >>append
+<in cmd1 | cmd2 arg "a'r'g" a"r"g > out | cmd3 a'r'g arg >out >>append

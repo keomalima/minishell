@@ -39,9 +39,11 @@ typedef struct s_token
 	struct s_token	*prev;
 }				t_token;
 
-// MINISHELL UTILS
-int	ft_strcmp(const char *s1, const char *s2);
-void	*ft_free(void *data);
+// PARSING UTILS
+int		ft_strcmp(const char *s1, const char *s2);
+void	*ft_free(char **data);
+int 	ft_is_quote(char c);
+char 	*ft_clean_quote(char *s);
 
 // SPLIT MINISHELL
 char	**ft_split_ms(char const *s);
@@ -57,7 +59,7 @@ void	ft_lstclear_ms(t_token **lst, void (*del)(void *));
 void	del_content(void *content);
 
 // PRINT TEST
-void print_list(t_token *list);
-void print_split(char **split);
+void 	print_list(t_token *list);
+void 	print_split(char **split);
 
 #endif

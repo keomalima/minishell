@@ -20,9 +20,9 @@ int main (int arc, char **arv)
 		return (1);
 	print_split(split);
 
-	// t_token	*token_list;
-	// token_list = NULL;
-	// parse_lex(&token_list, split);
+	t_token	*token_list;
+	token_list = NULL;
+	parse_lex(&token_list, split);
 
 
 	return (0);
