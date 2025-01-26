@@ -11,23 +11,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
-typedef enum e_type
-{
-	COMMAND,
-	OPTION,
-	OPERAND,
-	PIPE
-}	e_type;
+typedef enum e_type{
+	START,
+	IN_COMMAND,
+	IN_OPERATOR,
+	IN_SINGLE_QUOTE,
+	IN_DOUBLE_QUOTE,
+	IN_VARIABLE,
+	END
+} t_type;
 
 typedef struct s_token
 {
 	char	*cmd;
-	e_type	type;
+	t_type	type;
 	struct s_token	*next;
 }	t_token;
 
-t_token	*ft_lstnew_ms(char *content, e_type type);
+t_token	*ft_lstnew_ms(char *content, t_type type);
+void	finite_state_machine(char *input);
 t_token	*ft_lstlast_ms(t_token *lst);
 void	ft_lstadd_back_ms(t_token **lst, t_token *new);
 void	parse_cmd(char *cmd, t_token **head);

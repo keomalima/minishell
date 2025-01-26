@@ -3,6 +3,7 @@ NAME = minishell
 CC := cc
 CFLAGS := -Wall -Wextra -Werror -Iincludes -I$(LIBFTDIR)/includes -g3
 RM := rm -f
+LDFLAGS := -lreadline
 
 SRCSDIR := srcs
 OBJDIR := objects
@@ -43,7 +44,7 @@ HEADERS := includes/minishell.h  $(LIBFT_HEADERS)
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT)  $(LDFLAGS) -o $(NAME)
 
 $(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@

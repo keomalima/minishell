@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-t_token	*ft_lstnew_ms(char *content, e_type type)
+t_token	*ft_lstnew_ms(char *content, t_type type)
 {
 	t_token	*new;
 
