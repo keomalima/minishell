@@ -33,9 +33,8 @@ typedef struct s_token
 }	t_token;
 
 t_token	*ft_lstnew_ms(char *content, t_type type);
-void	finite_state_machine(char *input);
 t_token	*ft_lstlast_ms(t_token *lst);
 void	ft_lstadd_back_ms(t_token **lst, t_token *new);
-void	parse_cmd(char *cmd, t_token **head);
+void	finite_state_machine(char *input, t_token **list);
 
 #endif

@@ -20,45 +20,33 @@ void	ft_token_start(char ch, const char **token_start, t_type *state, const char
 		*token_start = *ptr;
 }
 
-void	ft_token_in_cmd(char ch, const char **token_start, t_type *state, const char **ptr)
+void	ft_token_checker(char ch, const char **token_start, t_type *state, const char **ptr, t_token **list)
 {
-	if (isspace(ch) || ch == '\0')
+	if (*state == IN_SINGLE_QUOTE && ch == '\'')
 	{
-		printf("Command/Arg: %.*s\n", (int)(*ptr - *token_start), *token_start);
-		*state = START;
-	}
-}
-
-void	ft_token_in_opp(char ch, const char **token_start, t_type *state, const char **ptr)
-{
-	if (!strchr("|><&", ch))
-	{
-		printf("Operator: %.*s\n", (int)(*ptr - *token_start), *token_start);
-		*state = START;
-	}
-}
-
-void	ft_token_in_dquote(char ch, const char **token_start, t_type *state, const char **ptr)
-{
-	if (ch == '"')
-	{
-		printf("Double-quoted: %.*s\n", (int)(*ptr - *token_start), *token_start);
+		ft_lstadd_back_ms(list, ft_lstnew_ms(strndup(*token_start, (*ptr - *token_start)) , IN_SINGLE_QUOTE));
 		*state = START;
 		(*ptr)++;
 	}
-}
-
-void	ft_token_in_squote(char ch, const char **token_start, t_type *state, const char **ptr)
-{
-	if (ch == '\'')
+	else if (*state == IN_DOUBLE_QUOTE && ch == '"')
 	{
-		printf("Single-quoted: %.*s\n", (int)(*ptr - *token_start), *token_start);
+		ft_lstadd_back_ms(list, ft_lstnew_ms(strndup(*token_start, (*ptr - *token_start)) , IN_DOUBLE_QUOTE));
 		*state = START;
 		(*ptr)++;
 	}
+	else if (*state == IN_COMMAND && (isspace(ch) || ch == '\0'))
+	{
+		ft_lstadd_back_ms(list, ft_lstnew_ms(strndup(*token_start, (*ptr - *token_start)) , IN_COMMAND));
+		*state = START;
+	}
+	else if (*state == IN_OPERATOR && !strchr("|><&", ch))
+	{
+		ft_lstadd_back_ms(list, ft_lstnew_ms(strndup(*token_start, (*ptr - *token_start)) , IN_OPERATOR));
+		*state = START;
+	}
 }
 
-void tokenize(const char *input)
+void	finite_state_machine(char *input, t_token **list)
 {
 	t_type		state;
 	const char *token_start;
@@ -71,21 +59,9 @@ void tokenize(const char *input)
 	{
 		if (state == START)
 			ft_token_start(*ptr, &token_start, &state, &ptr);
-		else if (state == IN_COMMAND)
-			ft_token_in_cmd(*ptr, &token_start, &state, &ptr);
-		else if (state == IN_OPERATOR)
-			ft_token_in_opp(*ptr, &token_start, &state, &ptr);
-		else if (state == IN_SINGLE_QUOTE)
-			ft_token_in_squote(*ptr, &token_start, &state, &ptr);
-		else if (state == IN_DOUBLE_QUOTE)
-			ft_token_in_dquote(*ptr, &token_start, &state, &ptr);
+		else
+			ft_token_checker(*ptr, &token_start, &state, &ptr, list);
 		if (state != START)
 			ptr++;
 	}
-}
-
-void	finite_state_machine(char *input)
-{
-	printf("Tokenizing: \"%s\"\n", input);
-	tokenize(input);
 }
