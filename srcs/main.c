@@ -21,7 +21,7 @@ int	main(void)
 	char *rl;
 
 	list = NULL;
-	rl = readline("Prompt > ");
+	rl = readline("minishell> ");
 	finite_state_machine(rl, &list);
 
 	current = list;

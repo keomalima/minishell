@@ -32,9 +32,19 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_lexer
+{
+	t_type		state;
+	const char	*token_start;
+	const char	*str_ptr;
+	int			is_quote_open;
+}				t_lexer;
+
 t_token	*ft_lstnew_ms(char *content, t_type type);
 t_token	*ft_lstlast_ms(t_token *lst);
 void	ft_lstadd_back_ms(t_token **lst, t_token *new);
 void	finite_state_machine(char *input, t_token **list);
+char	*ft_strndup_ms(const char *s, const char *end, t_type state);
+char	*ft_strchr_set(const char *s, char *set);
 
 #endif
