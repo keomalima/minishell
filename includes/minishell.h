@@ -19,45 +19,60 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-typedef enum
-{
-	COMMAND,
-	FILE_IN,
-	FILE_OUT,
-	FILE_OUT_APPEND,
-	FILE_NAME,
-	PIPE,
-	ARGUMENT,
-	PATH,
-	OPERATOR,
-}			e_type;
+typedef enum e_type{
+	START,
+	IN_COMMAND,
+	IN_OPERATOR,
+	IN_SINGLE_QUOTE,
+	IN_DOUBLE_QUOTE,
+	IN_VARIABLE,
+	END
+} t_type;
+
+typedef enum e_redir{
+	UNDEFINED,
+	OUT_TRUNC,
+	OUT_APPEND,
+	PIPE
+} t_redir;
 
 typedef struct s_token
 {
-	char	*word;
-	e_type	type;
+	char	*content;
+	t_type	type;
 	struct s_token	*next;
-	struct s_token	*prev;
-}				t_token;
+}	t_token;
+
+typedef struct s_cmd
+{
+	char	**cmd;
+	char	*infile;
+	char	*outfile;
+	t_redir	redir_type;
+	struct s_token	*next;
+}	t_cmd;
+
+
+
 
 // PARSING UTILS
 int		ft_strcmp(const char *s1, const char *s2);
 void	*ft_free(char **data);
-int 	ft_is_quote(char c);
-char 	*ft_clean_quote(char *s);
-
-// SPLIT MINISHELL
-char	**ft_split_ms(char const *s);
+char	*ft_strndup_ms(char *s, t_type type);
+char 	*ft_strchr_set(char *s, char *set);
 
 // PARSING
-void	parse_lex(t_token **token_list, char **split);
+void parse_cmd(t_cmd *cmd_list, t_token *token_list);
 
-// FT_LIST
+// FT_LIST_TOKEN
 void	ft_lstadd_back_ms(t_token **token_list, t_token *new);
 t_token	*ft_lstlast_ms(t_token *lst);
 t_token *create_new_token(char *str);
 void	ft_lstclear_ms(t_token **lst, void (*del)(void *));
 void	del_content(void *content);
+
+// FT_LIST_CMD
+t_cmd *ft_lst_new_cmd(void);
 
 // PRINT TEST
 void 	print_list(t_token *list);

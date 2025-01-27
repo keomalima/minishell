@@ -16,7 +16,7 @@ void print_list(t_token *list)
 {
 	while (list)
 	{
-		printf("%s	-->	%s\n", list->word, token_type_str[list->type]);
+		printf("%s	", list->cmd);
 		list = list->next;
 	}
 	printf("\n------------------\n\n");

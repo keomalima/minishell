@@ -7,9 +7,8 @@ t_token *create_new_token(char *str)
 	new = malloc(sizeof(t_token));
 	if (!new)
 		return (NULL);
-	new->word = ft_strdup(str);
+	new->content = ft_strdup(str);
 	new->next = NULL;
-	new->prev = NULL;
 	return (new);
 }
 
@@ -35,7 +34,6 @@ void	ft_lstadd_back_ms(t_token **token_list, t_token *new)
 	}
 	last = ft_lstlast_ms(*token_list);
 	last->next = new;
-	new->prev = last;
 }
 
 void	del_content(void *content)
@@ -54,7 +52,7 @@ void	ft_lstclear_ms(t_token **lst, void (*del)(void *))
 	temp = *lst;
 	while (temp)
 	{
-		del(temp->word);
+		del(temp->content);
 		next = temp->next;
 		free(temp);
 		temp = next;

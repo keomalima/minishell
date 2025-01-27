@@ -1,48 +1,29 @@
 #include "../includes/minishell.h"
 
-void define_type(t_token *node)
+void ft_complete_cmd(t_cmd *new, t_token *token_list)
 {
-	if (node->word[0] == '.' || node->word[0] == '/')
-		node->type = PATH;
-	else if (node->word[0] == '<')
-		node->type = FILE_IN;
-	else if (node->word[0] == '>' && node->word[1] && node->word[1] == '>')
-		node->type = FILE_OUT_APPEND;
-	else if (node->word[0] == '>')
-		node->type = FILE_OUT;
-	else if (node->word[0] == '|')
-		node->type = PIPE;
-	else if (node->prev && (ft_strcmp(node->prev->word, "<") == 0 || ft_strcmp(node->prev->word, ">") == 0 || ft_strcmp(node->prev->word, ">>") == 0))
-		node->type = FILE_NAME;
-	else if (node->word[0] == '$')
-		node->type = OPERATOR;
-	else if (node->prev && node->prev->type == COMMAND)
-		node->type = ARGUMENT;
-	else if (node->prev && node->prev->type == ARGUMENT)
-		node->type = ARGUMENT;
-	else
-		node->type = COMMAND;
+	if (token_list->type == IN_OPERATOR)
+	{
+		if (ft_strcmp(token_list->content, '>') == 0)
+			new->redir_type = OUT_TRUNC;
+		if (ft_strcmp(token_list->content, '>>') == 0)
+			new->redir_type = OUT_APPEND;
+	}
 }
 
-
-void parse_lex(t_token **token_list, char **split)
+void parse_cmd(t_cmd **cmd_list, t_token *token_list)
 {
-	int		i;
-	t_token	*new;
-
-	i = 0;
-	while (split[i])
+	t_cmd	*new;
+	while (token_list)
 	{
-		new = create_new_token(split[i]);
-		if (!new)
+		new = ft_lst_new_cmd();
+		while (token_list && ft_strcmp(token_list->type, '|') != 0)
 		{
-			ft_lstclear_ms(token_list, &del_content);
-			return;
+			ft_complete_cmd(new, token_list);
+			token_list = token_list->next;
 		}
-		ft_lstadd_back_ms(token_list, new);
-		define_type(new);
-		i++;
+		if (token_list && ft_strcmp(token_list->type, '|') == 0 && new->outfile == NULL)
+			new->redir_type = PIPE;
+		ft_lstadd_back_cmd(cmd_list, new);
 	}
-	// free(split);
-	print_list(*token_list);
 }

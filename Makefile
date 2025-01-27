@@ -11,7 +11,11 @@ OBJDIR := objects
 LIBFTDIR := libft
 LIBSRCS := $(LIBFTDIR)/src
 
-SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/parsing_utils.c $(SRCSDIR)/parsing.c $(SRCSDIR)/ft_list.c $(SRCSDIR)/print_test.c $(SRCSDIR)/split_ms_1.c $(SRCSDIR)/split_ms_2.c
+SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ft_list_token.c $(SRCSDIR)/ft_list_cmd.c $(SRCSDIR)/print_test.c \
+		$(SRCSDIR)/ft_strndup_ms.c $(SRCSDIR)/ft_strchr_set.c \
+
+
+
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
 LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c \
