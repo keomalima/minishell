@@ -8,11 +8,13 @@ t_token *create_new_token(char *str)
 	if (!new)
 		return (NULL);
 	new->content = ft_strdup(str);
+	new->type = 0;
 	new->next = NULL;
+	new->prev = NULL;
 	return (new);
 }
 
-t_token	*ft_lstlast_ms(t_token *lst)
+t_token	*ft_lstlast_token(t_token *lst)
 {
 	if (!lst)
 		return (NULL);
@@ -21,7 +23,7 @@ t_token	*ft_lstlast_ms(t_token *lst)
 	return (lst);
 }
 
-void	ft_lstadd_back_ms(t_token **token_list, t_token *new)
+void	ft_lstadd_back_token(t_token **token_list, t_token *new)
 {
 	t_token	*last;
 
@@ -32,7 +34,8 @@ void	ft_lstadd_back_ms(t_token **token_list, t_token *new)
 		*token_list = new;
 		return ;
 	}
-	last = ft_lstlast_ms(*token_list);
+	last = ft_lstlast_token(*token_list);
+	new->prev = last;
 	last->next = new;
 }
 
@@ -42,7 +45,7 @@ void	del_content(void *content)
 		free(content);
 }
 
-void	ft_lstclear_ms(t_token **lst, void (*del)(void *))
+void	ft_lstclear_token(t_token **lst, void (*del)(void *))
 {
 	t_token	*temp;
 	t_token	*next;

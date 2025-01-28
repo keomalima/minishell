@@ -1,29 +1,98 @@
 #include "../includes/minishell.h"
 
-void ft_complete_cmd(t_cmd *new, t_token *token_list)
+void ft_complete_cmd(t_cmd *new, t_ms *ms, int *i)
 {
-	if (token_list->type == IN_OPERATOR)
+	//	set redirection
+
+	if (ft_strcmp(ms->token->content, ">") == 0)
+		new->redir = OUT_TRUNC;
+	else if (ft_strcmp(ms->token->content, ">>") == 0)
+		new->redir = OUT_APPEND;
+
+	//	set infile / outfile
+	else if (ms->token->prev && (ft_strcmp(ms->token->prev->content, ">") == 0 || ft_strcmp(ms->token->prev->content, ">>") == 0))
+		new->outfile = ms->token->content;
+	else if (ms->token->prev && ft_strcmp(ms->token->prev->content, "<") == 0)
+		new->infile = ms->token->content;
+
+	//	set command
+	else if (*ms->token->content)
 	{
-		if (ft_strcmp(token_list->content, '>') == 0)
-			new->redir_type = OUT_TRUNC;
-		if (ft_strcmp(token_list->content, '>>') == 0)
-			new->redir_type = OUT_APPEND;
+		new->cmd[*i] = ms->token->content;
+		(*i)++;
 	}
 }
 
-void parse_cmd(t_cmd **cmd_list, t_token *token_list)
+int	ft_find_cmd_size(t_token *token)
+{
+	int	cmd_size;
+	int	redir;
+
+	cmd_size = 0;
+	redir = 0;
+	while (token && ft_strcmp(token->content, "|") != 0)
+	{
+		if (ft_strcmp(token->content, "<") == 0 || ft_strcmp(token->content, ">") == 0 || ft_strcmp(token->content, ">>") == 0)
+			redir += 2;
+		cmd_size++;
+		token = token->next;
+	}
+	if ((cmd_size - redir) > 0)
+		return (cmd_size - redir);
+	else
+		return (cmd_size);	//////////////////
+}
+
+void parse_cmd(t_ms *ms)
 {
 	t_cmd	*new;
-	while (token_list)
+	int		i;
+
+	new = NULL;
+	while (ms->token)
 	{
 		new = ft_lst_new_cmd();
-		while (token_list && ft_strcmp(token_list->type, '|') != 0)
+		new->cmd_size = ft_find_cmd_size(ms->token);
+		///////////////////// what if size < 0 ??
+		new->cmd = ft_calloc((new->cmd_size + 1), sizeof(char *));
+		//////////////////
+		i = 0;
+		while (ms->token && ft_strcmp(ms->token->content, "|") != 0)
 		{
-			ft_complete_cmd(new, token_list);
-			token_list = token_list->next;
+			ft_complete_cmd(new, ms, &i);
+			ms->token = ms->token->next;
 		}
-		if (token_list && ft_strcmp(token_list->type, '|') == 0 && new->outfile == NULL)
-			new->redir_type = PIPE;
-		ft_lstadd_back_cmd(cmd_list, new);
+		if (ms->token && ft_strcmp(ms->token->content, "|") == 0)
+		{
+			if (!new->outfile)
+				new->redir = PIPE;
+			ms->token = ms->token->next;
+			ft_lstadd_back_cmd(&ms->cmd, new);
+		}
 	}
+	ft_lstadd_back_cmd(&ms->cmd, new);
 }
+
+
+// void parse_cmd(t_ms *ms)
+// {
+// 	t_cmd	*new;
+
+// 	new = NULL;
+// 	while (ms->token)
+// 	{
+// 		if (new && ft_strcmp(ms->token->content, "|") == 0)
+// 		{
+// 			if (!new->outfile)
+// 				new->redir = PIPE;
+// 			ft_lstadd_back_cmd(&ms->cmd, new);
+// 			ms->token = ms->token->next;
+// 			new = ft_lst_new_cmd();
+// 		}
+// 		if (!new)
+// 			new = ft_lst_new_cmd();
+// 		ft_complete_cmd(new, ms);
+// 		ms->token = ms->token->next;
+// 	}
+// 	ft_lstadd_back_cmd(&ms->cmd, new);
+// }

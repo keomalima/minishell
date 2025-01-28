@@ -4,12 +4,13 @@ t_cmd *ft_lst_new_cmd(void)
 {
 	t_cmd	*new;
 
-	new = malloc(sizeof(t_token));
+	new = malloc(sizeof(t_cmd));
 	if (!new)
 		return (NULL);
 	new->cmd = NULL;
+	new->cmd_size = 0;
 	new->infile = NULL;
-	new->redir_type = UNDEFINED;
+	new->redir = UNDEFINED;
 	new->next = NULL;
 	return (new);
 }
@@ -34,7 +35,7 @@ void	ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new)
 		*cmd_list = new;
 		return ;
 	}
-	last = ft_lstlast_ms(*cmd_list);
+	last = ft_lstlast_cmd(*cmd_list);
 	last->next = new;
 }
 

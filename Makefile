@@ -13,7 +13,8 @@ LIBSRCS := $(LIBFTDIR)/src
 
 SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ft_list_token.c $(SRCSDIR)/ft_list_cmd.c $(SRCSDIR)/print_test.c \
 		$(SRCSDIR)/ft_strndup_ms.c $(SRCSDIR)/ft_strchr_set.c \
-
+		$(SRCSDIR)/parsing.c $(SRCSDIR)/parsing_utils.c \
+		$(SRCSDIR)/variable_expansion.c
 
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)

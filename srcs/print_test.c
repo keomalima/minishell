@@ -12,11 +12,37 @@ const char *token_type_str[] = {
 	PURPLE"OPERATOR"RESET
 };
 
-void print_list(t_token *list)
+const char *cmd_redir[] = {
+	"UNDEFINED",
+	"OUT_TRUNC",
+	"OUT_APPEND",
+	"PIPE"
+};
+
+void print_token(t_token *list)
 {
 	while (list)
 	{
-		printf("%s	", list->cmd);
+		printf("%s	", list->content);
+		list = list->next;
+	}
+	printf("\n------------------\n\n");
+}
+
+void print_cmd(t_cmd *list)
+{
+	int i;
+
+	while (list)
+	{
+		i = 0;
+		printf("cmd[%d] : %s	|	infile : %s	|	outfile	: %s	|	redir ; %s\n", list->cmd_size, list->cmd[i], list->infile, list->outfile, cmd_redir[list->redir]);
+		while (list->cmd[i])
+		{
+			printf(blue"[%s] "RESET, list->cmd[i]);
+			i++;
+		}
+		printf("\n\n");
 		list = list->next;
 	}
 	printf("\n------------------\n\n");
