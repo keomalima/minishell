@@ -13,7 +13,6 @@
 #define Purple	"\033[0;35m"
 #define RESET   "\033[0m"
 
-# include "libft.h"
 # include <stdio.h>
 # include "../libft/includes/libft.h"
 # include <readline/readline.h>

@@ -3,11 +3,6 @@
 void	initialize_var(t_ms *ms)
 {
 	ms->token = NULL;
-}
-
-void	initialize_var(t_ms *ms)
-{
-	ms->token = NULL;
 	ms->cmd = NULL;
 }
 

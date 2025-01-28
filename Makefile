@@ -56,22 +56,10 @@ HEADERS := includes/minishell.h  $(LIBFT_HEADERS)
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-<<<<<<< HEAD
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT)  $(LDFLAGS) -o $(NAME)
-
-$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token
-	$(CC) $(CFLAGS) -c $< -o $@
-=======
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 
-<<<<<<< HEAD
-$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)
-	$(CC) $(CFLAGS) -c $< -o $@
->>>>>>> 96291bc (lysha // improved split for parsing)
-=======
 $(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/expanser $(OBJDIR)/tester
 	$(CC) $(CFLAGS) -c $< -o $@
->>>>>>> 1979e0d (lysha // implementation of tokeniser + parser + expanser + tester working together)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -79,8 +67,6 @@ $(OBJDIR):
 $(OBJDIR)/token:
 	mkdir -p $(OBJDIR)/token
 
-<<<<<<< HEAD
-=======
 $(OBJDIR)/parsing:
 	mkdir -p $(OBJDIR)/parsing
 
@@ -90,7 +76,6 @@ $(OBJDIR)/expanser:
 $(OBJDIR)/tester:
 	mkdir -p $(OBJDIR)/tester
 
->>>>>>> 1979e0d (lysha // implementation of tokeniser + parser + expanser + tester working together)
 $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)
 
