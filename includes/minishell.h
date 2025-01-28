@@ -62,13 +62,14 @@ typedef struct s_ms
 }                t_ms;
 
 // VARIABLE EXPANSION
-void get_var(char *s);
+char *get_var(char *s);
 
 // PARSING UTILS
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strndup_ms(char *s, t_type type);
 char 	*ft_strchr_set(char *s, char *set);
 int 	ft_isspaces(char c);
+void	*ft_free(char **data);
 
 // PARSING
 void parse_cmd(t_ms *ms);

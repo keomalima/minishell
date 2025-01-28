@@ -1,5 +1,13 @@
 #include "../includes/minishell.h"
 
+void	*ft_free(char **data)
+{
+	if (*data)
+		free(*data);
+	*data = NULL;
+	return (NULL);
+}
+
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t	i;
