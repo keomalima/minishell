@@ -36,7 +36,7 @@ void print_cmd(t_cmd *list)
 	while (list)
 	{
 		i = 0;
-		printf("cmd[%d] : %s	|	infile : %s	|	outfile	: %s	|	redir ; %s\n", list->cmd_size, list->cmd[i], list->infile, list->outfile, cmd_redir[list->redir]);
+		printf("cmd[%d] : %s	|	infile : %s	|	outfile	: %s	|	redir : %s\n", list->cmd_size, list->cmd[i], list->infile, list->outfile, cmd_redir[list->redir]);
 		while (list->cmd[i])
 		{
 			printf(blue"[%s] "RESET, list->cmd[i]);
@@ -51,7 +51,7 @@ void print_cmd(t_cmd *list)
 void print_split(char **split)
 {
 	int i;
-	
+
 	i = 0;
 	while (split[i])
 	{

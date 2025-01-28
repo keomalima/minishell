@@ -19,30 +19,39 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-typedef enum e_type{
+typedef enum	e_type
+{
 	START,
-	IN_COMMAND,
-	IN_OPERATOR,
-	IN_SINGLE_QUOTE,
-	IN_DOUBLE_QUOTE,
-	IN_VARIABLE,
+	CMD,
+	OPP,
+	SQ,
+	DQ,
 	END
-} t_type;
+}				t_type;
 
-typedef enum e_redir{
+typedef enum	e_redir
+{
 	UNDEFINED,
 	OUT_TRUNC,
 	OUT_APPEND,
 	PIPE
-} t_redir;
+}				t_redir;
 
-typedef struct s_token
+typedef struct		s_token
 {
-	char	*content;
-	t_type	type;
-	struct s_token	*next;
+	char			*content;
+	t_type			type;
 	struct s_token	*prev;
-}	t_token;
+	struct s_token	*next;
+}					t_token;
+
+typedef struct 	s_lexer
+{
+	t_type		state;
+	const char	*str_start;
+	const char	*str_ptr;
+	int			quote_open;
+}				t_lexer;
 
 typedef struct s_cmd
 {
@@ -56,36 +65,42 @@ typedef struct s_cmd
 
 typedef struct s_ms
 {
-    struct s_lexer	*lexer;
-    struct s_token	*token;
+	struct s_lexer	lexer;
+	struct s_token	*token;
     struct s_cmd	*cmd;
 }                t_ms;
 
-// VARIABLE EXPANSION
+/******************    TOKENIZER    ******************/
+void	create_tokens(char *input, t_ms *ms);
+t_token	*ft_lstnew_ms(t_ms *ms, char *content);
+t_token	*ft_lstlast_ms(t_token *lst);
+void	ft_lstadd_back_ms(t_token **lst, t_token *new);
+char	*ft_strndup_ms(t_ms *ms);
+char	*ft_strchr_set(char *set, int c);
+void	exit_handler(t_ms *ms, int exit_code);
+char	*type_to_string(t_type type);
+
+
+
+/******************    EXPANSER    ******************/
 char *get_var(char *s);
 
+
+
+/******************    PARSER    ******************/
 // PARSING UTILS
 int		ft_strcmp(const char *s1, const char *s2);
-char	*ft_strndup_ms(char *s, t_type type);
-char 	*ft_strchr_set(char *s, char *set);
 int 	ft_isspaces(char c);
 void	*ft_free(char **data);
-
 // PARSING
 void parse_cmd(t_ms *ms);
-
-// FT_LIST_TOKEN
-void	ft_lstadd_back_token(t_token **token_list, t_token *new);
-t_token	*ft_lstlast_token(t_token *lst);
-t_token *create_new_token(char *str);
-void	ft_lstclear_token(t_token **lst, void (*del)(void *));
-void	del_content(void *content);
-
 // FT_LIST_CMD
 t_cmd *ft_lst_new_cmd(void);
 t_cmd	*ft_lstlast_cmd(t_cmd *lst);
 void	ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
 
+
+/******************    TESTER    ******************/
 // PRINT TEST
 void 	print_token(t_token *list);
 void 	print_split(char **split);

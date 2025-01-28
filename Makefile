@@ -8,13 +8,20 @@ RM := rm -f
 SRCSDIR := srcs
 OBJDIR := objects
 
+TOKENDIR := $(SRCSDIR)/token
+PARSERDIR := $(SRCSDIR)/parsing
+EXPANSER := $(SRCSDIR)/expanser
+TESTER := $(SRCSDIR)/tester
+
 LIBFTDIR := libft
 LIBSRCS := $(LIBFTDIR)/src
 
-SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ft_list_token.c $(SRCSDIR)/ft_list_cmd.c $(SRCSDIR)/print_test.c \
-		$(SRCSDIR)/ft_strndup_ms.c $(SRCSDIR)/ft_strchr_set.c \
-		$(SRCSDIR)/parsing.c $(SRCSDIR)/parsing_utils.c \
-		$(SRCSDIR)/variable_expansion.c
+SRCS := $(SRCSDIR)/main.c \
+		$(TESTER)/print_test.c \
+		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
+		$(EXPANSER)/variable_expansion.c \
+		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
+		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_exit.c
 
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
@@ -57,9 +64,14 @@ $(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/toke
 =======
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 
+<<<<<<< HEAD
 $(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 >>>>>>> 96291bc (lysha // improved split for parsing)
+=======
+$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/expanser $(OBJDIR)/tester
+	$(CC) $(CFLAGS) -c $< -o $@
+>>>>>>> 1979e0d (lysha // implementation of tokeniser + parser + expanser + tester working together)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -67,6 +79,18 @@ $(OBJDIR):
 $(OBJDIR)/token:
 	mkdir -p $(OBJDIR)/token
 
+<<<<<<< HEAD
+=======
+$(OBJDIR)/parsing:
+	mkdir -p $(OBJDIR)/parsing
+
+$(OBJDIR)/expanser:
+	mkdir -p $(OBJDIR)/expanser
+
+$(OBJDIR)/tester:
+	mkdir -p $(OBJDIR)/tester
+
+>>>>>>> 1979e0d (lysha // implementation of tokeniser + parser + expanser + tester working together)
 $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)
 

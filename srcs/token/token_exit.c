@@ -4,7 +4,7 @@ void	ft_lstdelone_ms(t_token *lst)
 {
 	if (lst)
 	{
-		free(lst->cmd);
+		free(lst->content);
 		free(lst);
 	}
 }
