@@ -1,7 +1,21 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
+
+void	initialize_var(t_ms *ms)
+{
+	ms->token = NULL;
+}
 
 int	main(void)
 {
-	ft_printf("It works!");
+	t_ms	ms;
+	char	*rl;
+
+	initialize_var(&ms);
+	rl = readline("minishell> ");
+	create_tokens(rl, &ms);
+	//Parsing ft
+	parsing_token(&ms);
+	exit_handler(&ms, 0);
+	free(rl);
 	return (0);
 }

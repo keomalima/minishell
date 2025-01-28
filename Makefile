@@ -1,16 +1,20 @@
 NAME = minishell
 
+LIBFTDIR := libft
+LIBSRCS := $(LIBFTDIR)/src
+
 CC := cc
 CFLAGS := -Wall -Wextra -Werror -Iincludes -I$(LIBFTDIR)/includes -g3
 RM := rm -f
+LDFLAGS := -lreadline
 
 SRCSDIR := srcs
 OBJDIR := objects
 
-LIBFTDIR := libft
-LIBSRCS := $(LIBFTDIR)/src
+TOKENDIR := $(SRCSDIR)/token
 
-SRCS := $(SRCSDIR)/main.c
+SRCS := $(SRCSDIR)/main.c $(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
+		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_exit.c
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
 LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c \
@@ -43,18 +47,22 @@ HEADERS := includes/minishell.h  $(LIBFT_HEADERS)
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT)  $(LDFLAGS) -o $(NAME)
 
-$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)
+$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
+$(OBJDIR)/token:
+	mkdir -p $(OBJDIR)/token
+
 $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)
 
 clean:
+	$(RM) -rf $(OBJDIR)
 	$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
