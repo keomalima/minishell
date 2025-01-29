@@ -9,6 +9,7 @@ t_cmd *ft_lst_new_cmd(void)
 		return (NULL);
 	new->cmd = NULL;
 	new->cmd_size = 0;
+	new->outfile = NULL;
 	new->infile = NULL;
 	new->redir = UNDEFINED;
 	new->next = NULL;
