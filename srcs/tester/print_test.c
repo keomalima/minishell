@@ -23,7 +23,7 @@ void print_token(t_token *list)
 {
 	while (list)
 	{
-		printf("%s	", list->content);
+		printf("[%s]	", list->content);
 		list = list->next;
 	}
 	printf("\n------------------\n\n");

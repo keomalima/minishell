@@ -29,7 +29,8 @@ int	ft_find_cmd_size(t_token *token)
 	{
 		if (ft_strcmp(token->content, "<") == 0 || ft_strcmp(token->content, ">") == 0 || ft_strcmp(token->content, ">>") == 0)
 			redir += 2;
-		cmd_size++;
+		if (*token->content)
+			cmd_size++;
 		token = token->next;
 	}
 	if ((cmd_size - redir) > 0)
@@ -47,6 +48,7 @@ void parse_cmd(t_ms *ms)
 	{
 		new = ft_lst_new_cmd();
 		new->cmd_size = ft_find_cmd_size(ms->token);
+		printf("cmd size = %d\n", new->cmd_size);
 		///////////////////// what if size < 0 ??
 		new->cmd = ft_calloc((new->cmd_size + 1), sizeof(char *));
 		//////////////////

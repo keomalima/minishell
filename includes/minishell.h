@@ -60,7 +60,15 @@ typedef struct s_cmd
 	char			*outfile;
 	t_redir			redir;
 	struct s_cmd	*next;
-}	t_cmd;
+}				t_cmd;
+
+typedef struct s_exp
+{
+	char	*src;
+	char	*extract;
+	char	*env_var;
+	size_t	size;
+}				t_exp;
 
 typedef struct s_ms
 {
@@ -98,9 +106,10 @@ t_cmd *ft_lst_new_cmd(void);
 t_cmd	*ft_lstlast_cmd(t_cmd *lst);
 void	ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
 
+/******************    EXPANSER    ******************/
+char *expanse_var(char *s);
 
 /******************    TESTER    ******************/
-// PRINT TEST
 void 	print_token(t_token *list);
 void 	print_split(char **split);
 void 	print_cmd(t_cmd *list);

@@ -19,7 +19,7 @@ LIBSRCS := $(LIBFTDIR)/src
 SRCS := $(SRCSDIR)/main.c \
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
-		$(EXPANSER)/variable_expansion.c \
+		$(EXPANSER)/expanser.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
 		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_exit.c
 
@@ -78,6 +78,9 @@ $(OBJDIR)/tester:
 
 $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)
+
+val: $(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=valgrind.supp ./$(NAME)
 
 clean:
 	$(RM) -rf $(OBJDIR)
