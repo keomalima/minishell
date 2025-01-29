@@ -7,7 +7,7 @@ t_token	*ft_lstnew_ms(t_ms *ms, char *content)
 	new = malloc(sizeof(t_token));
 	if (!new)
 		exit_handler(ms, 1);
-	new->cmd = content;
+	new->content = content;
 	new->type = ms->lexer.state;
 	new->prev = NULL;
 	new->next = NULL;
