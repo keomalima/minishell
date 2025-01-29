@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 char	*ft_extract_var(char *s, size_t *size)
 {

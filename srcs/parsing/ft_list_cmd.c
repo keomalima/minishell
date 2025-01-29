@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 t_cmd *ft_lst_new_cmd(void)
 {

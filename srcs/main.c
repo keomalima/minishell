@@ -9,17 +9,16 @@ void	initialize_var(t_ms *ms)
 int	main(void)
 {
 	t_ms	ms;
+	//t_token	*current;
 	char	*rl;
 
 	initialize_var(&ms);
 	rl = readline("minishell> ");
 	create_tokens(rl, &ms);
-
-	//Parsing
-	parse_cmd(&ms);		//parsing
-	print_cmd(ms.cmd);	//print parsing
-
-	exit_handler(&ms, 0);
+	parse_cmd(&ms);
+	exec_cmd(&ms);
+	//print_cmd(ms.cmd);
+	//exit_handler(&ms, 0);
 	free(rl);
 	return (0);
 }

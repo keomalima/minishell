@@ -1,5 +1,8 @@
 NAME = minishell
 
+LIBFTDIR := libft
+LIBSRCS := $(LIBFTDIR)/src
+
 CC := cc
 CFLAGS := -Wall -Wextra -Werror -Iincludes -I$(LIBFTDIR)/includes -g3
 LDFLAGS := -lreadline
@@ -12,17 +15,15 @@ TOKENDIR := $(SRCSDIR)/token
 PARSERDIR := $(SRCSDIR)/parsing
 EXPANSER := $(SRCSDIR)/expanser
 TESTER := $(SRCSDIR)/tester
-
-LIBFTDIR := libft
-LIBSRCS := $(LIBFTDIR)/src
+EXECDIR := $(SRCSDIR)/exec
 
 SRCS := $(SRCSDIR)/main.c \
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
 		$(EXPANSER)/variable_expansion.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
-		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_exit.c
-
+		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_exit.c \
+		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
@@ -58,7 +59,7 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 
-$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/expanser $(OBJDIR)/tester
+$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/expanser $(OBJDIR)/exec $(OBJDIR)/tester
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):
@@ -75,6 +76,9 @@ $(OBJDIR)/expanser:
 
 $(OBJDIR)/tester:
 	mkdir -p $(OBJDIR)/tester
+
+$(OBJDIR)/exec:
+	mkdir -p $(OBJDIR)/exec
 
 $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)

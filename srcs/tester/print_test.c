@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 const char *token_type_str[] = {
     RED"COMMAND"RESET,

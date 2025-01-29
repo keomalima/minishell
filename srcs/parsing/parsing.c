@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 void ft_complete_cmd(t_cmd *new, t_ms *ms, int *i)
 {
@@ -19,15 +19,35 @@ void ft_complete_cmd(t_cmd *new, t_ms *ms, int *i)
 		(*i)++;
 	}
 }
+
+char	*ft_strchr_parse(char *set, char *str)
+{
+	int	i;
+
+	while (*str)
+	{
+		i = 0;
+		while (set[i])
+		{
+			if (*str == set[i++])
+				return (str);
+		}
+		str++;
+	}
+	return (NULL);
+}
+
 int	ft_find_cmd_size(t_token *token)
 {
 	int	cmd_size;
 	int	redir;
+
 	cmd_size = 0;
 	redir = 0;
-	while (token && ft_strcmp(token->content, "|") != 0)
+
+	while (token && ft_strcmp(token->content, "|"))
 	{
-		if (ft_strcmp(token->content, "<") == 0 || ft_strcmp(token->content, ">") == 0 || ft_strcmp(token->content, ">>") == 0)
+		if (ft_strchr_parse(token->content, "<>"))
 			redir += 2;
 		cmd_size++;
 		token = token->next;
@@ -35,13 +55,14 @@ int	ft_find_cmd_size(t_token *token)
 	if ((cmd_size - redir) > 0)
 		return (cmd_size - redir);
 	else
-		return (cmd_size);	//////////////////
+		return (cmd_size);
 }
 
-void parse_cmd(t_ms *ms)
+void	parse_cmd(t_ms *ms)
 {
 	t_cmd	*new;
 	int		i;
+
 	new = NULL;
 	while (ms->token)
 	{
