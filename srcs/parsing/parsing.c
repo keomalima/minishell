@@ -9,22 +9,15 @@ void ft_complete_cmd(t_cmd *new, t_token *token, t_index *index)
 		new->redir = OUT_APPEND;
 	//	set infile / outfile
 	else if (token->prev && (ft_strcmp(token->prev->content, ">") == 0 || ft_strcmp(token->prev->content, ">>") == 0))
-	{
-		new->outfile[index->out_i] = token->content;
-		index->out_i++;
-	}
+		new->outfile[index->out_i++] = token->content;
 	else if (token->prev && ft_strcmp(token->prev->content, "<") == 0)
-	{
-		new->infile[index->in_i] = token->content;
-		index->in_i++;
-	}
+		new->infile[index->in_i++] = token->content;
 	//	set command
 	else if (token->type != OPP)
 	{
 		if (ft_strchr(token->content, '$') && token->type != SQ)
 			token->content = expanser(token->content);
-		new->cmd[index->cmd_i] = token->content;
-		(index->cmd_i)++;
+		new->cmd[index->cmd_i++] = token->content;
 	}
 }
 void	ft_find_cmd_size(t_token *token, t_cmd *new)
