@@ -58,6 +58,7 @@ char	*exp_valid_variable(char *s)
 	exp.env_var = getenv(exp.extract);
 	exp.size = ft_strlen_expanser(s) - ft_strlen_expanser(exp.extract)
 		+ ft_strlen_expanser(exp.env_var) - 1;
+	printf("exp size = %zu\n", exp.size);
 	dest = ft_calloc((exp.size + 1), sizeof(char));
 	if (!dest)
 	{
@@ -66,8 +67,35 @@ char	*exp_valid_variable(char *s)
 		return (NULL);	///////////////////////////////////////////////////////
 	}
 	ft_fill_exp(&dest, exp);
-	ft_free(&exp.src);
+	ft_free(&s);
 	ft_free(&exp.extract);
+	return (dest);
+}
+
+char	*exp_digit_variable(char *s)
+{
+	char	*src;
+	char	*tmp;
+	char	*dest;
+	size_t	len;
+
+	src = s;
+	tmp = ft_strchr(src, '$') + 1;
+	len = ft_strlen_expanser(src) - ft_strlen_expanser(tmp) - 1;
+	printf("len = %zu\n", len);
+	while (*tmp && ft_isdigit(*tmp))
+		tmp++;
+	len = len + ft_strlen_expanser(tmp);
+	printf("len = %zu\n", len);
+	dest = ft_calloc((len + 1), sizeof(char));
+	if (!dest)
+		return (NULL);	//////////////
+	len = 0;
+	while (*src && *src != '$')
+		dest[len++] = *src++;
+	while (*tmp)
+		dest[len++] = *tmp++;
+	ft_free(&s);
 	return (dest);
 }
 
@@ -77,7 +105,9 @@ char	*expanser(char *s)
 
 	str = ft_strchr(s, '$') + 1;
 	if (ft_isalpha(*str))
-		return(exp_valid_variable(s));
+		return (exp_valid_variable(s));
+	else if (ft_isdigit(*str))
+		return (exp_digit_variable(s));
 	else
 		return (s);
 }
