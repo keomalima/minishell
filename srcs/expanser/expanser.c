@@ -12,32 +12,24 @@ size_t	ft_strlen_expanser(const char *s)
 	return (i);
 }
 
-
 char	*ft_extract_var(char *s)
 {
-	int		i;
 	int		len;
 	char	*str;
+	char	*tmp;
 
-	i = 0;
-	while (s[i] && s[i] != '$')
-		i++;
-	if (s[i] && s[i] == '$')
-		i++;
-	len = i;
-	while (s[len] && ft_isalnum(s[len]))
+	tmp = ft_strchr(s, '$') + 1;
+	len = 0;
+	while (tmp[len] && ft_isalnum(tmp[len]))
 		len++;
-	len = len - i;
 	str = ft_calloc((len + 1), sizeof(char));
 	if (!str)
 		return (NULL);	////////////////////////////////////////////////////
-	len = 0;
-	while (s[i] && ft_isalnum(s[i]))
-		str[len++] = s[i++];
+	ft_strlcpy(str, tmp, len + 1);
 	return (str);
 }
 
-void ft_fill_exp(char **dest, t_exp exp)
+void	ft_fill_exp(char **dest, t_exp exp)
 {
 	int		i;
 	int		j;
@@ -50,20 +42,12 @@ void ft_fill_exp(char **dest, t_exp exp)
 	}
 	j = i + ft_strlen_expanser(exp.extract) + 1;
 	while (exp.env_var && *exp.env_var)
-	{
-		(*dest)[i] = *exp.env_var;
-		i++;
-		exp.env_var++;
-	}
+		(*dest)[i++] = *exp.env_var++;
 	while (exp.src[j])
-	{
-		(*dest)[i] = exp.src[j];
-		i++;
-		j++;
-	}
+		(*dest)[i++] = exp.src[j++];
 }
 
-char *expanse_var(char *s)
+char	*exp_valid_variable(char *s)
 {
 	t_exp	exp;
 	char	*dest;
@@ -71,11 +55,9 @@ char *expanse_var(char *s)
 	exp.src = s;
 	exp.size = 0;
 	exp.extract = ft_extract_var(s);
-	printf("extract = [%s]\n", exp.extract);
 	exp.env_var = getenv(exp.extract);
-	printf("var = [%s]\n", exp.env_var);
-	exp.size = ft_strlen_expanser(s) - ft_strlen_expanser(exp.extract) + ft_strlen_expanser(exp.env_var) - 1;
-	printf("size = %zu\n", exp.size);
+	exp.size = ft_strlen_expanser(s) - ft_strlen_expanser(exp.extract)
+		+ ft_strlen_expanser(exp.env_var) - 1;
 	dest = ft_calloc((exp.size + 1), sizeof(char));
 	if (!dest)
 	{
@@ -87,4 +69,15 @@ char *expanse_var(char *s)
 	ft_free(&exp.src);
 	ft_free(&exp.extract);
 	return (dest);
+}
+
+char	*expanser(char *s)
+{
+	char	*str;
+
+	str = ft_strchr(s, '$') + 1;
+	if (ft_isalpha(*str))
+		return(exp_valid_variable(s));
+	else
+		return (s);
 }

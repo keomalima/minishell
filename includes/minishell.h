@@ -10,7 +10,7 @@
 #define BLUE	"\033[1;34m"
 #define blue	"\033[0;34m"
 #define PURPLE	"\033[1;35m"
-#define Purple	"\033[0;35m"
+#define purple	"\033[0;35m"
 #define RESET   "\033[0m"
 
 # include <stdio.h>
@@ -56,11 +56,20 @@ typedef struct s_cmd
 {
 	char			**cmd;
 	int				cmd_size;
-	char			*infile;
-	char			*outfile;
+	char			**infile;
+	int				infile_size;
+	char			**outfile;
+	int				outfile_size;
 	t_redir			redir;
 	struct s_cmd	*next;
 }				t_cmd;
+
+typedef struct s_index
+{
+	int	cmd_i;
+	int	in_i;
+	int	out_i;
+}			t_index;
 
 typedef struct s_exp
 {
@@ -88,10 +97,8 @@ void	exit_handler(t_ms *ms, int exit_code);
 char	*type_to_string(t_type type);
 
 
-
 /******************    EXPANSER    ******************/
-char *get_var(char *s);
-
+char	*expanser(char *s);
 
 
 /******************    PARSER    ******************/
@@ -106,8 +113,7 @@ t_cmd *ft_lst_new_cmd(void);
 t_cmd	*ft_lstlast_cmd(t_cmd *lst);
 void	ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
 
-/******************    EXPANSER    ******************/
-char *expanse_var(char *s);
+
 
 /******************    TESTER    ******************/
 void 	print_token(t_token *list);
