@@ -1,16 +1,18 @@
 #include "minishell.h"
 
-t_cmd *ft_lst_new_cmd(t_ms *ms)
+t_cmd *ft_lst_new_cmd(void)
 {
 	t_cmd	*new;
 
 	new = malloc(sizeof(t_cmd));
 	if (!new)
-		exit_handler(ms,12);
+		return (NULL);
 	new->cmd = NULL;
 	new->cmd_size = 0;
-	new->outfile = NULL;
 	new->infile = NULL;
+	new->infile_size = 0;
+	new->outfile = NULL;
+	new->outfile_size = 0;
 	new->redir = UNDEFINED;
 	new->next = NULL;
 	return (new);

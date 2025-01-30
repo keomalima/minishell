@@ -19,34 +19,34 @@ void	wait_children_exit(t_ms *ms)
 
 void	open_file(t_cmd *cmd, t_ms *ms, int i)
 {
-	if (cmd->infile)
+	if (cmd->infile_size)
 	{
-		ms->exec.pipe_fd[(i + 1) % 2][0] = open(cmd->infile, O_RDONLY);
+		ms->exec.pipe_fd[(i + 1) % 2][0] = open(cmd->infile[cmd->infile_size - 1], O_RDONLY);
 		if (ms->exec.pipe_fd[(i + 1) % 2][0] < 0)
 		{
-			if (access(cmd->infile, R_OK) < 0
-				&& access(cmd->infile, F_OK) == 0)
-				ft_printf("%s: %s \n", strerror(errno), cmd->infile);
+			if (access(cmd->infile[cmd->infile_size - 1], R_OK) < 0
+				&& access(cmd->infile[cmd->infile_size - 1], F_OK) == 0)
+				ft_printf("%s: %s \n", strerror(errno), cmd->infile[cmd->infile_size - 1]);
 			else
-				ft_printf("%s: %s \n", strerror(errno), cmd->infile);
+				ft_printf("%s: %s \n", strerror(errno), cmd->infile[cmd->infile_size - 1]);
 			exit_handler(ms, -1);
 		}
 	}
-	else if (cmd->outfile)
+	else if (cmd->outfile_size)
 	{
 		if (cmd->redir == OUT_TRUNC)
 		{
-			ms->exec.pipe_fd[i % 2][1] = open(cmd->outfile,
+			ms->exec.pipe_fd[i % 2][1] = open(cmd->outfile[cmd->outfile_size - 1],
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		}
 		else
 		{
-			ms->exec.pipe_fd[i % 2][1] = open(cmd->outfile,
+			ms->exec.pipe_fd[i % 2][1] = open(cmd->outfile[cmd->outfile_size - 1],
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
 		}
 		if (ms->exec.pipe_fd[i % 2][1] < 0)
 		{
-			ft_printf("%s: %s \n", strerror(errno), cmd->outfile);
+			ft_printf("%s: %s \n", strerror(errno), cmd->outfile[cmd->outfile_size - 1]);
 			exit_handler(ms, -1);
 		}
 	}
@@ -54,12 +54,14 @@ void	open_file(t_cmd *cmd, t_ms *ms, int i)
 
 void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 {
-	if (cmd->infile || cmd->outfile)
+	if (cmd->infile_size || cmd->outfile_size)
 		open_file(cmd, ms, i);
 	ms->exec.cmd = parse_arg(cmd, ms);
-	if (dup2(ms->exec.pipe_fd[(i + 1) % 2][0], STDIN_FILENO) < 0)
+	if (dup2(ms->exec.pipe_fd[(i + 1) % 2][0], STDIN_FILENO) < 0
+		&& ms->exec.pipe_fd[(i + 1) % 2][0] > 0)
 		exit_handler(ms, 1);
-	if (dup2(ms->exec.pipe_fd[i % 2][1], STDOUT_FILENO) < 0)
+	if (dup2(ms->exec.pipe_fd[i % 2][1], STDOUT_FILENO) < 0
+		&& cmd->redir != UNDEFINED)
 		exit_handler(ms, 1);
 	close_all_fds(ms);
 	if (execve(ms->exec.cmd[0], ms->exec.cmd, NULL) == -1)

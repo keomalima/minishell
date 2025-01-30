@@ -10,7 +10,7 @@
 #define BLUE	"\033[1;34m"
 #define blue	"\033[0;34m"
 #define PURPLE	"\033[1;35m"
-#define Purple	"\033[0;35m"
+#define purple	"\033[0;35m"
 #define RESET   "\033[0m"
 
 # include <stdio.h>
@@ -60,11 +60,20 @@ typedef struct s_cmd
 {
 	char			**cmd;
 	int				cmd_size;
-	char			*infile;
-	char			*outfile;
+	char			**infile;
+	int				infile_size;
+	char			**outfile;
+	int				outfile_size;
 	t_redir			redir;
 	struct s_cmd	*next;
-}		t_cmd;
+}				t_cmd;
+
+typedef struct s_index
+{
+	int	cmd_i;
+	int	in_i;
+	int	out_i;
+}			t_index;
 
 typedef struct s_exec
 {
@@ -103,28 +112,25 @@ void	exit_handler(t_ms *ms, int exit_code);
 char	*type_to_string(t_type type);
 void	ft_lstclear_token(t_token **token);
 
-
 /******************    EXPANSER    ******************/
-char *expanse_var(char *s);
-
+char	*expanser(char *s);
 
 /******************    PARSER    ******************/
 // PARSING UTILS
 int		ft_strcmp(const char *s1, const char *s2);
-int 	ft_isspaces(char c);
+int		ft_isspaces(char c);
 void	*ft_free(char **data);
 // PARSING
-void parse_cmd(t_ms *ms);
+void	parse_cmd(t_ms *ms);
 // FT_LIST_CMD
-t_cmd	*ft_lst_new_cmd(t_ms *ms);
+t_cmd	*ft_lst_new_cmd(void);
 t_cmd	*ft_lstlast_cmd(t_cmd *lst);
 void	ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
-void	ft_lstclear_cmd(t_cmd **cmd);
 
 /******************    EXEC    ******************/
 void	exec_cmd(t_ms *ms);
 // EXEC UTILS
-int	ft_cmd_count(t_ms *ms);
+int		ft_cmd_count(t_ms *ms);
 void	initialize_variables(t_ms *ms);
 char	**parse_arg(t_cmd *cmd, t_ms *ms);
 void	free_split(char **arr);
@@ -132,7 +138,6 @@ void	close_fd(t_ms *ms, int *fd);
 void	close_all_fds(t_ms *ms);
 
 /******************    TESTER    ******************/
-// PRINT TEST
 void 	print_token(t_token *list);
 void 	print_split(char **split);
 void 	print_cmd(t_cmd *list);
