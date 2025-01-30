@@ -1,66 +1,89 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-void ft_complete_cmd(t_cmd *new, t_ms *ms, int *i)
+void ft_complete_cmd(t_cmd *new, t_token *token, t_index *index)
 {
 	//	set redirection
-	if (ft_strcmp(ms->token->content, ">") == 0)
+	if (ft_strcmp(token->content, ">") == 0)
 		new->redir = OUT_TRUNC;
-	else if (ft_strcmp(ms->token->content, ">>") == 0)
+	else if (ft_strcmp(token->content, ">>") == 0)
 		new->redir = OUT_APPEND;
 	//	set infile / outfile
-	else if (ms->token->prev && (ft_strcmp(ms->token->prev->content, ">") == 0 || ft_strcmp(ms->token->prev->content, ">>") == 0))
-		new->outfile = ms->token->content;
-	else if (ms->token->prev && ft_strcmp(ms->token->prev->content, "<") == 0)
-		new->infile = ms->token->content;
-	//	set command
-	else if (*ms->token->content && ms->token->type != OPP)
+	else if (token->prev && (ft_strcmp(token->prev->content, ">") == 0 || ft_strcmp(token->prev->content, ">>") == 0))
 	{
-		new->cmd[*i] = ms->token->content;
-		(*i)++;
+		new->outfile[index->out_i] = token->content;
+		index->out_i++;
+	}
+	else if (token->prev && ft_strcmp(token->prev->content, "<") == 0)
+	{
+		new->infile[index->in_i] = token->content;
+		index->in_i++;
+	}
+	//	set command
+	else if (token->type != OPP)
+	{
+		if (ft_strchr(token->content, '$') && token->type != SQ)
+			token->content = expanser(token->content);
+		new->cmd[index->cmd_i] = token->content;
+		(index->cmd_i)++;
 	}
 }
-int	ft_find_cmd_size(t_token *token)
+void	ft_find_cmd_size(t_token *token, t_cmd *new)
 {
-	int	cmd_size;
 	int	redir;
-	cmd_size = 0;
+
 	redir = 0;
 	while (token && ft_strcmp(token->content, "|") != 0)
 	{
 		if (ft_strcmp(token->content, "<") == 0 || ft_strcmp(token->content, ">") == 0 || ft_strcmp(token->content, ">>") == 0)
+		{
+			if (ft_strcmp(token->content, "<") == 0)
+				new->infile_size++;
+			else if (ft_strcmp(token->content, ">") == 0 || ft_strcmp(token->content, ">>") == 0)
+				new->outfile_size++;
 			redir += 2;
-		cmd_size++;
+		}
+		new->cmd_size++;
 		token = token->next;
 	}
-	if ((cmd_size - redir) > 0)
-		return (cmd_size - redir);
-	else
-		return (cmd_size);	//////////////////
+	if ((new->cmd_size - redir) > 0)
+		new->cmd_size = new->cmd_size - redir;
+}
+
+void	ft_initialize_index(t_index *index)
+{
+	index->cmd_i = 0;
+	index->in_i = 0;
+	index->out_i = 0;
 }
 
 void parse_cmd(t_ms *ms)
 {
 	t_cmd	*new;
-	int		i;
+	t_token	*token;
+	t_index	index;
+
+	token = ms->token;
 	new = NULL;
-	while (ms->token)
+	while (token)
 	{
 		new = ft_lst_new_cmd();
-		new->cmd_size = ft_find_cmd_size(ms->token);
+		ft_find_cmd_size(token, new);
 		///////////////////// what if size < 0 ??
 		new->cmd = ft_calloc((new->cmd_size + 1), sizeof(char *));
+		new->infile = ft_calloc((new->infile_size + 1), sizeof(char *));
+		new->outfile = ft_calloc((new->outfile_size + 1), sizeof(char *));
 		//////////////////
-		i = 0;
-		while (ms->token && ft_strcmp(ms->token->content, "|") != 0)
+		ft_initialize_index(&index);
+		while (token && ft_strcmp(token->content, "|") != 0)
 		{
-			ft_complete_cmd(new, ms, &i);
-			ms->token = ms->token->next;
+			ft_complete_cmd(new, token, &index);
+			token = token->next;
 		}
-		if (ms->token && ft_strcmp(ms->token->content, "|") == 0)
+		if (token && ft_strcmp(token->content, "|") == 0)
 		{
 			if (!new->outfile)
 				new->redir = PIPE;
-			ms->token = ms->token->next;
+			token = token->next;
 			ft_lstadd_back_cmd(&ms->cmd, new);
 		}
 	}

@@ -13,11 +13,19 @@ int	main(void)
 
 	initialize_var(&ms);
 	rl = readline("minishell> ");
-	create_tokens(rl, &ms);
+
+	//Tokenization
+	create_tokens(rl, &ms);	//tokenization
+	print_token(ms.token);	//print token
+
+	//Lexical Analysis
 
 	//Parsing
 	parse_cmd(&ms);		//parsing
 	print_cmd(ms.cmd);	//print parsing
+
+	//Execution
+	exec_cmd(&ms);
 
 	exit_handler(&ms, 0);
 	free(rl);

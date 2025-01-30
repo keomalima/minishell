@@ -1,15 +1,12 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 const char *token_type_str[] = {
-    RED"COMMAND"RESET,
-    YELLOW"FILE_IN"RESET,
-    YELLOW"FILE_OUT"RESET,
-    YELLOW"FILE_OUT_APPEND"RESET,
-	yellow"FILE_NAME"RESET,
-    BLUE"PIPE"RESET,
-    red"ARGUMENT"RESET,
-	GREEN"PATH"RESET,
-	PURPLE"OPERATOR"RESET
+	"START",
+	"CMD",
+	"OPP",
+	"SQ",
+	"DQ",
+	"END"
 };
 
 const char *cmd_redir[] = {
@@ -23,7 +20,8 @@ void print_token(t_token *list)
 {
 	while (list)
 	{
-		printf("%s	", list->content);
+		printf("[%s]", list->content);
+		printf(purple"%s	"RESET, token_type_str[list->type]);
 		list = list->next;
 	}
 	printf("\n------------------\n\n");
@@ -31,16 +29,34 @@ void print_token(t_token *list)
 
 void print_cmd(t_cmd *list)
 {
-	int i;
+	int cmd_i;
+	int	in_i;
+	int	out_i;
 
 	while (list)
 	{
-		i = 0;
-		printf("cmd[%d] : %s	|	infile : %s	|	outfile	: %s	|	redir : %s\n", list->cmd_size, list->cmd[i], list->infile, list->outfile, cmd_redir[list->redir]);
-		while (list->cmd[i])
+		cmd_i = 0;
+		in_i = 0;
+		out_i = 0;
+		printf("cmd[%d] : %s	|	redir : %s\n", list->cmd_size, list->cmd[cmd_i], cmd_redir[list->redir]);
+		while (list->cmd[cmd_i])
 		{
-			printf(blue"[%s] "RESET, list->cmd[i]);
-			i++;
+			printf(blue"[%s] "RESET, list->cmd[cmd_i]);
+			cmd_i++;
+		}
+		printf("\n");
+		printf(green"infile_size : %d	"RESET, list->infile_size);
+		while (list->infile[in_i])
+		{
+			printf(green"[%s] "RESET, list->infile[in_i]);
+			in_i++;
+		}
+		printf("\n");
+		printf(yellow"outfile_size : %d	"RESET, list->outfile_size);
+		while (list->outfile[out_i])
+		{
+			printf(yellow"[%s] "RESET, list->outfile[out_i]);
+			out_i++;
 		}
 		printf("\n\n");
 		list = list->next;
