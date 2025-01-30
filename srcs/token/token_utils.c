@@ -36,7 +36,7 @@ size_t	ft_strlen_state(t_ms *ms)
 	return (len);
 }
 
-char	*ft_strndup_ms(t_ms *ms)
+char	*ft_strndup_tk(t_ms *ms)
 {
 	char	*str;
 	size_t	len;

@@ -1,6 +1,19 @@
 #include "minishell.h"
 
-char	*ft_extract_var(char *s, size_t *size)
+size_t	ft_strlen_expanser(const char *s)
+{
+	size_t	i;
+
+	if (!s || !*s)
+		return (0);
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+
+char	*ft_extract_var(char *s)
 {
 	int		i;
 	int		len;
@@ -15,59 +28,63 @@ char	*ft_extract_var(char *s, size_t *size)
 	while (s[len] && ft_isalnum(s[len]))
 		len++;
 	len = len - i;
-	*size = ft_strlen(s) - len - 1;
 	str = ft_calloc((len + 1), sizeof(char));
 	if (!str)
 		return (NULL);	////////////////////////////////////////////////////
 	len = 0;
 	while (s[i] && ft_isalnum(s[i]))
-	{
-		str[len] = s[i];
-		len++;
-		i++;
-	}
+		str[len++] = s[i++];
 	return (str);
 }
 
-char *get_var(char *s)
+void ft_fill_exp(char **dest, t_exp exp)
 {
-	char	*extract;
-	char	*var;
-	char	*ret;
-	size_t	size;
 	int		i;
 	int		j;
 
-	extract = ft_extract_var(s, &size);
-	var = getenv(extract);
-	size = size + ft_strlen(var);
-	ret = ft_calloc((size + 1), sizeof(char));
-	if (!ret)
-	{
-		ft_free(&extract);
-		ft_free(&var);
-		return (NULL);	///////////////////////////////////////////////////////
-	}
 	i = 0;
-	while (s[i] && s[i] != '$')
+	while (exp.src[i] && exp.src[i] != '$')
 	{
-		ret[i] = s[i];
+		(*dest)[i] = exp.src[i];
 		i++;
 	}
-	j = i + ft_strlen(extract) + 1;
-	while (*var)
+	j = i + ft_strlen_expanser(exp.extract) + 1;
+	while (exp.env_var && *exp.env_var)
 	{
-		ret[i] = *var;
+		(*dest)[i] = *exp.env_var;
 		i++;
-		var++;
+		exp.env_var++;
 	}
-	while (s[j])
+	while (exp.src[j])
 	{
-		ret[i] = s[j];
+		(*dest)[i] = exp.src[j];
 		i++;
 		j++;
 	}
-	ft_free(&extract);
-	ft_free(&s);
-	return (ret);
+}
+
+char *expanse_var(char *s)
+{
+	t_exp	exp;
+	char	*dest;
+
+	exp.src = s;
+	exp.size = 0;
+	exp.extract = ft_extract_var(s);
+	printf("extract = [%s]\n", exp.extract);
+	exp.env_var = getenv(exp.extract);
+	printf("var = [%s]\n", exp.env_var);
+	exp.size = ft_strlen_expanser(s) - ft_strlen_expanser(exp.extract) + ft_strlen_expanser(exp.env_var) - 1;
+	printf("size = %zu\n", exp.size);
+	dest = ft_calloc((exp.size + 1), sizeof(char));
+	if (!dest)
+	{
+		ft_free(&exp.extract);
+		ft_free(&exp.env_var);
+		return (NULL);	///////////////////////////////////////////////////////
+	}
+	ft_fill_exp(&dest, exp);
+	ft_free(&exp.src);
+	ft_free(&exp.extract);
+	return (dest);
 }

@@ -13,7 +13,8 @@ void	wait_children_exit(t_ms *ms)
 		i++;
 	}
 	free(ms->exec.child_pids);
-	exit(WEXITSTATUS(status));
+	ms->exec.child_pids = NULL;
+	exit_handler(ms, WEXITSTATUS(status));
 }
 
 void	open_file(t_cmd *cmd, t_ms *ms, int i)

@@ -76,6 +76,14 @@ typedef struct s_exec
 	pid_t	*child_pids;
 }				t_exec;
 
+typedef struct s_exp
+{
+	char	*src;
+	char	*extract;
+	char	*env_var;
+	size_t	size;
+}				t_exp;
+
 typedef struct s_ms
 {
 	struct s_lexer	lexer;
@@ -86,18 +94,18 @@ typedef struct s_ms
 
 /******************    TOKENIZER    ******************/
 void	create_tokens(char *input, t_ms *ms);
-t_token	*ft_lstnew_ms(t_ms *ms, char *content);
-t_token	*ft_lstlast_ms(t_token *lst);
-void	ft_lstadd_back_ms(t_token **lst, t_token *new);
-char	*ft_strndup_ms(t_ms *ms);
+t_token	*ft_lstnew_tk(t_ms *ms, char *content);
+t_token	*ft_lstlast_tk(t_token *lst);
+void	ft_lstadd_back_tk(t_token **lst, t_token *new);
+char	*ft_strndup_tk(t_ms *ms);
 char	*ft_strchr_set(char *set, int c);
 void	exit_handler(t_ms *ms, int exit_code);
 char	*type_to_string(t_type type);
-
+void	ft_lstclear_token(t_token **token);
 
 
 /******************    EXPANSER    ******************/
-char *get_var(char *s);
+char *expanse_var(char *s);
 
 
 /******************    PARSER    ******************/
@@ -108,9 +116,10 @@ void	*ft_free(char **data);
 // PARSING
 void parse_cmd(t_ms *ms);
 // FT_LIST_CMD
-t_cmd *ft_lst_new_cmd(void);
+t_cmd	*ft_lst_new_cmd(t_ms *ms);
 t_cmd	*ft_lstlast_cmd(t_cmd *lst);
 void	ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
+void	ft_lstclear_cmd(t_cmd **cmd);
 
 /******************    EXEC    ******************/
 void	exec_cmd(t_ms *ms);

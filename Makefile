@@ -17,12 +17,12 @@ EXPANSER := $(SRCSDIR)/expanser
 TESTER := $(SRCSDIR)/tester
 EXECDIR := $(SRCSDIR)/exec
 
-SRCS := $(SRCSDIR)/main.c \
+SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c \
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
 		$(EXPANSER)/variable_expansion.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
-		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_exit.c \
+		$(TOKENDIR)/token_utils.c \
 		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)

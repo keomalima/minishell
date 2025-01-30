@@ -40,13 +40,13 @@ static void	ft_token_checker(t_ms *ms)
 	else if (ms->lexer.state == OPP
 		&& !ft_strchr_set("|><&", *ms->lexer.str_ptr))
 	{
-		ft_lstadd_back_ms(&ms->token, ft_lstnew_ms(ms, ft_strndup_ms(ms)));
+		ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));
 		ms->lexer.state = START;
 	}
 	else if ((*ms->lexer.str_ptr == ' '
 			|| *ms->lexer.str_ptr == '\0') && !ms->lexer.quote_open)
 	{
-		ft_lstadd_back_ms(&ms->token, ft_lstnew_ms(ms, ft_strndup_ms(ms)));
+		ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));
 		ms->lexer.state = START;
 	}
 }

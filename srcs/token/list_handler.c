@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_token	*ft_lstnew_ms(t_ms *ms, char *content)
+t_token	*ft_lstnew_tk(t_ms *ms, char *content)
 {
 	t_token	*new;
 
@@ -14,14 +14,14 @@ t_token	*ft_lstnew_ms(t_ms *ms, char *content)
 	return (new);
 }
 
-t_token	*ft_lstlast_ms(t_token *lst)
+t_token	*ft_lstlast_tk(t_token *lst)
 {
 	while (lst && lst->next)
 		lst = lst->next;
 	return (lst);
 }
 
-void	ft_lstadd_back_ms(t_token **lst, t_token *new)
+void	ft_lstadd_back_tk(t_token **lst, t_token *new)
 {
 	t_token	*last;
 
@@ -31,7 +31,7 @@ void	ft_lstadd_back_ms(t_token **lst, t_token *new)
 		*lst = new;
 	else
 	{
-		last = ft_lstlast_ms(*lst);
+		last = ft_lstlast_tk(*lst);
 		new->prev = last;
 		last->next = new;
 	}
