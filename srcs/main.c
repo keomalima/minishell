@@ -7,7 +7,11 @@ void	initialize_var(t_ms *ms)
 	ms->exec = NULL;
 }
 
+<<<<<<< HEAD
 void	minishell(t_ms *ms)
+=======
+void	minishell(void)
+>>>>>>> ae15085 (corrections on token)
 {
 	char	*rl;
 
@@ -24,7 +28,7 @@ void	minishell(t_ms *ms)
 	{
 		rl_clear_history();
 		exit (0);
-	}	
+	}
 	//Tokenization
 	create_tokens(rl, ms);	//tokenization
 	print_token(ms->token);	//print token

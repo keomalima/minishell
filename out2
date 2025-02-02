@@ -1,1 +1,15 @@
+<<<<<<< HEAD
 /home/lthan/Desktop/42_project/minishell
+=======
+Makefile
+README.md
+includes
+infile
+infile2
+libft
+minishell
+objects
+out
+out2
+srcs
+>>>>>>> ae15085 (corrections on token)
