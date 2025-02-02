@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 # include <string.h>
+# include <unistd.h>
 # include <errno.h>
 # include <fcntl.h>
 # include "libft.h"
@@ -98,7 +99,7 @@ typedef struct s_ms
 	struct s_lexer	lexer;
 	struct s_token	*token;
 	struct s_cmd	*cmd;
-	struct s_exec	exec;
+	struct s_exec	*exec;
 }				t_ms;
 
 /******************    TOKENIZER    ******************/
@@ -136,6 +137,9 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms);
 void	free_split(char **arr);
 void	close_fd(t_ms *ms, int *fd);
 void	close_all_fds(t_ms *ms);
+
+/******************    BUILTIN    ******************/
+void	exec_builtin(t_ms *ms);
 
 /******************    TESTER    ******************/
 void 	print_token(t_token *list);

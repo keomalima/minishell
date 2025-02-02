@@ -4,9 +4,10 @@ void	initialize_var(t_ms *ms)
 {
 	ms->token = NULL;
 	ms->cmd = NULL;
+	ms->exec = NULL;
 }
 
-int	main(void)
+void	minishell(void)
 {
 	t_ms	ms;
 	char	*rl;
@@ -24,10 +25,18 @@ int	main(void)
 	parse_cmd(&ms);		//parsing
 	print_cmd(ms.cmd);	//print parsing
 
-	//Execution
-	exec_cmd(&ms);
+	//Builtin
+	exec_builtin(&ms);
 
-	exit_handler(&ms, 0);
+	//Execution
+	//exec_cmd(&ms);
+	
 	free(rl);
+	exit_handler(&ms, 0);
+}
+
+int	main(void)
+{
+	minishell();
 	return (0);
 }

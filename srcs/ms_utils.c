@@ -2,11 +2,15 @@
 
 void	exec_exit_handler(t_exec *args, t_ms *ms)
 {
-	close_all_fds(ms);
-	if (args->cmd)
-		free_split(args->cmd);
-	if (args->child_pids)
-		free(args->child_pids);
+	if (args)
+	{
+		close_all_fds(ms);
+		if (args->cmd)
+	 		free_split(args->cmd);
+		if (args->child_pids)
+			free(args->child_pids);
+		free(args);
+	}
 }
 
 static void	ft_lstdelone_token(t_token *lst)
@@ -56,7 +60,7 @@ void	exit_handler(t_ms *ms, int exit_code)
 {
 	ft_lstclear_token(&ms->token);
 	ft_lstclear_cmd(&ms->cmd);
-	exec_exit_handler(&ms->exec, ms);
+	exec_exit_handler(ms->exec, ms);
 	if (exit_code == -1)
 	{
 		exit_code = 1;
@@ -66,7 +70,7 @@ void	exit_handler(t_ms *ms, int exit_code)
 		errno = 0;
 	if (exit_code == 12)
 		errno = ENOMEM;
-	if (errno)
+	if (errno && exit_code != 0)
 		perror("Error");
 	exit(exit_code);
 }

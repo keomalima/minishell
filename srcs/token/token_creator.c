@@ -25,29 +25,33 @@ void	ft_define_state(t_ms *ms)
 
 static void	ft_token_checker(t_ms *ms)
 {
-	if (*ms->lexer.str_ptr == '\'')
+	if ((*ms->lexer.str_ptr == '\'' && ms->lexer.state != DQ)
+		|| (*ms->lexer.str_ptr == '"' && ms->lexer.state != SQ))
 	{
-		if (ms->lexer.state != DQ)
-			ms->lexer.quote_open = !ms->lexer.quote_open;
-		ms->lexer.state = SQ;
-	}
-	else if (*ms->lexer.str_ptr == '"')
-	{
-		if (ms->lexer.state != SQ)
-			ms->lexer.quote_open = !ms->lexer.quote_open;
-		ms->lexer.state = DQ;
-	}
-	else if (ms->lexer.state == OPP
-		&& !ft_strchr_set("|><&", *ms->lexer.str_ptr))
-	{
+		ms->lexer.quote_open = !ms->lexer.quote_open;
 		ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));
+		ms->lexer.str_ptr++;
 		ms->lexer.state = START;
 	}
-	else if ((*ms->lexer.str_ptr == ' '
-			|| *ms->lexer.str_ptr == '\0') && !ms->lexer.quote_open)
+	else if ((*ms->lexer.str_ptr == ' ' || *ms->lexer.str_ptr == '\0'))
 	{
-		ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));
-		ms->lexer.state = START;
+		if (!ms->lexer.quote_open)
+			ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));
+		if (!ms->lexer.quote_open || *ms->lexer.str_ptr == '\0')
+			ms->lexer.state = START;
+	}
+	else
+	{
+		if ((!ft_strchr_set("|><&", *ms->lexer.str_ptr) && ms->lexer.state == OPP))
+		{
+			ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));
+			ms->lexer.state = START;
+		}
+		else if (ms->lexer.state == CMD && ft_strchr_set("|><&", *ms->lexer.str_ptr))
+		{
+			ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));
+			ms->lexer.state = START;
+		}
 	}
 }
 
@@ -64,5 +68,10 @@ void	create_tokens(char *input, t_ms *ms)
 			ft_token_checker(ms);
 		if (ms->lexer.state != START && ms->lexer.state != END)
 			ms->lexer.str_ptr++;
+	}
+	if (ms->lexer.quote_open)
+	{
+		printf("Unclosed quote\n");
+		exit_handler(ms, 1);
 	}
 }

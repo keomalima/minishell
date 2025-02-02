@@ -16,6 +16,7 @@ PARSERDIR := $(SRCSDIR)/parsing
 EXPANSER := $(SRCSDIR)/expanser
 TESTER := $(SRCSDIR)/tester
 EXECDIR := $(SRCSDIR)/exec
+BUILTINDIR := $(SRCSDIR)/builtins
 
 SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c \
 		$(TESTER)/print_test.c \
@@ -23,7 +24,8 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c \
 		$(EXPANSER)/expanser.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
 		$(TOKENDIR)/token_utils.c \
-		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c
+		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c \
+		$(BUILTINDIR)/exec_builtin.c
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
@@ -59,7 +61,7 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 
-$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/expanser $(OBJDIR)/exec $(OBJDIR)/tester
+$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/expanser $(OBJDIR)/exec $(OBJDIR)/tester $(OBJDIR)/builtins
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):
@@ -79,6 +81,9 @@ $(OBJDIR)/tester:
 
 $(OBJDIR)/exec:
 	mkdir -p $(OBJDIR)/exec
+
+$(OBJDIR)/builtins:
+	mkdir -p $(OBJDIR)/builtins
 
 $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)
