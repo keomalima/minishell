@@ -58,7 +58,7 @@ char	*exp_valid_variable(char *s)
 	exp.env_var = getenv(exp.extract);
 	exp.size = ft_strlen_expanser(s) - ft_strlen_expanser(exp.extract)
 		+ ft_strlen_expanser(exp.env_var) - 1;
-	printf("exp size = %zu\n", exp.size);
+	//printf("exp size = %zu\n", exp.size);
 	dest = ft_calloc((exp.size + 1), sizeof(char));
 	if (!dest)
 	{

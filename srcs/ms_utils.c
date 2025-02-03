@@ -45,6 +45,8 @@ void	ft_lstclear_cmd(t_cmd **cmd)
 	{
 		while (*cmd)
 		{
+			free_split((*cmd)->outfile);
+			free_split((*cmd)->infile);
 			tmp = *cmd;
 			*cmd = (*cmd)->next;
 			if (tmp)

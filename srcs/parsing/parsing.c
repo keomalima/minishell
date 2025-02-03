@@ -20,6 +20,7 @@ void ft_complete_cmd(t_cmd *new, t_token *token, t_index *index)
 		new->cmd[index->cmd_i++] = token->content;
 	}
 }
+
 void	ft_find_cmd_size(t_token *token, t_cmd *new)
 {
 	int	redir;

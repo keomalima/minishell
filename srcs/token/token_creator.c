@@ -72,6 +72,6 @@ void	create_tokens(char *input, t_ms *ms)
 	if (ms->lexer.quote_open)
 	{
 		printf("Unclosed quote\n");
-		exit_handler(ms, 1);
+		//exit_handler(ms, 1);
 	}
 }
