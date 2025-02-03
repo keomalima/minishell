@@ -1,1 +1,29 @@
+<<<<<<< HEAD
 /home/lthan/Desktop/42_project/minishell
+=======
+Makefile
+README.md
+includes
+infile
+infile2
+libft
+minishell
+objects
+out
+out2
+out3
+srcs
+Makefile
+README.md
+includes
+infile
+infile2
+libft
+minishell
+objects
+out
+out1
+out2
+out3
+srcs
+>>>>>>> 0640c32 (review of token)

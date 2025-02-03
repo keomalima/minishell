@@ -19,7 +19,6 @@ void	minishell(void)
 	rl = readline(RESET"minishell> ");
 	add_history(rl);
 
-<<<<<<< HEAD
 	if (!ft_strcmp(rl, "clear"))
 	{
 		printf("\033[H\033[J");
@@ -29,12 +28,6 @@ void	minishell(void)
 	{
 		rl_clear_history();
 		exit (0);
-=======
-	if (!strcmp(rl, "clear"))
-	{
-		printf("\033[H\033[J");
-		return;
->>>>>>> 8f35b52 (cleanup version)
 	}
 	//Tokenization
 	create_tokens(rl, ms);	//tokenization
@@ -50,8 +43,12 @@ void	minishell(void)
 	ms->cmd_count = ft_cmd_count(ms);
 =======
 	parse_cmd(&ms);		//parsing
+<<<<<<< HEAD
 	//print_cmd(ms.cmd);	//print parsing
 >>>>>>> 8f35b52 (cleanup version)
+=======
+	print_cmd(ms.cmd);	//print parsing
+>>>>>>> 0640c32 (review of token)
 
 	//Builtin
 	if (exec_builtin(ms) == 0)
