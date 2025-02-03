@@ -19,7 +19,7 @@ void	wait_children_exit(t_ms *ms)
 
 void	open_outfile(t_cmd *cmd, t_ms *ms, int i)
 {
-	int index;
+	size_t index;
 
 	index = 0;
 	while (cmd->outfile_size > index)
@@ -43,7 +43,7 @@ void	open_outfile(t_cmd *cmd, t_ms *ms, int i)
 
 void	open_infile(t_cmd *cmd, t_ms *ms, int i)
 {
-	int	index;
+	size_t	index;
 
 	index = 0;
 	while (cmd->infile_size > index)

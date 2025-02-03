@@ -18,6 +18,7 @@ static void	ft_lstdelone_token(t_token *lst)
 	if (lst)
 	{
 		free(lst->content);
+		lst->content = NULL;
 		free(lst);
 	}
 }
@@ -45,8 +46,10 @@ void	ft_lstclear_cmd(t_cmd **cmd)
 	{
 		while (*cmd)
 		{
-			free_split((*cmd)->outfile);
-			free_split((*cmd)->infile);
+			free ((*cmd)->outfile);
+			(*cmd)->outfile = NULL;
+			free ((*cmd)->infile);
+			(*cmd)->infile = NULL;
 			tmp = *cmd;
 			*cmd = (*cmd)->next;
 			if (tmp)
@@ -60,6 +63,7 @@ void	ft_lstclear_cmd(t_cmd **cmd)
 
 void	exit_handler(t_ms *ms, int exit_code)
 {
+	printf(RED"--> exit code = %d\n"RESET, ms->exit_status);
 	ft_lstclear_token(&ms->token);
 	ft_lstclear_cmd(&ms->cmd);
 	exec_exit_handler(ms->exec, ms);
@@ -74,5 +78,5 @@ void	exit_handler(t_ms *ms, int exit_code)
 		errno = ENOMEM;
 	if (errno && exit_code != 0)
 		perror("Error");
-	exit(exit_code);
+	// exit(exit_code);
 }
