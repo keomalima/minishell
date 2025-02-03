@@ -1,10 +1,10 @@
 #include "minishell.h"
 
-static t_type	ft_define_state(t_ms *ms)
+static void	ft_set_state(char c, t_ms *ms)
 {
-	if (*ms->lexer.str_ptr == '\'')
+	if (c == '\'')
 		ms->lexer.state = SQ;
-	else if (*ms->lexer.str_ptr == '"')
+	else if (c == '"')
 		ms->lexer.state = DQ;
 	else
 		ms->lexer.state = CMD;
@@ -17,7 +17,6 @@ static t_type	ft_define_state(char c)
 	if (c == '\'')
 		return (SQ);
 	return (START);
-
 }
 
 size_t	ft_strlen_state(t_ms *ms)
@@ -27,9 +26,19 @@ size_t	ft_strlen_state(t_ms *ms)
 
 	i = 0;
 	len = 0;
+	ms->lexer.state = START;
 	while ((ms->lexer.str_start + i) != ms->lexer.str_ptr)
 	{
-		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state)
+		if (ms->lexer.state == START)
+			ft_set_state(ms->lexer.str_start[i], ms);
+		else
+		{
+			if (*(ms->lexer.str_start + i) == '\'' && ms->lexer.state == SQ)
+				ms->lexer.state = START;
+			else if (*(ms->lexer.str_start + i) == '"' && ms->lexer.state == DQ)
+				ms->lexer.state = START;
+		}
+		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state && ms->lexer.state != START)
 			len++;
 		i++;
 	}
@@ -56,12 +65,12 @@ char	*ft_strndup_tk(t_ms *ms)
 	while ((ms->lexer.str_start + i) != ms->lexer.str_ptr)
 	{
 		if (ms->lexer.state == START)
-			ft_define_state(ms);
+			ft_set_state(ms->lexer.str_start[i], ms);
 		else
 		{
-			if (*(ms->lexer.str_ptr + 1) == '\'' && ms->lexer.state == SQ)
+			if (*(ms->lexer.str_start + i) == '\'' && ms->lexer.state != DQ)
 				ms->lexer.state = START;
-			else if (*(ms->lexer.str_ptr + 1) == '"' && ms->lexer.state == DQ)
+			else if (*(ms->lexer.str_start + i) == '"' && ms->lexer.state != SQ)
 				ms->lexer.state = START;
 		}
 		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state && ms->lexer.state != START)

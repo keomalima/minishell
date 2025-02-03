@@ -52,8 +52,10 @@ static void	ft_token_checker_quote(t_ms *ms)
 		if (*(ms->lexer.str_ptr + 1) == '\'')
 			ms->lexer.state = SQ;
 	}
-	else if (*(ms->lexer.str_ptr + 1) == ' ' || *(ms->lexer.str_ptr + 1) == '\0'
-		|| ft_strchr_set("|><&", *(ms->lexer.str_ptr + 1)))
+	else if (!ms->lexer.quote_open && (
+		*(ms->lexer.str_ptr + 1) == ' ' ||
+		*(ms->lexer.str_ptr + 1) == '\0' ||
+		ft_strchr_set("|><&", *(ms->lexer.str_ptr + 1))))
 	{
 		ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));
 		ms->lexer.state = START;
