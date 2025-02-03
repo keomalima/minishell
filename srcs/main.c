@@ -4,9 +4,10 @@ void	initialize_var(t_ms *ms)
 {
 	ms->token = NULL;
 	ms->cmd = NULL;
+	ms->exec = NULL;
 }
 
-int	main(void)
+void	minishell(void)
 {
 	t_ms	ms;
 	char	*rl;
@@ -14,6 +15,11 @@ int	main(void)
 	initialize_var(&ms);
 	rl = readline("minishell> ");
 
+	if (!strcmp(rl, "clear"))
+	{
+		printf("\033[H\033[J");
+		return;
+	}
 	//Tokenization
 	create_tokens(rl, &ms);	//tokenization
 	print_token(ms.token);	//print token
@@ -22,12 +28,21 @@ int	main(void)
 
 	//Parsing
 	parse_cmd(&ms);		//parsing
-	print_cmd(ms.cmd);	//print parsing
+	//print_cmd(ms.cmd);	//print parsing
+
+	//Builtin
+	exec_builtin(&ms);
 
 	//Execution
 	exec_cmd(&ms);
 
-	exit_handler(&ms, 0);
 	free(rl);
+	//exit_handler(&ms, 0);
+}
+
+int	main(void)
+{
+	while (1)
+		minishell();
 	return (0);
 }
