@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+t_infile	*ft_new_infile(t_token *token, t_ms *ms)
+{
+	t_infile	*new;
+
+	new = malloc(sizeof(t_infile));
+	if (!new)
+		exit_handler(ms, 12);
+	new->name = token->content;
+	if (ft_strcmp(token->prev->content, "<<") == 0)
+		new->is_lim = 1;
+	else
+		new->is_lim = 0;
+	return (new);
+}
+
 t_cmd	*ft_lst_new_cmd(t_ms *ms)
 {
 	t_cmd	*new;

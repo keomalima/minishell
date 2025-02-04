@@ -57,23 +57,29 @@ typedef struct 	s_lexer
 	int			quote_open;
 }				t_lexer;
 
+typedef struct	s_infile
+{
+	char	*name;
+	int		is_lim;
+}				t_infile;
+
 typedef struct s_cmd
 {
-	char			**cmd;
-	size_t			cmd_size;
-	char			**infile;
-	size_t			infile_size;
-	char			**outfile;
-	size_t			outfile_size;
-	t_redir			redir;
-	struct s_cmd	*next;
-}				t_cmd;
+    char            **cmd;
+    size_t            cmd_size;
+    struct s_infile    **infile;
+    size_t            infile_size;
+    char            **outfile;
+    size_t            outfile_size;
+    t_redir            redir;
+    struct s_cmd    *next;
+}                t_cmd;
 
 typedef struct s_index
 {
-	int	cmd_i;
-	int	in_i;
-	int	out_i;
+	size_t	cmd_i;
+	size_t	in_i;
+	size_t	out_i;
 }			t_index;
 
 typedef struct s_exec
@@ -103,6 +109,9 @@ typedef struct s_ms
 	int				exit_status;
 }				t_ms;
 
+/******************    UTILS    ******************/
+int	ft_strcmp(const char *s1, const char *s2);
+
 /******************    TOKENIZER    ******************/
 void	create_tokens(char *input, t_ms *ms);
 t_token	*ft_lstnew_tk(t_ms *ms, char *content);
@@ -122,15 +131,14 @@ char	*ft_extract_var(char *s, t_ms *ms);
 void	ft_fill_exp(char **dest, t_exp exp);
 
 /******************    PARSER    ******************/
-// PARSING UTILS
-int		ft_strcmp(const char *s1, const char *s2);
-void	*ft_free(char **data);
-// PARSING
 void	parse_cmd(t_ms *ms);
+// PARSING UTILS
+void	*ft_free(char **data);
 // FT_LIST_CMD
 t_cmd	*ft_lst_new_cmd(t_ms *ms);
 t_cmd	*ft_lstlast_cmd(t_cmd *lst);
 void	ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
+t_infile	*ft_new_infile(t_token *token, t_ms *ms);
 
 /******************    EXEC    ******************/
 void	exec_cmd(t_ms *ms);
