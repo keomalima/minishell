@@ -15,6 +15,21 @@ t_infile	*ft_new_infile(t_token *token, t_ms *ms)
 	return (new);
 }
 
+t_outfile	*ft_new_outfile(t_token *token, t_ms *ms)
+{
+	t_outfile	*new;
+
+	new = malloc(sizeof(t_outfile));
+	if (!new)
+		exit_handler(ms, 12);
+	new->name = token->content;
+	if (ft_strcmp(token->prev->content, ">>") == 0)
+		new->type = OUT_APPEND;
+	else
+		new->type = OUT_TRUNC;
+	return (new);
+}
+
 t_cmd	*ft_lst_new_cmd(t_ms *ms)
 {
 	t_cmd	*new;

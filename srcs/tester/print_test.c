@@ -55,7 +55,7 @@ void print_cmd(t_cmd *list)
 		printf(yellow"outfile_size : %zu	"RESET, list->outfile_size);
 		while (list->outfile[out_i])
 		{
-			printf(yellow"[%s] "RESET, list->outfile[out_i]);
+			printf(yellow"[%s]%d "RESET, list->outfile[out_i]->name, list->outfile[out_i]->type);
 			out_i++;
 		}
 		printf("\n\n");
