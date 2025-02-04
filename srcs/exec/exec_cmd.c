@@ -14,7 +14,7 @@ void	wait_children_exit(t_ms *ms)
 	}
 	free(ms->exec->child_pids);
 	ms->exec->child_pids = NULL;
-	exit_handler(ms, WEXITSTATUS(status));
+	// exit_handler(ms, WEXITSTATUS(status));
 }
 
 void	open_outfile(t_cmd *cmd, t_ms *ms, int i)
@@ -50,14 +50,14 @@ void	open_infile(t_cmd *cmd, t_ms *ms, int i)
 	{
 		if (ms->exec->pipe_fd[(i % 2) % 2][0] >= 0)
 			close_fd(ms, &ms->exec->pipe_fd[(i % 2) % 2][0]);
-		ms->exec->pipe_fd[(i + 1) % 2][0] = open(cmd->infile[index], O_RDONLY);
+		ms->exec->pipe_fd[(i + 1) % 2][0] = open(cmd->infile[index]->name, O_RDONLY);
 		if (ms->exec->pipe_fd[(i + 1) % 2][0] < 0)
 		{
-			if (access(cmd->infile[index], R_OK) < 0
-				&& access(cmd->infile[index], F_OK) == 0)
-				ft_printf("%s: %s \n", strerror(errno), cmd->infile[index]);
+			if (access(cmd->infile[index]->name, R_OK) < 0
+				&& access(cmd->infile[index]->name, F_OK) == 0)
+				ft_printf("%s: %s \n", strerror(errno), cmd->infile[index]->name);
 			else
-				ft_printf("%s: %s \n", strerror(errno), cmd->infile[index]);
+				ft_printf("%s: %s \n", strerror(errno), cmd->infile[index]->name);
 			exit_handler(ms, -1);
 		}
 		index++;

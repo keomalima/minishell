@@ -48,7 +48,7 @@ void print_cmd(t_cmd *list)
 		printf(green"infile_size : %zu	"RESET, list->infile_size);
 		while (list->infile[in_i])
 		{
-			printf(green"[%s] "RESET, list->infile[in_i]);
+			printf(green"[%s]%d "RESET, list->infile[in_i]->name, list->infile[in_i]->is_lim);
 			in_i++;
 		}
 		printf("\n");
