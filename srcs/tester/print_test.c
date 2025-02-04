@@ -38,21 +38,21 @@ void print_cmd(t_cmd *list)
 		cmd_i = 0;
 		in_i = 0;
 		out_i = 0;
-		printf("cmd[%d] : %s	|	redir : %s\n", list->cmd_size, list->cmd[cmd_i], cmd_redir[list->redir]);
+		printf("cmd[%zu] : %s	|	redir : %s\n", list->cmd_size, list->cmd[cmd_i], cmd_redir[list->redir]);
 		while (list->cmd[cmd_i])
 		{
 			printf(blue"[%s] "RESET, list->cmd[cmd_i]);
 			cmd_i++;
 		}
 		printf("\n");
-		printf(green"infile_size : %d	"RESET, list->infile_size);
+		printf(green"infile_size : %zu	"RESET, list->infile_size);
 		while (list->infile[in_i])
 		{
 			printf(green"[%s] "RESET, list->infile[in_i]);
 			in_i++;
 		}
 		printf("\n");
-		printf(yellow"outfile_size : %d	"RESET, list->outfile_size);
+		printf(yellow"outfile_size : %zu	"RESET, list->outfile_size);
 		while (list->outfile[out_i])
 		{
 			printf(yellow"[%s] "RESET, list->outfile[out_i]);

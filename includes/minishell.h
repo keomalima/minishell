@@ -60,11 +60,11 @@ typedef struct 	s_lexer
 typedef struct s_cmd
 {
 	char			**cmd;
-	int				cmd_size;
+	size_t			cmd_size;
 	char			**infile;
-	int				infile_size;
+	size_t			infile_size;
 	char			**outfile;
-	int				outfile_size;
+	size_t			outfile_size;
 	t_redir			redir;
 	struct s_cmd	*next;
 }				t_cmd;
@@ -100,6 +100,7 @@ typedef struct s_ms
 	struct s_token	*token;
 	struct s_cmd	*cmd;
 	struct s_exec	*exec;
+	int				exit_status;
 }				t_ms;
 
 /******************    TOKENIZER    ******************/
@@ -114,17 +115,20 @@ char	*type_to_string(t_type type);
 void	ft_lstclear_token(t_token **token);
 
 /******************    EXPANSER    ******************/
-char	*expanser(char *s);
+char	*expanser(char *s, t_ms *ms);
+// PARSING UTILS
+size_t	ft_strlen_exp(const char *s);
+char	*ft_extract_var(char *s, t_ms *ms);
+void	ft_fill_exp(char **dest, t_exp exp);
 
 /******************    PARSER    ******************/
 // PARSING UTILS
 int		ft_strcmp(const char *s1, const char *s2);
-int		ft_isspaces(char c);
 void	*ft_free(char **data);
 // PARSING
 void	parse_cmd(t_ms *ms);
 // FT_LIST_CMD
-t_cmd	*ft_lst_new_cmd(void);
+t_cmd	*ft_lst_new_cmd(t_ms *ms);
 t_cmd	*ft_lstlast_cmd(t_cmd *lst);
 void	ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
 
