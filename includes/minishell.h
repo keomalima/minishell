@@ -41,6 +41,7 @@ typedef enum	e_redir
 	PIPE
 }				t_redir;
 
+
 typedef struct		s_token
 {
 	char			*content;
@@ -63,15 +64,21 @@ typedef struct	s_infile
 	int		is_lim;
 }				t_infile;
 
+typedef struct	s_outfile
+{
+	char		*name;
+	t_redir		type;
+}				t_outfile;
+
 typedef struct s_cmd
 {
-    char            **cmd;
-    size_t            cmd_size;
-    struct s_infile    **infile;
-    size_t            infile_size;
-    char            **outfile;
-    size_t            outfile_size;
-    t_redir            redir;
+    char				**cmd;
+    size_t				cmd_size;
+    struct s_infile		**infile;
+    size_t				infile_size;
+    struct s_outfile	**outfile;
+    size_t				outfile_size;
+    t_redir				redir;
     struct s_cmd    *next;
 }                t_cmd;
 
@@ -139,6 +146,7 @@ t_cmd	*ft_lst_new_cmd(t_ms *ms);
 t_cmd	*ft_lstlast_cmd(t_cmd *lst);
 void	ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
 t_infile	*ft_new_infile(t_token *token, t_ms *ms);
+t_outfile	*ft_new_outfile(t_token *token, t_ms *ms);
 
 /******************    EXEC    ******************/
 void	exec_cmd(t_ms *ms);

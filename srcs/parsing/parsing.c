@@ -7,7 +7,7 @@ void	ft_complete_cmd(t_cmd *new, t_token *token, t_index *index, t_ms *ms)
 	else if (ft_strcmp(token->content, ">>") == 0)
 		new->redir = OUT_APPEND;
 	else if (token->prev && (ft_strcmp(token->prev->content, ">") == 0 || ft_strcmp(token->prev->content, ">>") == 0))
-		new->outfile[index->out_i++] = token->content;
+		new->outfile[index->out_i++] = ft_new_outfile(token, ms);
 	else if (token->prev && (ft_strcmp(token->prev->content, "<") == 0 || ft_strcmp(token->prev->content, "<<") == 0))
 		new->infile[index->in_i++] = ft_new_infile(token, ms);
 	else if (token->type != OPP)
@@ -54,7 +54,7 @@ void	ft_parsing_allocation(t_cmd *new, t_ms *ms)
 {
 	new->cmd = ft_calloc((new->cmd_size + 1), sizeof(char *));
 	new->infile = ft_calloc((new->infile_size + 1), sizeof(t_infile *));
-	new->outfile = ft_calloc((new->outfile_size + 1), sizeof(char *));
+	new->outfile = ft_calloc((new->outfile_size + 1), sizeof(t_outfile *));
 	if (!new->cmd || !new->infile || !new->outfile)
 		exit_handler(ms, 12);
 }
