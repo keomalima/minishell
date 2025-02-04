@@ -59,12 +59,12 @@ void	error_handler(t_ms *ms, char **cmd)
 	if (cmd[0] && ft_strncmp(cmd[0], "/", 1) == 0)
 	{
 		ft_printf("%s: %s\n", strerror(errno), cmd[0]);
-		exit_handler(ms, 128);
+		exit_handler(ms, 127);
 	}
 	else if (cmd[0])
 	{
 		ft_printf("command not found: %s\n", cmd[0]);
-		exit_handler(ms, 128);
+		exit_handler(ms, 127);
 	}
 	else
 	{
