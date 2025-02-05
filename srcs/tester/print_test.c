@@ -76,17 +76,3 @@ void print_split(char **split)
 	}
 	printf("\n------------------\n\n");
 }
-
-char	*type_to_string(t_type type)
-{
-	switch (type)
-	{
-		case START:	return "START";
-		case END:	return "END";
-		case SQ:	return "IN_SINGLE_QUOTE";
-		case DQ:	return "IN_DOUBLE_QUOTE";
-		case OPP:	return "IN_OPERATOR";
-		case CMD:	return "IN_COMMAND";
-		default:	return "UNKNOWN";
-	}
-}

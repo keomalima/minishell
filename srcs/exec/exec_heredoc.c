@@ -1,0 +1,27 @@
+#include "minishell.h"
+
+void	here_doc(t_ms *ms, t_infile *infile, int i)
+{
+	char	*str;
+
+	if (pipe(ms->exec->pipe_fd[(i + 1) % 2]) < 0)
+		exit_handler(ms, 1);
+	while (1)
+	{
+		ft_printf("> ");
+		str = get_next_line(STDIN_FILENO);
+		if (!str)
+			exit_handler(ms, 1);
+		if (ft_strncmp(str, infile->name , ft_strlen(infile->name)) == 0)
+		{
+			free(str);
+			return ;
+		}
+		if (ft_putstr_fd(str, ms->exec->pipe_fd[(i + 1) % 2][1]) < 0)
+		{
+			free(str);
+			exit_handler(ms, 1);
+		}
+		free(str);
+	}
+}

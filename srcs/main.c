@@ -7,11 +7,7 @@ void	initialize_var(t_ms *ms)
 	ms->exec = NULL;
 }
 
-<<<<<<< HEAD
-void	minishell(t_ms *ms)
-=======
 void	minishell(void)
->>>>>>> ae15085 (corrections on token)
 {
 	char	*rl;
 
@@ -34,54 +30,25 @@ void	minishell(void)
 	print_token(ms->token);	//print token
 
 	//Lexical Analysis
+	lexical_analysis(ms);
 
 	//Parsing
-<<<<<<< HEAD
-	parse_cmd(ms);		//parsing
-	print_cmd(ms->cmd);	//print parsing
-
-	ms->cmd_count = ft_cmd_count(ms);
-=======
 	parse_cmd(&ms);		//parsing
-<<<<<<< HEAD
-	//print_cmd(ms.cmd);	//print parsing
->>>>>>> 8f35b52 (cleanup version)
-=======
 	print_cmd(ms.cmd);	//print parsing
->>>>>>> 0640c32 (review of token)
 
 	//Builtin
-	if (exec_builtin(ms) == 0)
-		exec_cmd(ms);
+	exec_builtin(&ms);
 
-<<<<<<< HEAD
-	free(rl);
-	// exit_handler(ms, 0);
-=======
 	//Execution
 	exec_cmd(&ms);
 
 	free(rl);
 	//exit_handler(&ms, 0);
->>>>>>> 8f35b52 (cleanup version)
 }
 
-int	main(int arc, char **arv, char **env)
+int	main(void)
 {
-<<<<<<< HEAD
-
-	t_ms	ms;
-
-	(void)arc;
-	(void)arv;
-	ms.exit_status = 42;
-	ms.env = env;
-
-	while (1)
-		minishell(&ms);
-=======
 	while (1)
 		minishell();
->>>>>>> 8f35b52 (cleanup version)
 	return (0);
 }

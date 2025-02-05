@@ -6,7 +6,9 @@ static void	ft_set_state(char c, t_ms *ms)
 		ms->lexer.state = SQ;
 	else if (c == '"')
 		ms->lexer.state = DQ;
-	else
+	else if (ft_strchr_set("|><&", c))
+		ms->lexer.state = OPP;
+	else if (c != ' ')
 		ms->lexer.state = CMD;
 }
 

@@ -23,6 +23,7 @@
 # include <sys/wait.h>
 #include <sys/stat.h>
 # include <readline/history.h>
+# include <sys/stat.h>
 
 typedef enum	e_type
 {
@@ -127,7 +128,8 @@ typedef struct s_ms
 }				t_ms;
 
 /******************    UTILS    ******************/
-int	ft_strcmp(const char *s1, const char *s2);
+int		ft_strcmp(const char *s1, const char *s2);
+void	clean_ms(t_ms *ms, int exit_code);
 
 /******************    TOKENIZER    ******************/
 void	create_tokens(char *input, t_ms *ms);
@@ -139,6 +141,7 @@ char	*ft_strchr_set(char *set, int c);
 void	exit_handler(t_ms *ms, int exit_code);
 char	*type_to_string(t_type type);
 void	ft_lstclear_token(t_token **token);
+size_t	is_val_opp(const char *str_ptr, const char *end_ptr);
 
 /******************    EXPANSER    ******************/
 char	*expanser(char *s, t_ms *ms);
@@ -167,6 +170,7 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms);
 void	free_split(char **arr);
 void	close_fd(t_ms *ms, int *fd);
 void	close_all_fds(t_ms *ms);
+void	here_doc(t_ms *ms, t_infile *infile, int i);
 
 /******************    BUILTIN    ******************/
 int		exec_builtin(t_ms *ms);
@@ -177,5 +181,8 @@ void	export_command(t_ms *ms, t_cmd *cmd);
 void 	print_token(t_token *list);
 void 	print_split(char **split);
 void 	print_cmd(t_cmd *list);
+
+/******************    LEXICAL    ******************/
+void	lexical_analysis(t_ms *ms);
 
 #endif

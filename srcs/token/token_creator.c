@@ -36,6 +36,7 @@ static void	ft_token_checker(t_ms *ms)
 			ms->lexer.state = START;
 	}
 	else if ((!ft_strchr_set("|><&", *ms->lexer.str_ptr) && state == OPP)
+		|| (is_val_opp(ms->lexer.str_start, ms->lexer.str_ptr) && state == OPP)
 		|| (state == CMD && ft_strchr_set("|><&", *ms->lexer.str_ptr)))
 	{
 		ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));

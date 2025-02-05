@@ -78,6 +78,14 @@ void	ft_lstclear_cmd(t_cmd **cmd)
 	}
 }
 
+void	clean_ms(t_ms *ms, int exit_code)
+{
+	ms->exit_status = exit_code;
+	ft_lstclear_token(&ms->token);
+	ft_lstclear_cmd(&ms->cmd);
+	exec_exit_handler(ms->exec, ms);
+}
+
 void	exit_handler(t_ms *ms, int exit_code)
 {
 	ms->exit_status = exit_code;
@@ -96,5 +104,5 @@ void	exit_handler(t_ms *ms, int exit_code)
 		errno = ENOMEM;
 	if (errno && exit_code != 0)
 		perror("Error");
-	//exit(exit_code);
+	exit(exit_code);
 }
