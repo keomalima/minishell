@@ -5,7 +5,6 @@ void	initialize_var(t_ms *ms)
 	ms->token = NULL;
 	ms->cmd = NULL;
 	ms->exec = NULL;
-	// ms->exit_status = 42;
 }
 
 void	minishell(t_ms *ms)
@@ -36,25 +35,27 @@ void	minishell(t_ms *ms)
 	parse_cmd(ms);		//parsing
 	print_cmd(ms->cmd);	//print parsing
 
-/* 	//Builtin
-	exec_builtin(ms);
+	ms->cmd_count = ft_cmd_count(ms);
 
-	//Execution
-	exec_cmd(ms); */
+	//Builtin
+	if (exec_builtin(ms) == 0)
+		exec_cmd(ms);
 
 	free(rl);
-	//exit_handler(ms, 0);
+	// exit_handler(ms, 0);
 }
 
-int	main(void)
+int	main(int arc, char **arv, char **env)
 {
+
 	t_ms	ms;
 
+	(void)arc;
+	(void)arv;
 	ms.exit_status = 42;
+	ms.env = env;
 
 	while (1)
-	{
 		minishell(&ms);
-	}
 	return (0);
 }

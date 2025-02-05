@@ -21,6 +21,7 @@
 # include "libft.h"
 # include <readline/readline.h>
 # include <sys/wait.h>
+#include <sys/stat.h>
 # include <readline/history.h>
 
 typedef enum	e_type
@@ -89,6 +90,13 @@ typedef struct s_index
 	size_t	out_i;
 }			t_index;
 
+typedef struct s_var
+{
+	char	*new_var;
+	char	*var_name;
+	char	*var_value;
+}			t_var;
+
 typedef struct s_exec
 {
 	int		cmd_count;
@@ -114,6 +122,8 @@ typedef struct s_ms
 	struct s_cmd	*cmd;
 	struct s_exec	*exec;
 	int				exit_status;
+	size_t			cmd_count;
+	char			**env;
 }				t_ms;
 
 /******************    UTILS    ******************/
@@ -159,7 +169,9 @@ void	close_fd(t_ms *ms, int *fd);
 void	close_all_fds(t_ms *ms);
 
 /******************    BUILTIN    ******************/
-void	exec_builtin(t_ms *ms);
+int		exec_builtin(t_ms *ms);
+void	cd_command(t_ms *ms, t_cmd *cmd);
+void	export_command(t_ms *ms, t_cmd *cmd);
 
 /******************    TESTER    ******************/
 void 	print_token(t_token *list);

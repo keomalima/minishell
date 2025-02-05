@@ -26,26 +26,20 @@ char	*exp_valid_variable(char *s, t_ms *ms)
 char	*exp_digit_variable(char *s, t_ms *ms)
 {
 	char	*src;
-	char	*tmp;
 	char	*dest;
 	size_t	len;
 
-	tmp = ft_strchr(s, '$') + 1;
-	while (!ft_isdigit(*tmp))
-		tmp = ft_strchr(tmp, '$') + 1;
 	src = s;
-	len = ft_strlen_exp(src) - ft_strlen_exp(tmp) - 1;
-	while (*tmp && ft_isdigit(*tmp))
-		tmp++;
-	len = len + ft_strlen_exp(tmp);
+	len = ft_strlen_exp(src) - 2;
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
 		exit_handler(ms, 12);
 	len = 0;
 	while (*src && !(*src == '$' && ft_isalnum(*(src + 1))))
 		dest[len++] = *src++;
-	while (*tmp)
-		dest[len++] = *tmp++;
+	src +=2;
+	while (*src)
+		dest[len++] = *src++;
 	ft_free(&s);
 	return (dest);
 }

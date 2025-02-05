@@ -27,14 +27,14 @@ void	open_outfile(t_cmd *cmd, t_ms *ms, int i)
 		if (ms->exec->pipe_fd[i % 2][1] >= 0)
 			close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
 		if (cmd->redir == OUT_TRUNC)
-			ms->exec->pipe_fd[i % 2][1] = open(cmd->outfile[index],
+			ms->exec->pipe_fd[i % 2][1] = open(cmd->outfile[index]->name,
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
-			ms->exec->pipe_fd[i % 2][1] = open(cmd->outfile[index],
+			ms->exec->pipe_fd[i % 2][1] = open(cmd->outfile[index]->name,
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (ms->exec->pipe_fd[i % 2][1] < 0)
 		{
-			ft_printf("%s: %s \n", strerror(errno), cmd->outfile[index]);
+			ft_printf("%s: %s \n", strerror(errno), cmd->outfile[index]->name);
 			exit_handler(ms, -1);
 		}
 		index++;
@@ -78,6 +78,8 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 		&& cmd->redir != UNDEFINED)
 		exit_handler(ms, 1);
 	close_all_fds(ms);
+	if (ft_strcmp(cmd->cmd[0], "cd") == 0)				////////
+		cd_command(ms, cmd);
 	if (execve(ms->exec->cmd[0], ms->exec->cmd, NULL) == -1)
 	{
 		if (dup2(2, STDOUT_FILENO) < 0)
