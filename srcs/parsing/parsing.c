@@ -2,13 +2,13 @@
 
 void	ft_complete_cmd(t_cmd *new, t_token *token, t_index *index, t_ms *ms)
 {
-	if (ft_strcmp(token->content, ">") == 0)
+	if (token->type == OPP && ft_strcmp(token->content, ">") == 0)
 		new->redir = OUT_TRUNC;
-	else if (ft_strcmp(token->content, ">>") == 0)
+	else if (token->type == OPP && ft_strcmp(token->content, ">>") == 0)
 		new->redir = OUT_APPEND;
-	else if (token->prev && (ft_strcmp(token->prev->content, ">") == 0 || ft_strcmp(token->prev->content, ">>") == 0))
+	else if (token->prev && token->prev->type == OPP && (ft_strcmp(token->prev->content, ">") == 0 || ft_strcmp(token->prev->content, ">>") == 0))
 		new->outfile[index->out_i++] = ft_new_outfile(token, ms);
-	else if (token->prev && (ft_strcmp(token->prev->content, "<") == 0 || ft_strcmp(token->prev->content, "<<") == 0))
+	else if (token->prev && token->prev->type == OPP && (ft_strcmp(token->prev->content, "<") == 0 || ft_strcmp(token->prev->content, "<<") == 0))
 		new->infile[index->in_i++] = ft_new_infile(token, ms);
 	else if (token->type != OPP)
 	{
@@ -25,10 +25,10 @@ void	ft_find_cmd_size(t_token *token, t_cmd *new)
 	redir = 0;
 	while (token && ft_strcmp(token->content, "|") != 0)
 	{
-		if (ft_strcmp(token->content, "<") == 0
+		if (token->type == OPP && (ft_strcmp(token->content, "<") == 0
 			|| ft_strcmp(token->content, "<<") == 0
 			|| ft_strcmp(token->content, ">") == 0
-			|| ft_strcmp(token->content, ">>") == 0)
+			|| ft_strcmp(token->content, ">>") == 0))
 		{
 			if (ft_strcmp(token->content, "<") == 0 || ft_strcmp(token->content, "<<") == 0)
 				new->infile_size++;

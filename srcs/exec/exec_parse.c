@@ -78,6 +78,10 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 	char	*exec_path;
 	char	*path;
 
+	if (ft_strcmp(cmd->cmd[0], "cd") == 0)			//////////
+	{
+		return (cmd->cmd);
+	}
 	exec_path = NULL;
 	path = getenv("PATH");
 	if (cmd->cmd[0])

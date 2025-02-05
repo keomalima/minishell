@@ -25,7 +25,7 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
 		$(TOKENDIR)/token_utils.c \
 		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c \
-		$(BUILTINDIR)/exec_builtin.c
+		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/cd_command.c $(BUILTINDIR)/export_command.c
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 

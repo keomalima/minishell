@@ -96,5 +96,5 @@ void	exit_handler(t_ms *ms, int exit_code)
 		errno = ENOMEM;
 	if (errno && exit_code != 0)
 		perror("Error");
-	// exit(exit_code);
+	exit(exit_code);
 }
