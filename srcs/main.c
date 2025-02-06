@@ -30,17 +30,21 @@ void	minishell(t_ms *ms)
 	print_token(ms->token);	//print token
 
 	//Lexical Analysis
-	lexical_analysis(ms);
+	if (lexical_analysis(ms))
+	{
+		clean_ms(ms, 2);
+		return ;
+	}
 
 	//Parsing
 	parse_cmd(ms);		//parsing
 	print_cmd(ms->cmd);	//print parsing
 
 	ms->cmd_count = ft_cmd_count(ms);
-
+	exec_cmd(ms);
 	//Builtin
-	if (exec_builtin(ms) == 0)
-		exec_cmd(ms);
+	// if (exec_builtin(ms) == 0)
+	// 	exec_cmd(ms);
 
 	free(rl);
 	// exit_handler(ms, 0);
@@ -55,6 +59,9 @@ int	main(int arc, char **arv, char **env)
 	ms.exit_status = 42;
 	ms.env = env;
 
+	// char *arg[] = {NULL, NULL, NULL};
+	// if (execve(arg[0], arg, NULL) < 0)
+	// 	perror("Execve error ");
 	while (1)
 		minishell(&ms);
 	return (0);

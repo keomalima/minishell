@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <string.h>
 # include <unistd.h>
+# include <stdlib.h>
 # include <errno.h>
 # include <fcntl.h>
 # include "libft.h"
@@ -81,7 +82,7 @@ typedef struct s_cmd
 	struct s_outfile	**outfile;
 	size_t				outfile_size;
 	t_redir				redir;
-	struct s_cmd    *next;
+	struct s_cmd		*next;
 }				t_cmd;
 
 typedef struct s_index
@@ -125,63 +126,64 @@ typedef struct s_ms
 	int				exit_status;
 	size_t			cmd_count;
 	char			**env;
+	int				here_doc_fd;
 }				t_ms;
 
 /******************    UTILS    ******************/
-int		ft_strcmp(const char *s1, const char *s2);
-void	clean_ms(t_ms *ms, int exit_code);
+int			ft_strcmp(const char *s1, const char *s2);
+void		clean_ms(t_ms *ms, int exit_code);
 
 /******************    TOKENIZER    ******************/
-void	create_tokens(char *input, t_ms *ms);
-t_token	*ft_lstnew_tk(t_ms *ms, char *content);
-t_token	*ft_lstlast_tk(t_token *lst);
-void	ft_lstadd_back_tk(t_token **lst, t_token *new);
-char	*ft_strndup_tk(t_ms *ms);
-char	*ft_strchr_set(char *set, int c);
-void	exit_handler(t_ms *ms, int exit_code);
-void	ft_lstclear_token(t_token **token);
-size_t	is_val_opp(const char *str_ptr, const char *end_ptr);
+void		create_tokens(char *input, t_ms *ms);
+t_token		*ft_lstnew_tk(t_ms *ms, char *content);
+t_token		*ft_lstlast_tk(t_token *lst);
+void		ft_lstadd_back_tk(t_token **lst, t_token *new);
+char		*ft_strndup_tk(t_ms *ms);
+char		*ft_strchr_set(char *set, int c);
+void		exit_handler(t_ms *ms, int exit_code);
+void		ft_lstclear_token(t_token **token);
+size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
 
 /******************    EXPANSER    ******************/
-char	*expanser(char *s, t_ms *ms);
+char		*expanser(char *s, t_ms *ms);
 // PARSING UTILS
-size_t	ft_strlen_exp(const char *s);
-char	*ft_extract_var(char *s, t_ms *ms);
-void	ft_fill_exp(char **dest, t_exp exp);
+size_t		ft_strlen_exp(const char *s);
+char		*ft_extract_var(char *s, t_ms *ms);
+void		ft_fill_exp(char **dest, t_exp exp);
 
 /******************    PARSER    ******************/
-void	parse_cmd(t_ms *ms);
+void		parse_cmd(t_ms *ms);
 // PARSING UTILS
-void	*ft_free(char **data);
+void		*ft_free(char **data);
 // FT_LIST_CMD
-t_cmd	*ft_lst_new_cmd(t_ms *ms);
-t_cmd	*ft_lstlast_cmd(t_cmd *lst);
-void	ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
+t_cmd		*ft_lst_new_cmd(t_ms *ms);
+t_cmd		*ft_lstlast_cmd(t_cmd *lst);
+void		ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
 t_infile	*ft_new_infile(t_token *token, t_ms *ms);
 t_outfile	*ft_new_outfile(t_token *token, t_ms *ms);
 
 /******************    EXEC    ******************/
-void	exec_cmd(t_ms *ms);
+void		exec_cmd(t_ms *ms);
 // EXEC UTILS
-int		ft_cmd_count(t_ms *ms);
-void	initialize_variables(t_ms *ms);
-char	**parse_arg(t_cmd *cmd, t_ms *ms);
-void	free_split(char **arr);
-void	close_fd(t_ms *ms, int *fd);
-void	close_all_fds(t_ms *ms);
-void	here_doc(t_ms *ms, t_infile *infile, int i);
+int			ft_cmd_count(t_ms *ms);
+void		initialize_variables(t_ms *ms);
+char		**parse_arg(t_cmd *cmd, t_ms *ms);
+void		free_split(char **arr);
+void		close_fd(t_ms *ms, int *fd);
+void		close_all_fds(t_ms *ms);
 
 /******************    BUILTIN    ******************/
-int		exec_builtin(t_ms *ms);
-void	cd_command(t_ms *ms, t_cmd *cmd);
-void	export_command(t_ms *ms, t_cmd *cmd);
+int			exec_builtin(t_ms *ms);
+void		cd_command(t_ms *ms, t_cmd *cmd);
+void		export_command(t_ms *ms, t_cmd *cmd);
 
 /******************    TESTER    ******************/
-void 	print_token(t_token *list);
-void 	print_split(char **split);
-void 	print_cmd(t_cmd *list);
+void		print_token(t_token *list);
+void		print_split(char **split);
+void		print_cmd(t_cmd *list);
 
 /******************    LEXICAL    ******************/
-void	lexical_analysis(t_ms *ms);
+int			lexical_analysis(t_ms *ms);
+void		here_doc(t_ms *ms, char *limiter);
 
 #endif

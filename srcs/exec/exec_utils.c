@@ -51,6 +51,7 @@ void	close_all_fds(t_ms *ms)
 	{
 		close_fd(ms, &ms->exec->pipe_fd[i][0]);
 		close_fd(ms, &ms->exec->pipe_fd[i][1]);
+		close_fd(ms, &ms->here_doc_fd);
 		i++;
 	}
 }

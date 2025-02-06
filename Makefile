@@ -26,9 +26,8 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
 		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_copy.c\
 		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c \
-		$(EXECDIR)/exec_heredoc.c \
 		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/cd_command.c $(BUILTINDIR)/export_command.c \
-		$(LEXICALDIR)/lexical_analysis.c
+		$(LEXICALDIR)/lexical_analysis.c $(LEXICALDIR)/heredoc.c \
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 

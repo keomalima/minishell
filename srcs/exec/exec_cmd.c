@@ -51,7 +51,10 @@ void	open_infile(t_cmd *cmd, t_ms *ms, int i)
 	{
 		if (ms->exec->pipe_fd[(i % 2) % 2][0] >= 0)
 			close_fd(ms, &ms->exec->pipe_fd[(i % 2) % 2][0]);
-		ms->exec->pipe_fd[(i + 1) % 2][0] = open(cmd->infile[index]->name, O_RDONLY);
+		if (ms->here_doc_fd)
+			ms->exec->pipe_fd[(i + 1) % 2][0] = ms->here_doc_fd;
+		else
+			ms->exec->pipe_fd[(i + 1) % 2][0] = open(cmd->infile[index]->name, O_RDONLY);
 		if (ms->exec->pipe_fd[(i + 1) % 2][0] < 0)
 		{
 			if (access(cmd->infile[index]->name, R_OK) < 0
@@ -71,27 +74,23 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 		open_infile(cmd, ms, i);
 	if (cmd->outfile_size)
 		open_outfile(cmd, ms, i);
-	ms->exec->cmd = parse_arg(cmd, ms);
+	if (cmd->cmd[0])
+		ms->exec->cmd = parse_arg(cmd, ms);
 	if (dup2(ms->exec->pipe_fd[(i + 1) % 2][0], STDIN_FILENO) < 0
 		&& ms->exec->pipe_fd[(i + 1) % 2][0] > 0)
 		exit_handler(ms, 1);
-	if (dup2(ms->exec->pipe_fd[i % 2][1], STDOUT_FILENO) < 0
-		&& cmd->redir != UNDEFINED)
+	if (cmd->redir != UNDEFINED
+		&& dup2(ms->exec->pipe_fd[i % 2][1], STDOUT_FILENO) < 0)
 		exit_handler(ms, 1);
 	close_all_fds(ms);
-	////CHANGEMENT LY-SHA
-	if (ft_strcmp(cmd->cmd[0], "cd") == 0)
+	if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "cd") == 0)
 		cd_command(ms, cmd);
-	/////////////////////
-	if (ms->exec->cmd)
+	if (execve(ms->exec->cmd[0], ms->exec->cmd, NULL) == -1)
 	{
-		if (execve(ms->exec->cmd[0], ms->exec->cmd, NULL) == -1)
-		{
-			if (dup2(2, STDOUT_FILENO) < 0)
-				exit_handler(ms, 1);
-			ft_printf("%s: %s\n", strerror(errno), ms->exec->cmd[0]);
-			exit_handler(ms, 126);
-		}
+		if (dup2(2, STDOUT_FILENO) < 0)
+			exit_handler(ms, 1);
+		ft_printf("%s: %s\n", strerror(errno), ms->exec->cmd[0]);
+		exit_handler(ms, 126);
 	}
 }
 

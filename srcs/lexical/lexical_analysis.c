@@ -15,7 +15,7 @@ static size_t	is_redir(const char *content)
 	return (1);
 }
 
-void	lexical_analysis(t_ms *ms)
+int	lexical_analysis(t_ms *ms)
 {
 	t_token	*token;
 	char	*str_err;
@@ -24,6 +24,8 @@ void	lexical_analysis(t_ms *ms)
 	while(token)
 	{
 		str_err = NULL;
+		if (!ft_strcmp(token->content, "<<") && token->next && token->next->type == CMD)
+			here_doc(ms, token->next->content);
 		if (token->type == OPP)
 		{
 			if (!token->prev && is_redir(token->content))
@@ -36,8 +38,9 @@ void	lexical_analysis(t_ms *ms)
 		if (str_err)
 		{
 			printf("syntax error near unexpected token `%s`\n", str_err);
-			clean_ms(ms, 2);
+			return (1);
 		}
 		token = token->next;
 	}
+	return (0);
 }
