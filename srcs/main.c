@@ -7,7 +7,7 @@ void	initialize_var(t_ms *ms)
 	ms->exec = NULL;
 }
 
-void	minishell(void)
+void	minishell(t_ms *ms)
 {
 	char	*rl;
 
@@ -33,22 +33,29 @@ void	minishell(void)
 	lexical_analysis(ms);
 
 	//Parsing
-	parse_cmd(&ms);		//parsing
-	print_cmd(ms.cmd);	//print parsing
+	parse_cmd(ms);		//parsing
+	print_cmd(ms->cmd);	//print parsing
+
+	ms->cmd_count = ft_cmd_count(ms);
 
 	//Builtin
-	exec_builtin(&ms);
-
-	//Execution
-	exec_cmd(&ms);
+	if (exec_builtin(ms) == 0)
+		exec_cmd(ms);
 
 	free(rl);
-	//exit_handler(&ms, 0);
+	// exit_handler(ms, 0);
 }
 
-int	main(void)
+int	main(int arc, char **arv, char **env)
 {
+	t_ms	ms;
+
+	(void)arc;
+	(void)arv;
+	ms.exit_status = 42;
+	ms.env = env;
+
 	while (1)
-		minishell();
+		minishell(&ms);
 	return (0);
 }

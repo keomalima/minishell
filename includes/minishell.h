@@ -74,15 +74,15 @@ typedef struct	s_outfile
 
 typedef struct s_cmd
 {
-    char				**cmd;
-    size_t				cmd_size;
-    struct s_infile		**infile;
-    size_t				infile_size;
-    struct s_outfile	**outfile;
-    size_t				outfile_size;
-    t_redir				redir;
-    struct s_cmd    *next;
-}                t_cmd;
+	char				**cmd;
+	size_t				cmd_size;
+	struct s_infile		**infile;
+	size_t				infile_size;
+	struct s_outfile	**outfile;
+	size_t				outfile_size;
+	t_redir				redir;
+	struct s_cmd    *next;
+}				t_cmd;
 
 typedef struct s_index
 {
@@ -139,7 +139,6 @@ void	ft_lstadd_back_tk(t_token **lst, t_token *new);
 char	*ft_strndup_tk(t_ms *ms);
 char	*ft_strchr_set(char *set, int c);
 void	exit_handler(t_ms *ms, int exit_code);
-char	*type_to_string(t_type type);
 void	ft_lstclear_token(t_token **token);
 size_t	is_val_opp(const char *str_ptr, const char *end_ptr);
 

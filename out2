@@ -1,29 +1,7 @@
-<<<<<<< HEAD
-/home/lthan/Desktop/42_project/minishell
-=======
-Makefile
-README.md
-includes
-infile
-infile2
-libft
-minishell
-objects
-out
-out2
-out3
-srcs
-Makefile
-README.md
-includes
-infile
-infile2
-libft
-minishell
-objects
-out
-out1
-out2
-out3
-srcs
->>>>>>> 0640c32 (review of token)
+2024-12-23 08:06:00 ERROR Network timeout
+2024-12-23 10:01:00 ERROR Failed to connect to database
+2024-12-23 10:03:00 ERROR Failed to load configuration file
+2024-12-23 10:05:00 ERROR Failed to connect to database
+2024-12-23 10:06:00 ERROR Network timeout
+2024-12-23 10:08:00 ERROR Failed to connect to database
+2024-12-23 10:08:00 ERROR Failed to connect to database
