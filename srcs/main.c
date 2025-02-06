@@ -24,12 +24,13 @@ void	minishell(t_ms *ms)
 	{
 		rl_clear_history();
 		exit (0);
-	}	
+	}
 	//Tokenization
 	create_tokens(rl, ms);	//tokenization
 	print_token(ms->token);	//print token
 
 	//Lexical Analysis
+	lexical_analysis(ms);
 
 	//Parsing
 	parse_cmd(ms);		//parsing
@@ -47,7 +48,6 @@ void	minishell(t_ms *ms)
 
 int	main(int arc, char **arv, char **env)
 {
-
 	t_ms	ms;
 
 	(void)arc;

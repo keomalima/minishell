@@ -55,7 +55,6 @@ char	*exp_exit_code(char *s, t_ms *ms)
 	tmp = ft_strchr(s, '$') + 1;
 	while (*tmp != '?')
 		tmp = ft_strchr(tmp, '$') + 1;
-	
 	exit_code = ft_itoa(ms->exit_status);
 	if (!exit_code)
 		exit_handler(ms, 12);

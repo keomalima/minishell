@@ -17,15 +17,18 @@ EXPANSER := $(SRCSDIR)/expanser
 TESTER := $(SRCSDIR)/tester
 EXECDIR := $(SRCSDIR)/exec
 BUILTINDIR := $(SRCSDIR)/builtins
+LEXICALDIR := $(SRCSDIR)/lexical
 
 SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c \
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
 		$(EXPANSER)/expanser.c $(EXPANSER)/expanser_utils.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
-		$(TOKENDIR)/token_utils.c \
+		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_copy.c\
 		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c \
-		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/cd_command.c $(BUILTINDIR)/export_command.c
+		$(EXECDIR)/exec_heredoc.c \
+		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/cd_command.c $(BUILTINDIR)/export_command.c \
+		$(LEXICALDIR)/lexical_analysis.c
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
@@ -61,7 +64,7 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 
-$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/expanser $(OBJDIR)/exec $(OBJDIR)/tester $(OBJDIR)/builtins
+$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/expanser $(OBJDIR)/exec $(OBJDIR)/tester $(OBJDIR)/builtins $(OBJDIR)/lexical
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):
@@ -84,6 +87,9 @@ $(OBJDIR)/exec:
 
 $(OBJDIR)/builtins:
 	mkdir -p $(OBJDIR)/builtins
+
+$(OBJDIR)/lexical:
+	mkdir -p $(OBJDIR)/lexical
 
 $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)

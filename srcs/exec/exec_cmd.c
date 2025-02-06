@@ -10,6 +10,7 @@ void	wait_children_exit(t_ms *ms)
 	{
 		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
 			exit_handler(ms, 1);
+		ms->exit_status = WEXITSTATUS(status);
 		i++;
 	}
 	free(ms->exec->child_pids);
@@ -26,7 +27,7 @@ void	open_outfile(t_cmd *cmd, t_ms *ms, int i)
 	{
 		if (ms->exec->pipe_fd[i % 2][1] >= 0)
 			close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
-		if (cmd->redir == OUT_TRUNC)
+		if (cmd->outfile[index]->type == OUT_TRUNC)
 			ms->exec->pipe_fd[i % 2][1] = open(cmd->outfile[index]->name,
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
@@ -68,7 +69,7 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 {
 	if (cmd->infile_size)
 		open_infile(cmd, ms, i);
-	else if (cmd->outfile_size)
+	if (cmd->outfile_size)
 		open_outfile(cmd, ms, i);
 	ms->exec->cmd = parse_arg(cmd, ms);
 	if (dup2(ms->exec->pipe_fd[(i + 1) % 2][0], STDIN_FILENO) < 0
@@ -78,20 +79,26 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 		&& cmd->redir != UNDEFINED)
 		exit_handler(ms, 1);
 	close_all_fds(ms);
-	if (ft_strcmp(cmd->cmd[0], "cd") == 0)				////////
+	////CHANGEMENT LY-SHA
+	if (ft_strcmp(cmd->cmd[0], "cd") == 0)
 		cd_command(ms, cmd);
-	if (execve(ms->exec->cmd[0], ms->exec->cmd, NULL) == -1)
+	/////////////////////
+	if (ms->exec->cmd)
 	{
-		if (dup2(2, STDOUT_FILENO) < 0)
-			exit_handler(ms, 1);
-		ft_printf("%s: %s\n", strerror(errno), ms->exec->cmd[0]);
-		exit_handler(ms, 126);
+		if (execve(ms->exec->cmd[0], ms->exec->cmd, NULL) == -1)
+		{
+			if (dup2(2, STDOUT_FILENO) < 0)
+				exit_handler(ms, 1);
+			ft_printf("%s: %s\n", strerror(errno), ms->exec->cmd[0]);
+			exit_handler(ms, 126);
+		}
 	}
 }
 
 void	exec_cmd(t_ms *ms)
 {
 	int		i;
+	int		status;
 	t_cmd	*current;
 
 	current = ms->cmd;
@@ -116,8 +123,12 @@ void	exec_cmd(t_ms *ms)
 			switch_io_n_execve(current, ms, i);
 		close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
 		close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][0]);
+		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
+			exit_handler(ms, 1);
+		ms->exit_status = WEXITSTATUS(status);
 		i++;
 		current = current->next;
 	}
-	wait_children_exit(ms);
+	free(ms->exec->child_pids);
+	ms->exec->child_pids = NULL;
 }
