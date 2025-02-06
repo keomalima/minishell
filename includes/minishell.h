@@ -95,9 +95,9 @@ typedef struct s_index
 
 typedef struct s_var
 {
-	char	*new_var;
-	char	*var_name;
-	char	*var_value;
+	char	**new_env;
+	char	*name;
+	char	*value;
 }			t_var;
 
 typedef struct s_exec
@@ -126,7 +126,7 @@ typedef struct s_ms
 	int				exit_status;
 	size_t			cmd_count;
 	char			**env;
-	char			*lex_err;
+	int				mod_env;
 }				t_ms;
 
 /******************    UTILS    ******************/
@@ -175,14 +175,28 @@ void		close_all_fds(t_ms *ms);
 void		exec_here_doc(t_ms *ms, char *limiter, int i);
 
 /******************    BUILTIN    ******************/
-int			exec_builtin(t_ms *ms);
-void		cd_command(t_ms *ms, t_cmd *cmd);
-void		export_command(t_ms *ms, t_cmd *cmd);
+int		exec_builtin(t_ms *ms);
+void	cd_command(t_ms *ms, t_cmd *cmd);
+// EXPORT
+void	export_command(t_ms *ms, t_cmd *cmd);
+t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd);
+void	ft_print_export(char **env);
+size_t	ft_find_var_count(t_cmd *cmd);
+int		ft_is_all_alnum(char *str);
+void	clean_var(t_var **env_var);
+t_var	*ft_create_new_var(t_ms *ms, t_var **env_var);
+int	ft_modify_env(t_var **env_var, t_ms *ms);
+void	export_exit_o_return(t_ms *ms, t_var **env_var, int exit_code);
+char	**ft_duplicate_env(t_var **env_var, t_ms *ms);
+
 
 /******************    TESTER    ******************/
-void		print_token(t_token *list);
-void		print_split(char **split);
-void		print_cmd(t_cmd *list);
+void 	print_token(t_token *list);
+void 	print_split(char **split);
+void 	print_cmd(t_cmd *list);
+void	ft_print_res_export(t_var **env_var);
+int		ft_is_valid_export(t_ms *ms, t_cmd *cmd);
+
 
 /******************    LEXICAL    ******************/
 int			lexical_analysis(t_ms *ms);

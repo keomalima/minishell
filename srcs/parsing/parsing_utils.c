@@ -2,8 +2,10 @@
 
 void	*ft_free(char **data)
 {
-	if (*data)
+	if (data && *data)
+	{
 		free(*data);
-	*data = NULL;
+		*data = NULL;
+	}
 	return (NULL);
 }

@@ -25,9 +25,12 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
 		$(EXPANSER)/expanser.c $(EXPANSER)/expanser_utils.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
 		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_copy.c\
-		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c $(EXECDIR)/exec_heredoc.c \
-		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/cd_command.c $(BUILTINDIR)/export_command.c \
-		$(LEXICALDIR)/lex_analysis.c $(LEXICALDIR)/lex_heredoc.c \
+		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c \
+		$(EXECDIR)/exec_heredoc.c \
+		$(BUILTINDIR)/exec_builtin.c \
+		$(BUILTINDIR)/cd_command.c \
+		$(BUILTINDIR)/export_command.c $(BUILTINDIR)/export_command_utils.c $(BUILTINDIR)/export_get_variable.c $(BUILTINDIR)/export_modify_env.c \
+		$(LEXICALDIR)/lexical_analysis.c
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
