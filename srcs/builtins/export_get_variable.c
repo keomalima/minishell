@@ -10,7 +10,7 @@ int	ft_check_var_spelling(t_var **env_var, t_ms *ms)
 		if (!ft_is_all_alnum(env_var[i]->name))
 		{
 			printf("export: '%s': not a valid identifier\n", env_var[i]->name);
-			export_exit_o_return(ms, env_var, 1);;
+			export_exit_o_return(ms, env_var, 1);
 			return (0);
 		}
 		if (env_var[i]->value && ft_strchr(env_var[i]->value, ';'))
@@ -47,32 +47,34 @@ int	ft_is_valid_export(t_ms *ms, t_cmd *cmd)
 	return (1);
 }
 
-int	ft_alloc_n_fill_name_value(t_var *var, t_var **env_var, t_ms *ms, char *str)
+int	ft_alloc_n_fill(t_var *var, t_var **env_var, t_ms *ms, char *str)
 {
-	var->name = ft_calloc((ft_strlen_exp(str) - ft_strlen_exp(ft_strchr(str, '=')) + 1), sizeof(char));
+	size_t	len;
+
+	len = ft_strlen_ms(str) - ft_strlen_ms(ft_strchr(str, '='));
+	var->name = ft_calloc((len + 1), sizeof(char));
 	if (!var->name)
 	{
 		export_exit_o_return(ms, env_var, 12);
 		return (0);
 	}
-	var->value = ft_calloc((ft_strlen_exp(ft_strchr(str, '=')) + 2), sizeof(char));
+	var->value = ft_calloc((ft_strlen_ms(ft_strchr(str, '=')) + 2), sizeof(char));
 	if (!var->value)
 	{
 		ft_free(&var->name);
 		export_exit_o_return(ms, env_var, 12);
 		return (0);
 	}
-	ft_strlcpy(var->name, str, (ft_strlen_exp(str) - ft_strlen_exp(ft_strchr(str, '=')) + 1));
+	ft_strlcpy_ms(var->name, str, (ft_strlen_ms(str) - ft_strlen_ms(ft_strchr(str, '=')) + 1));
 	var->value[0] = '\"';
-	ft_strlcpy((var->value + 1), ft_strchr(str, '=')+1, ft_strlen_exp(ft_strchr(str, '=')));
-	var->value[ft_strlen_exp(var->value)] = '\"';
+	ft_strlcpy_ms((var->value + 1), ft_strchr(str, '=') + 1, ft_strlen_ms(ft_strchr(str, '=')));
+	var->value[ft_strlen_ms(var->value)] = '\"';
 	return (1);
 }
 
 int	ft_initialize_var(t_var **env_var, t_ms *ms, t_cmd *cmd)
 {
-	int i;
-
+	int	i;
 
 	i = 0;
 	while (cmd->cmd[i + 1])
@@ -80,7 +82,6 @@ int	ft_initialize_var(t_var **env_var, t_ms *ms, t_cmd *cmd)
 		env_var[i] = ft_create_new_var(ms, env_var);
 		if (!env_var[i])
 			return (0);
-		
 		if (!ft_strchr(cmd->cmd[i + 1], '='))
 		{
 			env_var[i]->name = ft_strdup(cmd->cmd[i + 1]);
@@ -92,13 +93,12 @@ int	ft_initialize_var(t_var **env_var, t_ms *ms, t_cmd *cmd)
 			env_var[i]->value = NULL;
 		}
 		else
-			if (!ft_alloc_n_fill_name_value(env_var[i], env_var, ms, cmd->cmd[i + 1]))
+			if (!ft_alloc_n_fill(env_var[i], env_var, ms, cmd->cmd[i + 1]))
 				return (0);
 		i++;
 	}
 	return (1);
 }
-
 
 t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd)
 {
@@ -115,7 +115,6 @@ t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd)
 			clean_ms (ms, 12);
 			return (NULL);
 		}
-
 		if (!ft_initialize_var(env_var, ms, cmd))
 			return (NULL);
 		if (!ft_check_var_spelling(env_var, ms))

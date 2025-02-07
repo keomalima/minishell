@@ -19,7 +19,7 @@ int	handle_key(t_ms *ms, char *rl)
 	{
 		if (ms->mod_env == 1)
 			free_split(ms->env);
-		rl_clear_history();
+		clear_history();
 		exit (0);
 	}
 	//Tokenization

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	ft_find_var(t_var *env_var, t_ms *ms)
+int	ft_find_var(t_var *current_var, t_ms *ms)
 {
 	int		i;
 	int		comp;
@@ -8,23 +8,67 @@ int	ft_find_var(t_var *env_var, t_ms *ms)
 	i = 0;
 	while (ms->env[i])
 	{
-		comp = ft_strncmp(ms->env[i], env_var->name, ft_strlen_exp(env_var->name));
-		if (comp == 0 && ms->env[i][ft_strlen_exp(env_var->name)] == '=')
+		comp = ft_strncmp(ms->env[i],
+				current_var->name, ft_strlen_ms(current_var->name));
+		if (comp == 0)
 			return (i);
 		i++;
 	}
 	return (-1);
 }
 
-char	**ft_duplicate_env(t_var **env_var, t_ms *ms)
+char	*ft_remplace_value(t_var *cur_var, t_var **env_var, t_ms *ms, int index)
 {
-	char	**new_env;
-	int		i;
+	char	*dest;
+	size_t	len;
 
-	i = 0;
-	while (ms->env[i])
-		i++;
-	new_env = ft_calloc((i + 1), sizeof(char *));
+	len = ft_strlen_ms(cur_var->name) + ft_strlen_ms(cur_var->value);
+	if (cur_var->value)
+		len++;
+	dest = ft_calloc((len + 1), sizeof(char));
+	if (!dest)
+	{
+		export_exit_o_return(ms, env_var, 12);
+		return (NULL);
+	}
+	ft_strlcpy_ms(dest, cur_var->name, (ft_strlen_ms(cur_var->name) + 1));
+	if (cur_var->value)
+		ft_strlcpy_ms(&dest[ft_strlen_ms(dest)], "=", 2);
+	ft_strlcpy_ms(&dest[ft_strlen_ms(dest)],
+		cur_var->value, (ft_strlen_ms(cur_var->value) + 1));
+	ft_free(&ms->env[index]);
+	return (dest);
+}
+
+char	*ft_set_new_variable(t_var *cur_var, t_var **env_var, t_ms *ms)
+{
+	size_t	len;
+	char	*new_var;
+
+	len = ft_strlen_ms(cur_var->name) + ft_strlen_ms(cur_var->value);
+	if (cur_var->value)
+		len++;
+	new_var = ft_calloc((len + 1), sizeof(char));
+	if (!new_var)
+	{
+		export_exit_o_return(ms, env_var, 12);
+		return (NULL);
+	}
+	ft_strlcpy_ms(new_var, cur_var->name, (ft_strlen_ms(cur_var->name) + 1));
+	if (cur_var->value)
+		ft_strlcpy_ms(&new_var[ft_strlen_ms(new_var)], "=", 2);
+	ft_strlcpy_ms(&new_var[ft_strlen_ms(new_var)],
+		cur_var->value, (ft_strlen_ms(cur_var->value) + 1));
+	free(ms->env);
+	return (new_var);
+}
+
+char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
+{
+	size_t	i;
+	char	**new_env;
+
+	new_env = ft_calloc((ft_env_count(ms->env) + 2), sizeof(char *));
 	if (!new_env)
 	{
 		export_exit_o_return(ms, env_var, 12);
@@ -33,98 +77,40 @@ char	**ft_duplicate_env(t_var **env_var, t_ms *ms)
 	i = 0;
 	while (ms->env[i])
 	{
-		new_env[i] = ft_strdup(ms->env[i]);
-		if (!new_env[i])
-		{
-			export_exit_o_return(ms, env_var, 12);
-			return (NULL);
-		}
+		new_env[i] = ms->env[i];
 		i++;
 	}
-	ms->mod_env = 1;
-	return (new_env);
-}
-
-
-
-char	*ft_remplace_value(char *src, t_var *current_var, t_var **env_var, t_ms *ms)
-{
-	char	*dest;
-	size_t	len;
-
-	len = ft_strlen_exp(current_var->name) + ft_strlen_exp(current_var->value) + 1;
-	dest = ft_calloc((len + 1), sizeof(char));
-	if (!dest)
-	{
-		export_exit_o_return(ms, env_var, 12);
+	new_env[i] = ft_set_new_variable(current_var, env_var, ms);
+	if (!new_env[i])
 		return (NULL);
-	}
-	ft_strlcpy(dest, current_var->name, (ft_strlen_exp(current_var->name) + 1));
-	ft_strlcpy(&dest[ft_strlen_exp(dest)], "=", 2);
-	ft_strlcpy(&dest[ft_strlen_exp(dest)], current_var->value, (ft_strlen_exp(current_var->value) + 1));
-	printf("dest [%s]\n", dest);
-	ft_free(&src);
-	(void)src;
-	return (dest);
-
+	return (new_env);
 }
 
 int	ft_modify_env(t_var **env_var, t_ms *ms)
 {
 	int		i;
 	int		index;
-	size_t	env_size;
 
-	i = 0;
-	index = ft_find_var(env_var[i], ms);
-	if (index >= 0)
+	ms->env = ft_duplicate_env(env_var, ms);
+	if (!ms->env)
+		return (1);
+	i = -1;
+	while (env_var[++i])
 	{
-		printf("Replacement of existing environnement variable\n");
-		if (ms->mod_env == 0)
-		{
-			ms->env = ft_duplicate_env(env_var, ms);
-			if (!ms->env)
-				return (1);
-		}
 		index = ft_find_var(env_var[i], ms);
-		ms->env[index] = ft_remplace_value(ms->env[index], env_var[i], env_var, ms);
-		printf("My variable : %s\n", ms->env[index]);
-
-	}
-	else
-	{
-		printf("Adding of a new variable\n");
-		if (ms->mod_env == 0)
+		if (index >= 0 && env_var[i]->value)		// Variable found
 		{
-			ms->env = ft_duplicate_env(env_var, ms);
+			index = ft_find_var(env_var[i], ms);
+			ms->env[index] = ft_remplace_value(env_var[i], env_var, ms, index);
+			if (!ms->env[index])
+				return (0);
+		}
+		else if (index == -1)				// Variable not found
+		{
+			ms->env = ft_add_var_to_env(env_var[i], env_var, ms);
 			if (!ms->env)
-				return (1);
+				return (0);
 		}
-		env_size = 0;
-		while (ms->env[env_size])
-			env_size++;
-		env_var[i]->new_env = ft_calloc((env_size + 2), sizeof(char *));
-		if (!env_var[i]->new_env)
-		{
-			export_exit_o_return(ms, env_var, 12);
-			return (1);
-		}
-		env_size = 0;
-		while (ms->env[env_size])
-		{
-			env_var[i]->new_env[env_size] = ms->env[env_size];
-			env_size++;
-		}
-		printf("Last env : %s\n", env_var[i]->new_env[env_size-1]);
-
-		ft_strlcpy(env_var[i]->new_env[env_size], env_var[i]->name, (ft_strlen_exp(env_var[i]->name) + 1));
-		printf("My variable ?? : %s\n", env_var[i]->new_env[env_size]);
-		ft_strlcpy(&env_var[i]->new_env[env_size][ft_strlen_exp(env_var[i]->new_env[env_size])], "=", 2);
-		ft_strlcpy(&env_var[i]->new_env[env_size][ft_strlen_exp(env_var[i]->new_env[env_size])], env_var[i]->value, (ft_strlen_exp(env_var[i]->value) + 1));
-		free(ms->env);
-		ms->env = env_var[i]->new_env;
-		printf("My variable : %s\n", ms->env[env_size]);
 	}
-	// ft_print_export(ms->env);
 	return (1);
 }

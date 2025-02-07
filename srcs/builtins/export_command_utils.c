@@ -10,7 +10,6 @@ size_t	ft_find_var_count(t_cmd *cmd)
 	{
 		count++;
 	}
-	printf("count = %zu\n", count - 1);
 	return (count - 1);
 }
 
@@ -57,7 +56,6 @@ t_var	*ft_create_new_var(t_ms *ms, t_var **env_var)
 		return (NULL);
 	}
 	new->name = NULL;
-	new->new_env = NULL;
 	new->value = NULL;
 	return (new);
 }
@@ -70,3 +68,44 @@ void	export_exit_o_return(t_ms *ms, t_var **env_var, int exit_code)
 		exit_handler(ms, exit_code);
 	clean_ms (ms, exit_code);
 }
+
+size_t	ft_env_count(char **env)
+{
+	size_t	i;
+
+	if (!env)
+		return (0);
+	i = 0;
+	while (env[i])
+		i++;
+	return (i);
+}
+
+char	**ft_duplicate_env(t_var **env_var, t_ms *ms)
+{
+	char	**new_env;
+	int		i;
+
+	if (ms->mod_env == 1)
+		return (NULL);
+	new_env = ft_calloc((ft_env_count(ms->env) + 1), sizeof(char *));
+	if (!new_env)
+	{
+		export_exit_o_return(ms, env_var, 12);
+		return (NULL);
+	}
+	i = 0;
+	while (ms->env[i])
+	{
+		new_env[i] = ft_strdup(ms->env[i]);
+		if (!new_env[i])
+		{
+			export_exit_o_return(ms, env_var, 12);
+			return (NULL);
+		}
+		i++;
+	}
+	ms->mod_env = 1;
+	return (new_env);
+}
+

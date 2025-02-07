@@ -95,7 +95,6 @@ typedef struct s_index
 
 typedef struct s_var
 {
-	char	**new_env;
 	char	*name;
 	char	*value;
 }			t_var;
@@ -130,9 +129,10 @@ typedef struct s_ms
 }				t_ms;
 
 /******************    UTILS    ******************/
-int			ft_strcmp(const char *s1, const char *s2);
-void		clean_ms(t_ms *ms, int exit_code);
-char		*ft_getenv(t_ms *ms, char *str);
+int		ft_strcmp(const char *s1, const char *s2);
+void	clean_ms(t_ms *ms, int exit_code);
+size_t	ft_strlen_ms(const char *s);
+size_t	ft_strlcpy_ms(char *dst, const char *src, size_t size);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
@@ -148,9 +148,8 @@ size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
 /******************    EXPANSER    ******************/
 char		*expanser(char *s, t_ms *ms);
 // PARSING UTILS
-size_t		ft_strlen_exp(const char *s);
-char		*ft_extract_var(char *s, t_ms *ms);
-void		ft_fill_exp(char **dest, t_exp exp);
+char	*ft_extract_var(char *s, t_ms *ms);
+void	ft_fill_exp(char **dest, t_exp exp);
 
 /******************    PARSER    ******************/
 void		parse_cmd(t_ms *ms);
@@ -185,8 +184,10 @@ size_t	ft_find_var_count(t_cmd *cmd);
 int		ft_is_all_alnum(char *str);
 void	clean_var(t_var **env_var);
 t_var	*ft_create_new_var(t_ms *ms, t_var **env_var);
-int	ft_modify_env(t_var **env_var, t_ms *ms);
+int		ft_modify_env(t_var **env_var, t_ms *ms);
 void	export_exit_o_return(t_ms *ms, t_var **env_var, int exit_code);
+char	**ft_duplicate_env(t_var **env_var, t_ms *ms);
+size_t	ft_env_count(char **env);
 char	**ft_duplicate_env(t_var **env_var, t_ms *ms);
 
 

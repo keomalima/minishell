@@ -114,3 +114,31 @@ void	exit_handler(t_ms *ms, int exit_code)
 		perror("Error");
 	exit(exit_code);
 }
+size_t	ft_strlcpy_ms(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+
+	if (dst && src && size > 0)
+	{
+		i = 0;
+		while (size - 1 > i && src[i])
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
+	}
+	return (ft_strlen_ms(src));
+}
+
+size_t	ft_strlen_ms(const char *s)
+{
+	size_t	i;
+
+	if (!s || !*s)
+		return (0);
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}

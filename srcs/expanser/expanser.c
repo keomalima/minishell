@@ -9,8 +9,8 @@ char	*exp_valid_variable(char *s, t_ms *ms)
 	exp.size = 0;
 	exp.extract = ft_extract_var(s, ms);
 	exp.env_var = getenv(exp.extract);
-	exp.size = ft_strlen_exp(s) - ft_strlen_exp(exp.extract)
-		+ ft_strlen_exp(exp.env_var) - 1;
+	exp.size = ft_strlen_ms(s) - ft_strlen_ms(exp.extract)
+		+ ft_strlen_ms(exp.env_var) - 1;
 	dest = ft_calloc((exp.size + 1), sizeof(char));
 	if (!dest)
 	{
@@ -30,7 +30,7 @@ char	*exp_digit_variable(char *s, t_ms *ms)
 	size_t	len;
 
 	src = s;
-	len = ft_strlen_exp(src) - 2;
+	len = ft_strlen_ms(src) - 2;
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
 		exit_handler(ms, 12);
@@ -59,9 +59,9 @@ char	*exp_exit_code(char *s, t_ms *ms)
 	if (!exit_code)
 		exit_handler(ms, 12);
 	src = s;
-	len = ft_strlen_exp(src) - ft_strlen_exp(tmp) - 1;
+	len = ft_strlen_ms(src) - ft_strlen_ms(tmp) - 1;
 	tmp++;
-	len = len + ft_strlen_exp(tmp) + ft_strlen_exp(exit_code);
+	len = len + ft_strlen_ms(tmp) + ft_strlen_ms(exit_code);
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
 		exit_handler(ms, 12);
