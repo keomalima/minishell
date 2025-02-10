@@ -42,7 +42,8 @@ size_t	ft_strlen_state(t_ms *ms)
 		}
 		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state && ms->lexer.state != START)
 			len++;
-		i++;
+		if (ms->lexer.state != START)
+			i++;
 	}
 	return (len);
 }
@@ -77,7 +78,8 @@ char	*ft_strndup_tk(t_ms *ms)
 		}
 		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state && ms->lexer.state != START)
 			str[j++] = ms->lexer.str_start[i];
-		i++;
+		if (ms->lexer.state != START)
+			i++;
 	}
 	return (str);
 }

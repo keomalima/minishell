@@ -22,12 +22,12 @@ void	minishell(t_ms *ms)
 	}
 	if (!ft_strcmp(rl, "exit"))
 	{
-		rl_clear_history();
+		//rl_clear_history();
 		exit (0);
 	}
 	//Tokenization
 	create_tokens(rl, ms);	//tokenization
-	print_token(ms->token);	//print token
+	//print_token(ms->token);	//print token
 
 	//Lexical Analysis
 	if (lexical_analysis(ms))

@@ -28,7 +28,9 @@ static void	ft_token_checker(t_ms *ms)
 	t_type	state;
 
 	state = ms->lexer.state;
-	if ((*ms->lexer.str_ptr == ' ' || *ms->lexer.str_ptr == '\0'))
+	if (*ms->lexer.str_ptr == '"' || *ms->lexer.str_ptr == '\'')
+		ms->lexer.state = START;
+	else if ((*ms->lexer.str_ptr == ' ' || *ms->lexer.str_ptr == '\0'))
 	{
 		if (!ms->lexer.quote_open)
 			ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));

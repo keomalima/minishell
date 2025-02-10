@@ -102,7 +102,6 @@ typedef struct s_var
 typedef struct s_exec
 {
 	int		cmd_count;
-	int		here_doc;
 	char	**env;
 	char	**cmd;
 	int		pipe_fd[2][2];
@@ -126,7 +125,6 @@ typedef struct s_ms
 	int				exit_status;
 	size_t			cmd_count;
 	char			**env;
-	int				here_doc_fd;
 }				t_ms;
 
 /******************    UTILS    ******************/
@@ -171,6 +169,7 @@ char		**parse_arg(t_cmd *cmd, t_ms *ms);
 void		free_split(char **arr);
 void		close_fd(t_ms *ms, int *fd);
 void		close_all_fds(t_ms *ms);
+void	exec_here_doc(t_ms *ms, char *limiter, int i);
 
 /******************    BUILTIN    ******************/
 int			exec_builtin(t_ms *ms);

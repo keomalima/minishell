@@ -51,8 +51,8 @@ void	open_infile(t_cmd *cmd, t_ms *ms, int i)
 	{
 		if (ms->exec->pipe_fd[(i % 2) % 2][0] >= 0)
 			close_fd(ms, &ms->exec->pipe_fd[(i % 2) % 2][0]);
-		if (ms->here_doc_fd)
-			ms->exec->pipe_fd[(i + 1) % 2][0] = ms->here_doc_fd;
+		if (cmd->infile[i]->is_lim)
+			exec_here_doc(ms, cmd->infile[i]->name, i);
 		else
 			ms->exec->pipe_fd[(i + 1) % 2][0] = open(cmd->infile[index]->name, O_RDONLY);
 		if (ms->exec->pipe_fd[(i + 1) % 2][0] < 0)
