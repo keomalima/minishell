@@ -24,14 +24,14 @@ int	handle_key(t_ms *ms, char *rl)
 	}
 	//Tokenization
 	create_tokens(rl, ms);	//tokenization
-	print_token(ms->token);	//print token
+	// print_token(ms->token);	//print token
 
 	//Lexical Analysis
 	lexical_analysis(ms);
 
 	//Parsing
 	parse_cmd(ms);		//parsing
-	print_cmd(ms->cmd);	//print parsing
+	// print_cmd(ms->cmd);	//print parsing
 
 	ms->cmd_count = ft_cmd_count(ms);
 

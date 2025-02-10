@@ -133,6 +133,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 void	clean_ms(t_ms *ms, int exit_code);
 size_t	ft_strlen_ms(const char *s);
 size_t	ft_strlcpy_ms(char *dst, const char *src, size_t size);
+char	*ft_getenv(t_ms *ms, char *str);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
@@ -176,17 +177,14 @@ void		exec_here_doc(t_ms *ms, char *limiter, int i);
 /******************    BUILTIN    ******************/
 int		exec_builtin(t_ms *ms);
 void	cd_command(t_ms *ms, t_cmd *cmd);
+void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
 // EXPORT
 void	export_command(t_ms *ms, t_cmd *cmd);
 t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd);
-void	ft_print_export(char **env);
+int		ft_modify_env(t_var **env_var, t_ms *ms);
 size_t	ft_find_var_count(t_cmd *cmd);
 int		ft_is_all_alnum(char *str);
-void	clean_var(t_var **env_var);
 t_var	*ft_create_new_var(t_ms *ms, t_var **env_var);
-int		ft_modify_env(t_var **env_var, t_ms *ms);
-void	export_exit_o_return(t_ms *ms, t_var **env_var, int exit_code);
-char	**ft_duplicate_env(t_var **env_var, t_ms *ms);
 size_t	ft_env_count(char **env);
 char	**ft_duplicate_env(t_var **env_var, t_ms *ms);
 

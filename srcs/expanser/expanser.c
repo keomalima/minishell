@@ -8,7 +8,7 @@ char	*exp_valid_variable(char *s, t_ms *ms)
 	exp.src = s;
 	exp.size = 0;
 	exp.extract = ft_extract_var(s, ms);
-	exp.env_var = getenv(exp.extract);
+	exp.env_var = ft_getenv(ms, exp.extract);
 	exp.size = ft_strlen_ms(s) - ft_strlen_ms(exp.extract)
 		+ ft_strlen_ms(exp.env_var) - 1;
 	dest = ft_calloc((exp.size + 1), sizeof(char));
@@ -90,7 +90,6 @@ size_t	ft_count_exp(char *s)
 			count_exp++;
 		tmp = ft_strchr((tmp + 1), '$');
 	}
-	printf(RED"Count = %zu\n"RESET, count_exp);
 	return (count_exp);
 }
 

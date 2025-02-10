@@ -28,7 +28,7 @@ char	*ft_remplace_value(t_var *cur_var, t_var **env_var, t_ms *ms, int index)
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
 	{
-		export_exit_o_return(ms, env_var, 12);
+		ft_builtins_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	ft_strlcpy_ms(dest, cur_var->name, (ft_strlen_ms(cur_var->name) + 1));
@@ -51,7 +51,7 @@ char	*ft_set_new_variable(t_var *cur_var, t_var **env_var, t_ms *ms)
 	new_var = ft_calloc((len + 1), sizeof(char));
 	if (!new_var)
 	{
-		export_exit_o_return(ms, env_var, 12);
+		ft_builtins_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	ft_strlcpy_ms(new_var, cur_var->name, (ft_strlen_ms(cur_var->name) + 1));
@@ -71,7 +71,7 @@ char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	new_env = ft_calloc((ft_env_count(ms->env) + 2), sizeof(char *));
 	if (!new_env)
 	{
-		export_exit_o_return(ms, env_var, 12);
+		ft_builtins_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	i = 0;

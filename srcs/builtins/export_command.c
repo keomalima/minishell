@@ -2,9 +2,18 @@
 
 void	ft_print_export(char **env)
 {
+	int	i;
+
 	while (env && *env)
 	{
-		printf("export %s\n", *env);
+		printf("export ");
+		i = 0;
+		while ((*env)[i] != '=')
+			printf("%c", (*env)[i++]);
+		printf("%c\"", (*env)[i++]);
+		while ((*env)[i])
+			printf("%c", (*env)[i++]);
+		printf("\"\n");
 		env++;
 	}
 }
