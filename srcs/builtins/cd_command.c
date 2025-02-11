@@ -32,7 +32,7 @@ void	cd_command(t_ms *ms, t_cmd *cmd)
 		printf("cd : too many arguments\n");
 		return (ft_builtins_exit(ms, NULL, 1));
 	}
-	else if (!cmd->cmd[1] || !*cmd->cmd[1])
+	if (!cmd->cmd[1] || !*cmd->cmd[1])
 	{
 		if (!ft_getenv(ms, "HOME"))
 			printf("cd: HOME not set\n");
@@ -41,13 +41,17 @@ void	cd_command(t_ms *ms, t_cmd *cmd)
 	}
 	else
 	{
-		if (ft_check_valid_dir(ms, cmd))
-		{
+		// if (ft_check_valid_dir(ms, cmd))
+		// {
 			if (chdir(cmd->cmd[1]) == -1)
-				printf("cd: %s: No such file or directory\n", cmd->cmd[1]);
+			{
+				perror("cd");
+				ft_builtins_exit(ms, NULL, 1);
+			}
+				// printf("cd: %s: No such file or directory\n", cmd->cmd[1]);
 			else if (getcwd(NULL, 0) == NULL)
 				printf("chdir: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
-		}
+		// }
 	}
 	ft_builtins_exit(ms, NULL, 0);
 }
