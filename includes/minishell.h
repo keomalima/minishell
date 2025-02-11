@@ -25,6 +25,7 @@
 #include <sys/stat.h>
 # include <readline/history.h>
 # include <sys/stat.h>
+# include <signal.h>
 
 typedef enum	e_type
 {
@@ -125,6 +126,7 @@ typedef struct s_ms
 	int				exit_status;
 	size_t			cmd_count;
 	char			**env;
+	char			*lex_err;
 }				t_ms;
 
 /******************    UTILS    ******************/
@@ -161,7 +163,7 @@ t_infile	*ft_new_infile(t_token *token, t_ms *ms);
 t_outfile	*ft_new_outfile(t_token *token, t_ms *ms);
 
 /******************    EXEC    ******************/
-void		exec_cmd(t_ms *ms);
+void		exec_init(t_ms *ms);
 // EXEC UTILS
 int			ft_cmd_count(t_ms *ms);
 void		initialize_variables(t_ms *ms);

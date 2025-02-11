@@ -89,7 +89,7 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 			exec_path = get_exec_path(path, cmd->cmd[0]);
 	}
 	else
-		exec_path = get_exec_path(path,cmd->cmd[0]);
+		exec_path = get_exec_path(path, cmd->cmd[0]);
 	if (!exec_path)
 		error_handler(ms, cmd->cmd);
 	free(cmd->cmd[0]);

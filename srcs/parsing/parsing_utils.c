@@ -7,5 +7,3 @@ void	*ft_free(char **data)
 	*data = NULL;
 	return (NULL);
 }
-
-

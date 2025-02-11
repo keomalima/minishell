@@ -15,16 +15,17 @@ static size_t	is_redir(const char *content)
 	return (1);
 }
 
-int	lexical_error(t_ms *ms, char *str_err)
+int	lexical_error(t_ms *ms)
 {
 	t_token	*token;
 
 	token = ms->token;
-	if (ft_strcmp(str_err, "newline"))
-		printf("ms: syntax error near unexpected token `%s'\n", str_err);
-	while(token)
+	if (ft_strcmp(ms->lex_err, "newline"))
+		printf("ms: syntax error near unexpected token `%s'\n", ms->lex_err);
+	while (token)
 	{
-		if (!ft_strcmp(token->content, "<<") && token->next && token->next->type == CMD)
+		if (!ft_strcmp(token->content, "<<") && token->next
+			&& token->next->type == CMD)
 			here_doc(ms, token->next->content);
 		if (token->type == OPP && !is_redir(token->content))
 		{
@@ -33,42 +34,40 @@ int	lexical_error(t_ms *ms, char *str_err)
 		}
 		else if (token->type == OPP)
 		{
-			if (!token->prev)
-				return (1);
-			else if (token->next && token->next->type == OPP && is_redir(token->next->content))
+			if (!token->prev || (token->next && token->next->type == OPP
+					&& is_redir(token->next->content)))
 				return (1);
 		}
 		token = token->next;
 	}
-	printf("ms: syntax error near unexpected token `%s'\n", str_err);
+	printf("ms: syntax error near unexpected token `%s'\n", ms->lex_err);
 	return (1);
 }
 
 int	lexical_analysis(t_ms *ms)
 {
 	t_token	*token;
-	char	*str_err;
 
 	token = ms->token;
-	while(token)
+	while (token)
 	{
-		str_err = NULL;
 		if (token->type == OPP && !is_redir(token->content))
 		{
 			if (token->next && token->next->type == OPP)
-				str_err = token->next->content;
+				ms->lex_err = token->next->content;
 			else if (!token->next)
-				str_err = "newline";
+				ms->lex_err = "newline";
 		}
 		else if (token->type == OPP)
 		{
 			if (!token->prev)
-				str_err = token->content;
-			else if (token->next && token->next->type == OPP && is_redir(token->next->content))
-				str_err = token->next->content;
+				ms->lex_err = token->content;
+			else if (token->next && token->next->type == OPP
+				&& is_redir(token->next->content))
+				ms->lex_err = token->next->content;
 		}
-		if (str_err)
-			return (lexical_error(ms, str_err));
+		if (ms->lex_err)
+			return (lexical_error(ms));
 		token = token->next;
 	}
 	return (0);

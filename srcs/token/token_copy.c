@@ -40,7 +40,8 @@ size_t	ft_strlen_state(t_ms *ms)
 			else if (*(ms->lexer.str_start + i) == '"' && ms->lexer.state == DQ)
 				ms->lexer.state = START;
 		}
-		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state && ms->lexer.state != START)
+		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state
+			&& ms->lexer.state != START)
 			len++;
 		if (ms->lexer.state != START)
 			i++;
@@ -48,23 +49,13 @@ size_t	ft_strlen_state(t_ms *ms)
 	return (len);
 }
 
-
-char	*ft_strndup_tk(t_ms *ms)
+static void	ft_strndup_loop(t_ms *ms, char *str)
 {
-	char	*str;
-	size_t	len;
 	size_t	i;
 	size_t	j;
 
-	if (!ms->lexer.str_start || !ms->lexer.str_ptr)
-		exit_handler(ms, 1);
-	len = ft_strlen_state(ms);
-	str = ft_calloc((len + 1), sizeof(char));
-	if (!str)
-		exit_handler(ms, 1);
 	i = 0;
 	j = 0;
-	ms->lexer.state = START;
 	while ((ms->lexer.str_start + i) != ms->lexer.str_ptr)
 	{
 		if (ms->lexer.state == START)
@@ -76,10 +67,26 @@ char	*ft_strndup_tk(t_ms *ms)
 			else if (*(ms->lexer.str_start + i) == '"' && ms->lexer.state != SQ)
 				ms->lexer.state = START;
 		}
-		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state && ms->lexer.state != START)
+		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state
+			&& ms->lexer.state != START)
 			str[j++] = ms->lexer.str_start[i];
 		if (ms->lexer.state != START)
 			i++;
 	}
+}
+
+char	*ft_strndup_tk(t_ms *ms)
+{
+	char	*str;
+	size_t	len;
+
+	if (!ms->lexer.str_start || !ms->lexer.str_ptr)
+		exit_handler(ms, 1);
+	len = ft_strlen_state(ms);
+	str = ft_calloc((len + 1), sizeof(char));
+	if (!str)
+		exit_handler(ms, 1);
+	ms->lexer.state = START;
+	ft_strndup_loop(ms, str);
 	return (str);
 }

@@ -1,26 +1,8 @@
 #include "minishell.h"
 
-void	wait_children_exit(t_ms *ms)
+static void	open_outfile(t_cmd *cmd, t_ms *ms, int i)
 {
-	int	i;
-	int	status;
-
-	i = 0;
-	while (ms->exec->cmd_count > i)
-	{
-		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
-			exit_handler(ms, 1);
-		ms->exit_status = WEXITSTATUS(status);
-		i++;
-	}
-	free(ms->exec->child_pids);
-	ms->exec->child_pids = NULL;
-	// exit_handler(ms, WEXITSTATUS(status));
-}
-
-void	open_outfile(t_cmd *cmd, t_ms *ms, int i)
-{
-	size_t index;
+	size_t	index;
 
 	index = 0;
 	while (cmd->outfile_size > index)
@@ -29,10 +11,10 @@ void	open_outfile(t_cmd *cmd, t_ms *ms, int i)
 			close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
 		if (cmd->outfile[index]->type == OUT_TRUNC)
 			ms->exec->pipe_fd[i % 2][1] = open(cmd->outfile[index]->name,
-				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+					O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
 			ms->exec->pipe_fd[i % 2][1] = open(cmd->outfile[index]->name,
-				O_WRONLY | O_CREAT | O_APPEND, 0644);
+					O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (ms->exec->pipe_fd[i % 2][1] < 0)
 		{
 			ft_printf("%s: %s \n", strerror(errno), cmd->outfile[index]->name);
@@ -42,7 +24,7 @@ void	open_outfile(t_cmd *cmd, t_ms *ms, int i)
 	}
 }
 
-void	open_infile(t_cmd *cmd, t_ms *ms, int i)
+static void	open_infile(t_cmd *cmd, t_ms *ms, int i)
 {
 	size_t	index;
 
@@ -54,21 +36,24 @@ void	open_infile(t_cmd *cmd, t_ms *ms, int i)
 		if (cmd->infile[i]->is_lim)
 			exec_here_doc(ms, cmd->infile[i]->name, i);
 		else
-			ms->exec->pipe_fd[(i + 1) % 2][0] = open(cmd->infile[index]->name, O_RDONLY);
+			ms->exec->pipe_fd[(i + 1) % 2][0] = open(cmd->infile[index]->name,
+					O_RDONLY);
 		if (ms->exec->pipe_fd[(i + 1) % 2][0] < 0)
 		{
 			if (access(cmd->infile[index]->name, R_OK) < 0
 				&& access(cmd->infile[index]->name, F_OK) == 0)
-				ft_printf("%s: %s \n", strerror(errno), cmd->infile[index]->name);
+				ft_printf("%s: %s \n", strerror(errno),
+					cmd->infile[index]->name);
 			else
-				ft_printf("%s: %s \n", strerror(errno), cmd->infile[index]->name);
+				ft_printf("%s: %s \n", strerror(errno),
+					cmd->infile[index]->name);
 			exit_handler(ms, -1);
 		}
 		index++;
 	}
 }
 
-void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
+static void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 {
 	if (cmd->infile_size)
 		open_infile(cmd, ms, i);
@@ -94,21 +79,13 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 	}
 }
 
-void	exec_cmd(t_ms *ms)
+static void	exec_cmd(t_ms *ms)
 {
 	int		i;
 	int		status;
 	t_cmd	*current;
 
 	current = ms->cmd;
-	ms->exec = malloc(sizeof(t_exec));
-	if (!ms->exec)
-		exit_handler(ms, 12);
-	initialize_variables(ms);
-	ms->exec->cmd_count = ft_cmd_count(ms);
-	ms->exec->child_pids = malloc (ms->exec->cmd_count * sizeof(pid_t));
-	if (!ms->exec->child_pids)
-		exit_handler(ms, 12);
 	i = 0;
 	while (current)
 	{
@@ -128,6 +105,17 @@ void	exec_cmd(t_ms *ms)
 		i++;
 		current = current->next;
 	}
-	free(ms->exec->child_pids);
-	ms->exec->child_pids = NULL;
+}
+
+void	exec_init(t_ms *ms)
+{
+	ms->exec = malloc(sizeof(t_exec));
+	if (!ms->exec)
+		exit_handler(ms, 12);
+	initialize_variables(ms);
+	ms->exec->cmd_count = ft_cmd_count(ms);
+	ms->exec->child_pids = malloc (ms->exec->cmd_count * sizeof(pid_t));
+	if (!ms->exec->child_pids)
+		exit_handler(ms, 12);
+	exec_cmd(ms);
 }

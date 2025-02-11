@@ -13,6 +13,7 @@ const char *cmd_redir[] = {
 	"UNDEFINED",
 	"OUT_TRUNC",
 	"OUT_APPEND",
+	"IN",
 	"PIPE"
 };
 
