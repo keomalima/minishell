@@ -23,13 +23,9 @@ int	handle_key(t_ms *ms, char *rl)
 	return (0);
 }
 
-void	minishell(t_ms *ms)
+void	minishell(t_ms *ms, char *rl)
 {
-	char	*rl;
-
 	initialize_var(ms);
-	rl = readline(RESET"minishell> ");
-	add_history(rl);
 	if (handle_key(ms, rl))
 	{
 		clean_ms(ms, 1);
@@ -50,25 +46,39 @@ void	minishell(t_ms *ms)
 	//Builtinj
 	// if (exec_builtin(ms) == 0)
 	// 	exec_cmd(ms);
-	free(rl);
-	//exit_handler(ms, 0);
 }
 
-void	handler(int signum)
+void sigint_handler(int sig)
 {
-	if (signum == 2)
-		printf("[%i]\n", signum);
+	(void)sig;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
+
+
 int	main(int arc, char **arv, char **env)
 {
 	(void)arc;
 	(void)arv;
 	t_ms	ms;
-	signal(SIGINT, handler);
-
+	char *input;
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 	ms.exit_status = 42;
 	ms.env = env;
 	while (1)
-		minishell(&ms);
+	{
+		input = readline("minishell$ ");
+		if (!input)
+			break ;
+		if (*input && !ft_strncmp(input, "\n", ft_strlen(input)))
+		{
+			add_history(input);
+			minishell(&ms, input);
+		}
+		free(input);
+	}
 	return (0);
 }

@@ -20,10 +20,10 @@
 # include <errno.h>
 # include <fcntl.h>
 # include "libft.h"
-# include <readline/readline.h>
 # include <sys/wait.h>
 #include <sys/stat.h>
 # include <readline/history.h>
+# include <readline/readline.h>
 # include <sys/stat.h>
 # include <signal.h>
 
@@ -171,7 +171,7 @@ char		**parse_arg(t_cmd *cmd, t_ms *ms);
 void		free_split(char **arr);
 void		close_fd(t_ms *ms, int *fd);
 void		close_all_fds(t_ms *ms);
-void	exec_here_doc(t_ms *ms, char *limiter, int i);
+void		exec_here_doc(t_ms *ms, char *limiter, int i);
 
 /******************    BUILTIN    ******************/
 int			exec_builtin(t_ms *ms);
