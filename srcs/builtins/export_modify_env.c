@@ -1,22 +1,5 @@
 #include "minishell.h"
 
-int	ft_find_var(t_var *current_var, t_ms *ms)
-{
-	int		i;
-	int		comp;
-
-	i = 0;
-	while (ms->env[i])
-	{
-		comp = ft_strncmp(ms->env[i],
-				current_var->name, ft_strlen_ms(current_var->name));
-		if (comp == 0)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
 char	*ft_remplace_value(t_var *cur_var, t_var **env_var, t_ms *ms, int index)
 {
 	char	*dest;
@@ -97,10 +80,10 @@ int	ft_modify_env(t_var **env_var, t_ms *ms)
 	i = -1;
 	while (env_var[++i])
 	{
-		index = ft_find_var(env_var[i], ms);
+		index = ft_find_var(env_var[i]->name, ms);
 		if (index >= 0 && env_var[i]->value)		// Variable found
 		{
-			index = ft_find_var(env_var[i], ms);
+			index = ft_find_var(env_var[i]->name, ms);
 			ms->env[index] = ft_remplace_value(env_var[i], env_var, ms, index);
 			if (!ms->env[index])
 				return (0);

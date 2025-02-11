@@ -66,7 +66,10 @@ static void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 	close_all_fds(ms);
 	if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "cd") == 0)
 		cd_command(ms, cmd);
-	if (execve(ms->exec->cmd[0], ms->exec->cmd, NULL) == -1)
+	else if (ft_strcmp(cmd->cmd[0], "export") == 0)
+		export_command(ms, cmd);
+	/////////////////////
+	if (ms->exec->cmd)
 	{
 		if (dup2(2, STDOUT_FILENO) < 0)
 			exit_handler(ms, 1);

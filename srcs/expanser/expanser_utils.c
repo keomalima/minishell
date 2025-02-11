@@ -15,8 +15,52 @@ char	*ft_extract_var(char *s, t_ms *ms)
 	str = ft_calloc((len + 1), sizeof(char));
 	if (!str)
 		exit_handler(ms, 12);
-		ft_strlcpy_ms(str, tmp, len + 1);
+	ft_strlcpy_ms(str, tmp, len + 1);
 	return (str);
+}
+
+char	*ft_clear_space(char *src, t_ms *ms)
+{
+	char	*dest;
+	size_t	i;
+	size_t	len;
+
+	if (!src)
+		return (NULL);
+	i = 0;
+	len = 0;
+	while (src[i])
+	{
+		if (src[i] == ' ')
+		{
+			i++;
+			len++;
+		}
+		while (src[i] && src[i] == ' ')
+			i++;
+		while (src[i] && src[i] != ' ')
+		{
+			i++;
+			len++;
+		}
+	}
+	printf("len = %zu\n", len);
+	dest = ft_calloc((len +1), sizeof(char));
+	if (!dest)
+		exit_handler(ms, 12);
+	len = 0;
+	i = 0;
+	while (src[i])
+	{
+		if (src[i] == ' ')
+			dest[len++] = src[i++];
+		while (src[i] && src[i] == ' ')
+			i++;
+		while (src[i] && src[i] != ' ')
+			dest[len++] = src[i++];
+	}
+	// ft_free(&src);
+	return (dest);
 }
 
 void	ft_fill_exp(char **dest, t_exp exp)

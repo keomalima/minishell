@@ -26,9 +26,11 @@ char	*ft_getenv(t_ms *ms, char *str)
 	i = 0;
 	while (ms->env[i])
 	{
-		if (ft_strncmp(ms->env[i], str, ft_strlen(str)) == 0 && ms->env[i][ft_strlen(str)] == '=')
-			return (&ms->env[i][ft_strlen(str) + 1]);
-		i++;
+		close_all_fds(ms);
+		if (args->child_pids)
+			free(args->child_pids);
+		free(args);
+		args = NULL;
 	}
 }
 
@@ -61,25 +63,33 @@ void	ft_lstclear_token(t_token **lst)
 	}
 }
 
-void	ft_lstclear_cmd(t_cmd **cmd)
+void	ft_lstclear_cmd(t_ms *ms)
 {
 	t_cmd	*tmp;
+	int		i;
 
-	if (cmd)
+	if (ms->cmd)
 	{
-		while (*cmd)
+		tmp = ms->cmd;
+		while (tmp)
 		{
-			free ((*cmd)->outfile);
-			(*cmd)->outfile = NULL;
-			free ((*cmd)->infile);
-			(*cmd)->infile = NULL;
-			tmp = *cmd;
-			*cmd = (*cmd)->next;
-			if (tmp)
-			{
-				free(tmp->cmd);
-				free(tmp);
-			}
+			i = 0;
+			while (tmp->outfile[i])
+				free(tmp->outfile[i++]);
+			free(tmp->outfile);
+			tmp->outfile = NULL;
+			i = 0;
+			while (tmp->infile[i])
+				free(tmp->infile[i++]);
+			free(tmp->infile);
+			tmp->infile = NULL;
+			if (ms->cmd->cmd)
+				free(ms->cmd->cmd);
+			ms->cmd->cmd = NULL;
+			ms->cmd = ms->cmd->next;
+			free(tmp);
+			tmp = NULL;
+			tmp = ms->cmd;
 		}
 	}
 }
@@ -88,10 +98,8 @@ void	clean_ms(t_ms *ms, int exit_code)
 {
 	ms->exit_status = exit_code;
 	ft_lstclear_token(&ms->token);
-	ft_lstclear_cmd(&ms->cmd);
+	ft_lstclear_cmd(ms);
 	exec_exit_handler(ms->exec, ms);
-	// if (ms->mod_env == 1)
-	// 	free_split(ms->env);
 }
 
 void	exit_handler(t_ms *ms, int exit_code)
@@ -99,7 +107,7 @@ void	exit_handler(t_ms *ms, int exit_code)
 	ms->exit_status = exit_code;
 	printf(RED"--> exit code = %d\n"RESET, ms->exit_status);
 	ft_lstclear_token(&ms->token);
-	ft_lstclear_cmd(&ms->cmd);
+	ft_lstclear_cmd(ms);
 	exec_exit_handler(ms->exec, ms);
 	if (exit_code == -1)
 	{
@@ -114,6 +122,7 @@ void	exit_handler(t_ms *ms, int exit_code)
 		perror("Error");
 	exit(exit_code);
 }
+
 size_t	ft_strlcpy_ms(char *dst, const char *src, size_t size)
 {
 	size_t	i;
@@ -142,6 +151,7 @@ size_t	ft_strlen_ms(const char *s)
 		i++;
 	return (i);
 }
+
 char	*ft_getenv(t_ms *ms, char *str)
 {
 	int	i;

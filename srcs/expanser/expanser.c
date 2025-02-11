@@ -9,6 +9,10 @@ char	*exp_valid_variable(char *s, t_ms *ms)
 	exp.size = 0;
 	exp.extract = ft_extract_var(s, ms);
 	exp.env_var = ft_getenv(ms, exp.extract);
+	printf("env var = [%s]\n", exp.env_var);
+	exp.env_var = ft_clear_space(exp.env_var, ms);
+	printf("env var = [%s]\n", exp.env_var);
+
 	exp.size = ft_strlen_ms(s) - ft_strlen_ms(exp.extract)
 		+ ft_strlen_ms(exp.env_var) - 1;
 	dest = ft_calloc((exp.size + 1), sizeof(char));
@@ -20,6 +24,7 @@ char	*exp_valid_variable(char *s, t_ms *ms)
 	ft_fill_exp(&dest, exp);
 	ft_free(&s);
 	ft_free(&exp.extract);
+	ft_free(&exp.env_var);
 	return (dest);
 }
 

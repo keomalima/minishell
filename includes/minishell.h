@@ -151,6 +151,7 @@ char		*expanser(char *s, t_ms *ms);
 // PARSING UTILS
 char	*ft_extract_var(char *s, t_ms *ms);
 void	ft_fill_exp(char **dest, t_exp exp);
+char	*ft_clear_space(char *src, t_ms *ms);
 
 /******************    PARSER    ******************/
 void		parse_cmd(t_ms *ms);
@@ -178,11 +179,12 @@ void		exec_here_doc(t_ms *ms, char *limiter, int i);
 int		exec_builtin(t_ms *ms);
 void	cd_command(t_ms *ms, t_cmd *cmd);
 void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
+int		ft_find_var(char *path, t_ms *ms);
 // EXPORT
+size_t	ft_find_var_count(t_cmd *cmd);
 void	export_command(t_ms *ms, t_cmd *cmd);
 t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd);
 int		ft_modify_env(t_var **env_var, t_ms *ms);
-size_t	ft_find_var_count(t_cmd *cmd);
 int		ft_is_all_alnum(char *str);
 t_var	*ft_create_new_var(t_ms *ms, t_var **env_var);
 size_t	ft_env_count(char **env);

@@ -28,6 +28,7 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
 		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c \
 		$(EXECDIR)/exec_heredoc.c \
 		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/builtins_clean.c \
+		$(BUILTINDIR)/env_management.c \
 		$(BUILTINDIR)/cd_command.c \
 		$(BUILTINDIR)/export_command.c $(BUILTINDIR)/export_utils.c $(BUILTINDIR)/export_get_variable.c $(BUILTINDIR)/export_modify_env.c \
 		$(LEXICALDIR)/lexical_analysis.c
@@ -98,7 +99,6 @@ $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 
 val:
 	valgrind --leak-check=full --show-leak-kinds=all --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
-	
 clean:
 	$(RM) -rf $(OBJDIR)
 	$(MAKE) -C $(LIBFTDIR) clean
