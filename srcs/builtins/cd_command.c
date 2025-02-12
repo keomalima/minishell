@@ -66,8 +66,10 @@ void	ft_update_pwd(t_ms *ms)
 	new_pwd = getcwd(NULL, 0);
 	if (!new_pwd)
 	{
-		printf("chdir: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
-		return;
+		printf("chdir: error retrieving current directory: \
+			getcwd: cannot access parent directories: \
+			No such file or directory\n");
+		return ;
 	}
 	i_old = ft_find_var("OLDPWD", ms);
 	if (i_old >= 0)
@@ -93,8 +95,6 @@ void	cd_command(t_ms *ms, t_cmd *cmd)
 		printf("cd : too many arguments\n");
 		return (ft_builtins_exit(ms, NULL, 1));
 	}
-	if (ms->mod_env == 0)
-		ms->env = ft_duplicate_env(NULL, ms);
 	if (!cmd->cmd[1] || !*cmd->cmd[1])
 	{
 		if (!ft_getenv(ms, "HOME"))
@@ -116,4 +116,3 @@ void	cd_command(t_ms *ms, t_cmd *cmd)
 	}
 	ft_builtins_exit(ms, NULL, 0);
 }
-

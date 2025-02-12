@@ -30,7 +30,9 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
 		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/builtins_clean.c \
 		$(BUILTINDIR)/env_management.c \
 		$(BUILTINDIR)/cd_command.c \
+		$(BUILTINDIR)/env_command.c \
 		$(BUILTINDIR)/export_command.c $(BUILTINDIR)/export_utils.c $(BUILTINDIR)/export_get_variable.c $(BUILTINDIR)/export_modify_env.c \
+		$(BUILTINDIR)/unset_command.c \
 		$(LEXICALDIR)/lex_analysis.c $(LEXICALDIR)/lex_heredoc.c
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)

@@ -72,6 +72,10 @@ static void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 		cd_command(ms, cmd);
 	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "export") == 0)
 		export_command(ms, cmd);
+	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "unset") == 0)
+		unset_command(ms, cmd);
+	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "env") == 0)
+		env_command(ms);
 	if (execve(ms->exec->cmd[0], ms->exec->cmd, NULL) == -1)
 	{
 		if (dup2(2, STDOUT_FILENO) < 0)

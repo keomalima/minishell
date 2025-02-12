@@ -74,7 +74,6 @@ int	ft_modify_env(t_var **env_var, t_ms *ms)
 	int		i;
 	int		index;
 
-	ms->env = ft_duplicate_env(env_var, ms);
 	if (!ms->env)
 		return (1);
 	i = -1;

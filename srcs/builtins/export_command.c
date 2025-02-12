@@ -1,20 +1,25 @@
 #include "minishell.h"
 
-void	ft_print_export(char **env)
+static void	ft_print_export(char **env)
 {
 	int	i;
+	int	j;
 
-	while (env && *env)
+	j = 0;
+	while (env[j])
 	{
 		printf("export ");
 		i = 0;
-		while ((*env)[i] != '=')
-			printf("%c", (*env)[i++]);
-		printf("%c\"", (*env)[i++]);
-		while ((*env)[i])
-			printf("%c", (*env)[i++]);
-		printf("\"\n");
-		env++;
+		while (env[j][i] && env[j][i] != '=')
+			printf("%c", env[j][i++]);
+		if (env[j][i])
+			printf("%c\"", env[j][i++]);
+		while (env[j][i])
+			printf("%c", env[j][i++]);
+		if (env[j][i])
+			printf("\"");
+		printf("\n");
+		j++;
 	}
 }
 
