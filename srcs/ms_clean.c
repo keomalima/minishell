@@ -1,88 +1,85 @@
 #include "minishell.h"
 
-void	exec_exit_handler(t_exec *args, t_ms *ms)
+static void	clean_t_exec(t_exec *args, t_ms *ms)
 {
 	if (args)
 	{
 		close_all_fds(ms);
-		if (args->cmd)
-			free_split(args->cmd);
 		if (args->child_pids)
 			free(args->child_pids);
 		free(args);
+		args = NULL;
 	}
 }
 
-static void	ft_lstdelone_token(t_token *lst)
+static void	clean_t_token(t_ms *ms)
 {
-	if (lst)
-	{
-		free(lst->content);
-		lst->content = NULL;
-		free(lst);
-	}
-}
-
-void	ft_lstclear_token(t_token **lst)
-{
+	t_token	*token;
 	t_token	*tmp;
 
-	if (lst)
+	token = ms->token;
+	if (token)
 	{
-		while (*lst)
+		while (token)
 		{
-			tmp = *lst;
-			*lst = (*lst)->next;
-			ft_lstdelone_token(tmp);
+			tmp = token;
+			if (tmp->content)
+			{
+				free(tmp->content);
+				tmp->content = NULL;
+			}
+			token = token->next;
+			free(tmp);
+			tmp = NULL;
 		}
 	}
 }
 
-void	ft_lstclear_cmd(t_cmd **cmd)
+static void	clean_t_cmd(t_ms *ms)
 {
 	t_cmd	*tmp;
 	int		i;
 
-	if (cmd)
+	if (ms->cmd)
 	{
-		while (*cmd)
+		tmp = ms->cmd;
+		while (tmp)
 		{
 			i = 0;
-			while ((*cmd)->outfile[i])
-				free ((*cmd)->outfile[i++]);
-			free ((*cmd)->outfile);
-			(*cmd)->outfile = NULL;
+			while (tmp->outfile[i])
+				free(tmp->outfile[i++]);
+			free(tmp->outfile);
+			tmp->outfile = NULL;
 			i = 0;
-			while ((*cmd)->infile[i])
-				free ((*cmd)->infile[i++]);
-			free ((*cmd)->infile);
-			(*cmd)->infile = NULL;
-			tmp = *cmd;
-			*cmd = (*cmd)->next;
-			if (tmp)
-			{
-				free(tmp->cmd);
-				free(tmp);
-			}
+			while (tmp->infile[i])
+				free(tmp->infile[i++]);
+			free(tmp->infile);
+			tmp->infile = NULL;
+			if (ms->cmd->cmd)
+				free(ms->cmd->cmd);
+			ms->cmd->cmd = NULL;
+			ms->cmd = ms->cmd->next;
+			free(tmp);
+			tmp = NULL;
+			tmp = ms->cmd;
 		}
 	}
 }
 
 void	clean_ms(t_ms *ms, int exit_code)
 {
+	clean_t_token(ms);
+	clean_t_cmd(ms);
+	clean_t_exec(ms->exec, ms);
 	ms->exit_status = exit_code;
-	ft_lstclear_token(&ms->token);
-	ft_lstclear_cmd(&ms->cmd);
-	exec_exit_handler(ms->exec, ms);
 }
 
 void	exit_handler(t_ms *ms, int exit_code)
 {
+	clean_t_token(ms);
+	clean_t_cmd(ms);
+	clean_t_exec(ms->exec, ms);
 	ms->exit_status = exit_code;
-	printf(RED"--> exit code = %d\n"RESET, ms->exit_status);
-	ft_lstclear_token(&ms->token);
-	ft_lstclear_cmd(&ms->cmd);
-	exec_exit_handler(ms->exec, ms);
 	if (exit_code == -1)
 	{
 		exit_code = 1;

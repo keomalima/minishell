@@ -16,3 +16,19 @@ int	ft_strcmp(const char *s1, const char *s2)
 	else
 		return ((unsigned char) s1[i] - (unsigned char) s2[i]);
 }
+
+char	*ft_getenv(t_ms *ms, char *str)
+{
+	int	i;
+
+	if (!ms || !ms->env)
+		return (NULL);
+	i = 0;
+	while (ms->env[i])
+	{
+		if (ft_strncmp(ms->env[i], str, ft_strlen(str)) == 0 && ms->env[i][ft_strlen(str)] == '=')
+			return (&ms->env[i][ft_strlen(str) + 1]);
+		i++;
+	}
+	return (NULL);
+}

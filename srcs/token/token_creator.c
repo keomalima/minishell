@@ -73,6 +73,9 @@ void	create_tokens(char *input, t_ms *ms)
 	ms->lexer.quote_open = 0;
 	while (ms->lexer.state != END)
 	{
+		printf("State [%u]\n", ms->lexer.state);
+		printf("Char [%c]\n", *(ms->lexer.str_ptr));
+		printf("Is quote open [%c]\n", ms->lexer.quote_open ? 'y' : 'n');
 		if (ms->lexer.state == START)
 			ft_define_state(ms);
 		else if ((*ms->lexer.str_ptr == '\'' && ms->lexer.state != DQ)

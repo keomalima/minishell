@@ -43,8 +43,8 @@ size_t	ft_strlen_state(t_ms *ms)
 		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state
 			&& ms->lexer.state != START)
 			len++;
-		if (ms->lexer.state != START)
-			i++;
+		//if (ms->lexer.state != START)
+		i++;
 	}
 	return (len);
 }
@@ -70,8 +70,8 @@ static void	ft_strndup_loop(t_ms *ms, char *str)
 		if (ft_define_state(ms->lexer.str_start[i]) != ms->lexer.state
 			&& ms->lexer.state != START)
 			str[j++] = ms->lexer.str_start[i];
-		if (ms->lexer.state != START)
-			i++;
+		//if (ms->lexer.state != START)
+		i++;
 	}
 }
 

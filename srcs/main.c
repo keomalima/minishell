@@ -73,7 +73,7 @@ int	main(int arc, char **arv, char **env)
 		input = readline("minishell$ ");
 		if (!input)
 			break ;
-		if (*input && !ft_strncmp(input, "\n", ft_strlen(input)))
+		if (*input)
 		{
 			add_history(input);
 			minishell(&ms, input);

@@ -132,6 +132,7 @@ typedef struct s_ms
 /******************    UTILS    ******************/
 int			ft_strcmp(const char *s1, const char *s2);
 void		clean_ms(t_ms *ms, int exit_code);
+char		*ft_getenv(t_ms *ms, char *str);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
