@@ -11,7 +11,6 @@ int	exec_builtin(t_ms *ms)
 		}
 		else if (ft_strcmp(ms->cmd->cmd[0], "export") == 0 && ms->cmd_count == 1)
 		{
-			printf("EXPORT=====\n");
 			export_command(ms, ms->cmd);
 			return (1);
 		}

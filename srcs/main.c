@@ -41,11 +41,11 @@ void	minishell(t_ms *ms, char *rl)
 	parse_cmd(ms);
 	print_cmd(ms->cmd);
 	ms->cmd_count = ft_cmd_count(ms);
-	exec_init(ms);
-	clean_ms(ms, 2);
-	//Builtinj
+	// Builtin
 	// if (exec_builtin(ms) == 0)
-	// 	exec_cmd(ms);
+		exec_init(ms);
+	clean_ms(ms, 2);
+
 }
 
 void sigint_handler(int sig)

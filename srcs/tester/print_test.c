@@ -77,3 +77,15 @@ void print_split(char **split)
 	}
 	printf("\n------------------\n\n");
 }
+
+void	ft_print_res_export(t_var **env_var)
+{
+	size_t	i;
+
+	i = 0;
+	while (env_var[i])
+	{
+		printf("[%zu]	name [%s]		value [%s]\n", i, env_var[i]->name, env_var[i]->value);
+		i++;
+	}
+}

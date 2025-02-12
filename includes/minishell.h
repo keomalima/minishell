@@ -95,9 +95,8 @@ typedef struct s_index
 
 typedef struct s_var
 {
-	char	*new_var;
-	char	*var_name;
-	char	*var_value;
+	char	*name;
+	char	*value;
 }			t_var;
 
 typedef struct s_exec
@@ -126,13 +125,16 @@ typedef struct s_ms
 	int				exit_status;
 	size_t			cmd_count;
 	char			**env;
+	int				mod_env;
 	char			*lex_err;
 }				t_ms;
 
 /******************    UTILS    ******************/
-int			ft_strcmp(const char *s1, const char *s2);
-void		clean_ms(t_ms *ms, int exit_code);
-char		*ft_getenv(t_ms *ms, char *str);
+int		ft_strcmp(const char *s1, const char *s2);
+void	clean_ms(t_ms *ms, int exit_code);
+size_t	ft_strlen_ms(const char *s);
+size_t	ft_strlcpy_ms(char *dst, const char *src, size_t size);
+char	*ft_getenv(t_ms *ms, char *str);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
@@ -148,9 +150,9 @@ size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
 /******************    EXPANSER    ******************/
 char		*expanser(char *s, t_ms *ms);
 // PARSING UTILS
-size_t		ft_strlen_exp(const char *s);
-char		*ft_extract_var(char *s, t_ms *ms);
-void		ft_fill_exp(char **dest, t_exp exp);
+char	*ft_extract_var(char *s, t_ms *ms);
+void	ft_fill_exp(char **dest, t_exp exp);
+char	*ft_clear_space(char *src, t_ms *ms);
 
 /******************    PARSER    ******************/
 void		parse_cmd(t_ms *ms);
@@ -175,14 +177,28 @@ void		close_all_fds(t_ms *ms);
 void		exec_here_doc(t_ms *ms, char *limiter, int i);
 
 /******************    BUILTIN    ******************/
-int			exec_builtin(t_ms *ms);
-void		cd_command(t_ms *ms, t_cmd *cmd);
-void		export_command(t_ms *ms, t_cmd *cmd);
+int		exec_builtin(t_ms *ms);
+void	cd_command(t_ms *ms, t_cmd *cmd);
+void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
+int		ft_find_var(char *path, t_ms *ms);
+// EXPORT
+size_t	ft_find_var_count(t_cmd *cmd);
+void	export_command(t_ms *ms, t_cmd *cmd);
+t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd);
+int		ft_modify_env(t_var **env_var, t_ms *ms);
+int		ft_is_all_alnum(char *str);
+t_var	*ft_create_new_var(t_ms *ms, t_var **env_var);
+size_t	ft_env_count(char **env);
+char	**ft_duplicate_env(t_var **env_var, t_ms *ms);
+
 
 /******************    TESTER    ******************/
-void		print_token(t_token *list);
-void		print_split(char **split);
-void		print_cmd(t_cmd *list);
+void 	print_token(t_token *list);
+void 	print_split(char **split);
+void 	print_cmd(t_cmd *list);
+void	ft_print_res_export(t_var **env_var);
+int		ft_is_valid_export(t_ms *ms, t_cmd *cmd);
+
 
 /******************    LEXICAL    ******************/
 int			lexical_analysis(t_ms *ms);
