@@ -78,7 +78,6 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 	char	*path;
 
 	if (ft_strcmp(cmd->cmd[0], "cd") == 0 || ft_strcmp(cmd->cmd[0], "export") == 0)			//////////
-	{
 		return (cmd->cmd);
 	exec_path = NULL;
 	path = ft_getenv(ms, "PATH");
@@ -97,4 +96,5 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 	cmd->cmd[0] = exec_path;
 	return (cmd->cmd);
 	return (NULL);
+		
 }

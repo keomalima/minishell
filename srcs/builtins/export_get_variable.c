@@ -51,22 +51,22 @@ int	ft_export_alloc_n_fill(t_var *var, t_var **env_var, t_ms *ms, char *str)
 {
 	size_t	len;
 
-	len = ft_strlen_ms(str) - ft_strlen_ms(ft_strchr(str, '='));
+	len = ft_strlen(str) - ft_strlen(ft_strchr(str, '='));
 	var->name = ft_calloc((len + 1), sizeof(char));
 	if (!var->name)
 	{
 		ft_builtins_exit(ms, env_var, 12);
 		return (0);
 	}
-	var->value = ft_calloc((ft_strlen_ms(ft_strchr(str, '='))), sizeof(char));
+	var->value = ft_calloc((ft_strlen(ft_strchr(str, '='))), sizeof(char));
 	if (!var->value)
 	{
 		ft_free(&var->name);
 		ft_builtins_exit(ms, env_var, 12);
 		return (0);
 	}
-	ft_strlcpy_ms(var->name, str, (ft_strlen_ms(str) - ft_strlen_ms(ft_strchr(str, '=')) + 1));
-	ft_strlcpy_ms(var->value, ft_strchr(str, '=') + 1, ft_strlen_ms(ft_strchr(str, '=')));
+	ft_strlcpy(var->name, str, (ft_strlen(str) - ft_strlen(ft_strchr(str, '=')) + 1));
+	ft_strlcpy(var->value, ft_strchr(str, '=') + 1, ft_strlen(ft_strchr(str, '=')));
 	return (1);
 }
 

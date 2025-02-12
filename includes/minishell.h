@@ -126,6 +126,7 @@ typedef struct s_ms
 	size_t			cmd_count;
 	char			**env;
 	int				mod_env;
+	char			*lex_err;
 }				t_ms;
 
 /******************    UTILS    ******************/

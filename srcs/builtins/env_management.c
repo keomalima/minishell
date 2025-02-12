@@ -8,7 +8,7 @@ int	ft_find_var(char *path, t_ms *ms)
 	i = 0;
 	while (ms->env[i])
 	{
-		comp = ft_strncmp(ms->env[i], path, ft_strlen_ms(path));
+		comp = ft_strncmp(ms->env[i], path, ft_strlen(path));
 		if (comp == 0)
 			return (i);
 		i++;

@@ -29,14 +29,14 @@ char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
 {
 	char	*tmp;
 
-	tmp = ft_calloc((ft_strlen_ms(ms->env[i_new]) + 4), sizeof(char));
+	tmp = ft_calloc((ft_strlen(ms->env[i_new]) + 4), sizeof(char));
 	if (!tmp)
 	{
 		ft_builtins_exit(ms, NULL, 12);
 		return (NULL);
 	}
-	ft_strlcpy_ms(tmp, "OLD", 4);
-	ft_strlcpy_ms(&tmp[3], ms->env[i_new], (ft_strlen_ms(ms->env[i_new]) + 1));
+	ft_strlcpy(tmp, "OLD", 4);
+	ft_strlcpy(&tmp[3], ms->env[i_new], (ft_strlen(ms->env[i_new]) + 1));
 	ft_free(&ms->env[i_old]);
 	return (tmp);
 }
@@ -45,14 +45,14 @@ char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
 {
 	char	*tmp;
 
-	tmp = ft_calloc((ft_strlen_ms(new_pwd) + 5), sizeof(char));
+	tmp = ft_calloc((ft_strlen(new_pwd) + 5), sizeof(char));
 	if (!tmp)
 	{
 		ft_builtins_exit(ms, NULL, 12);
 		return (NULL);
 	}
-	ft_strlcpy_ms(tmp, "PWD=", 5);
-	ft_strlcpy_ms(&tmp[4], new_pwd, (ft_strlen_ms(new_pwd) + 1));
+	ft_strlcpy(tmp, "PWD=", 5);
+	ft_strlcpy(&tmp[4], new_pwd, (ft_strlen(new_pwd) + 1));
 	ft_free(&ms->env[i_new]);
 	return (tmp);
 }

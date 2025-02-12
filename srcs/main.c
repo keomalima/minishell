@@ -17,31 +17,10 @@ int	handle_key(t_ms *ms, char *rl)
 	}
 	if (!ft_strcmp(rl, "exit"))
 	{
-		if (ms->mod_env == 1)
-			free_split(ms->env);
-		clear_history();
+		clean_ms(ms, 2);
 		exit (0);
 	}
-	//Tokenization
-	create_tokens(rl, ms);	//tokenization
-	print_token(ms->token);	//print token
-
-	//Lexical Analysis
-	lexical_analysis(ms);
-
-	//Parsing
-	parse_cmd(ms);		//parsing
-	print_cmd(ms->cmd);	//print parsing
-
-	ms->cmd_count = ft_cmd_count(ms);
-
-	//Builtin
-	if (exec_builtin(ms) == 0)
-		exec_cmd(ms);
-
-	free(rl);
-	clean_ms(ms, 0);
-	// exit_handler(ms, 0);
+	return (0);
 }
 
 void	minishell(t_ms *ms, char *rl)
@@ -62,11 +41,11 @@ void	minishell(t_ms *ms, char *rl)
 	parse_cmd(ms);
 	print_cmd(ms->cmd);
 	ms->cmd_count = ft_cmd_count(ms);
-	exec_init(ms);
-	clean_ms(ms, 2);
-	//Builtinj
+	// Builtin
 	// if (exec_builtin(ms) == 0)
-	// 	exec_cmd(ms);
+		exec_init(ms);
+	clean_ms(ms, 2);
+
 }
 
 void sigint_handler(int sig)
@@ -89,8 +68,6 @@ int	main(int arc, char **arv, char **env)
 	signal(SIGQUIT, SIG_IGN);
 	ms.exit_status = 42;
 	ms.env = env;
-	ms.mod_env = 0;
-
 	while (1)
 	{
 		input = readline("minishell$ ");
