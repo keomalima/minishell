@@ -45,7 +45,7 @@ void	minishell(t_ms *ms, char *rl)
 	if (solo_builtin(ms) == 0)
 		exec_init(ms);
 	clean_ms(ms, -1);
-}	
+}
 
 void sigint_handler(int sig)
 {

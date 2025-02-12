@@ -1,0 +1,17 @@
+total 208
+drwxr-xr-x 7 kricci-d 2024_lyon   4096 Feb 12 16:11 .
+drwxr-xr-x 3 kricci-d 2024_lyon     23 Feb 12 10:07 ..
+-rw-r--r-- 1 kricci-d 2024_lyon      0 Feb 12 16:11 a
+-rw-r--r-- 1 kricci-d 2024_lyon  68089 Feb  6 08:25 bible.txt
+drwxr-xr-x 8 kricci-d 2024_lyon   4096 Feb 12 11:07 .git
+-rw-r--r-- 1 kricci-d 2024_lyon    464 Feb  6 08:25 .gitignore
+-rw-r--r-- 1 kricci-d 2024_lyon    135 Feb 12 11:07 ignore_readline.supp
+drwxr-xr-x 2 kricci-d 2024_lyon     25 Feb 12 11:07 includes
+-rw-r--r-- 1 kricci-d 2024_lyon    577 Feb 11 14:14 infile
+-rw-r--r-- 1 kricci-d 2024_lyon     22 Feb  6 08:25 infile2
+drwxr-xr-x 5 kricci-d 2024_lyon     79 Feb 12 11:08 libft
+-rw-r--r-- 1 kricci-d 2024_lyon   3794 Feb 12 14:47 Makefile
+-rwxr-xr-x 1 kricci-d 2024_lyon 108880 Feb 12 16:09 minishell
+drwxr-xr-x 9 kricci-d 2024_lyon    157 Feb 12 14:52 objects
+-rw-r--r-- 1 kricci-d 2024_lyon    368 Feb 12 16:11 out
+drwxr-xr-x 9 kricci-d 2024_lyon    174 Feb 12 11:07 srcs

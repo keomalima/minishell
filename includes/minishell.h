@@ -59,7 +59,8 @@ typedef struct 	s_lexer
 	t_type		state;
 	const char	*str_start;
 	const char	*str_ptr;
-	int			quote_open;
+	int			d_quo_open;
+	int			s_quo_open;
 }				t_lexer;
 
 typedef struct	s_infile
