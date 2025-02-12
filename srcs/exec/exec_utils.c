@@ -57,7 +57,6 @@ void	close_all_fds(t_ms *ms)
 
 void	initialize_variables(t_ms *ms)
 {
-	ms->exec->here_doc = 0;
 	ms->exec->cmd_count = 0;
 	ms->exec->env = NULL;
 	ms->exec->cmd = NULL;

@@ -19,16 +19,15 @@ EXECDIR := $(SRCSDIR)/exec
 BUILTINDIR := $(SRCSDIR)/builtins
 LEXICALDIR := $(SRCSDIR)/lexical
 
-SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c \
+SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
 		$(EXPANSER)/expanser.c $(EXPANSER)/expanser_utils.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
 		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_copy.c\
-		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c \
-		$(EXECDIR)/exec_heredoc.c \
+		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c $(EXECDIR)/exec_heredoc.c \
 		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/cd_command.c $(BUILTINDIR)/export_command.c \
-		$(LEXICALDIR)/lexical_analysis.c
+		$(LEXICALDIR)/lex_analysis.c $(LEXICALDIR)/lex_heredoc.c \
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 
@@ -94,6 +93,9 @@ $(OBJDIR)/lexical:
 $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)
 
+val:
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
+	
 clean:
 	$(RM) -rf $(OBJDIR)
 	$(MAKE) -C $(LIBFTDIR) clean

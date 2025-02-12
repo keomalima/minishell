@@ -28,7 +28,9 @@ static void	ft_token_checker(t_ms *ms)
 	t_type	state;
 
 	state = ms->lexer.state;
-	if ((*ms->lexer.str_ptr == ' ' || *ms->lexer.str_ptr == '\0'))
+	if (*ms->lexer.str_ptr == '"' || *ms->lexer.str_ptr == '\'')
+		ms->lexer.state = START;
+	else if ((*ms->lexer.str_ptr == ' ' || *ms->lexer.str_ptr == '\0'))
 	{
 		if (!ms->lexer.quote_open)
 			ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));
@@ -54,9 +56,9 @@ static void	ft_token_checker_quote(t_ms *ms)
 			ms->lexer.state = SQ;
 	}
 	else if (!ms->lexer.quote_open && (
-		*(ms->lexer.str_ptr + 1) == ' ' ||
-		*(ms->lexer.str_ptr + 1) == '\0' ||
-		ft_strchr_set("|><&", *(ms->lexer.str_ptr + 1))))
+			*(ms->lexer.str_ptr + 1) == ' '
+			|| *(ms->lexer.str_ptr + 1) == '\0'
+			|| ft_strchr_set("|><&", *(ms->lexer.str_ptr + 1))))
 	{
 		ft_lstadd_back_tk(&ms->token, ft_lstnew_tk(ms, ft_strndup_tk(ms)));
 		ms->lexer.state = START;
@@ -71,6 +73,9 @@ void	create_tokens(char *input, t_ms *ms)
 	ms->lexer.quote_open = 0;
 	while (ms->lexer.state != END)
 	{
+		printf("State [%u]\n", ms->lexer.state);
+		printf("Char [%c]\n", *(ms->lexer.str_ptr));
+		printf("Is quote open [%c]\n", ms->lexer.quote_open ? 'y' : 'n');
 		if (ms->lexer.state == START)
 			ft_define_state(ms);
 		else if ((*ms->lexer.str_ptr == '\'' && ms->lexer.state != DQ)

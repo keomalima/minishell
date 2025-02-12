@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	here_doc(t_ms *ms, t_infile *infile, int i)
+void	exec_here_doc(t_ms *ms, char *limiter, int i)
 {
 	char	*str;
 
@@ -12,7 +12,7 @@ void	here_doc(t_ms *ms, t_infile *infile, int i)
 		str = get_next_line(STDIN_FILENO);
 		if (!str)
 			exit_handler(ms, 1);
-		if (ft_strncmp(str, infile->name , ft_strlen(infile->name)) == 0)
+		if (ft_strncmp(str, limiter, ft_strlen(limiter)) == 0)
 		{
 			free(str);
 			return ;

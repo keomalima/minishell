@@ -55,7 +55,6 @@ char	*get_exec_path(char *path, char *cmd)
 
 void	error_handler(t_ms *ms, char **cmd)
 {
-	(void)ms;
 	if (cmd[0] && ft_strncmp(cmd[0], "/", 1) == 0)
 	{
 		ft_printf("%s: %s\n", strerror(errno), cmd[0]);
@@ -78,10 +77,8 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 	char	*exec_path;
 	char	*path;
 
-	if (ft_strcmp(cmd->cmd[0], "cd") == 0)			//////////
-	{
+	if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "cd") == 0)
 		return (cmd->cmd);
-	}
 	exec_path = NULL;
 	path = getenv("PATH");
 	if (cmd->cmd[0])
@@ -92,7 +89,7 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 			exec_path = get_exec_path(path, cmd->cmd[0]);
 	}
 	else
-		exec_path = get_exec_path(path,cmd->cmd[0]);
+		exec_path = get_exec_path(path, cmd->cmd[0]);
 	if (!exec_path)
 		error_handler(ms, cmd->cmd);
 	free(cmd->cmd[0]);
