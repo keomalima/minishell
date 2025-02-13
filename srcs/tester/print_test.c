@@ -46,20 +46,13 @@ void print_cmd(t_cmd *list)
 			cmd_i++;
 		}
 		printf("\n");
-		printf(green"infile_size : %zu	"RESET, list->infile_size);
-		while (list->infile[in_i])
+		printf(green"file_size : %zu	"RESET, list->files_size);
+		while (list->files[in_i])
 		{
-			printf(green"[%s]%d "RESET, list->infile[in_i]->name, list->infile[in_i]->is_lim);
+			printf(green"[%s]%d - Type [%d] "RESET, list->files[in_i]->name, list->files[in_i]->is_lim, list->files[in_i]->type);
 			in_i++;
 		}
 		printf("\n");
-		printf(yellow"outfile_size : %zu	"RESET, list->outfile_size);
-		while (list->outfile[out_i])
-		{
-			printf(yellow"[%s]%d "RESET, list->outfile[out_i]->name, list->outfile[out_i]->type);
-			out_i++;
-		}
-		printf("\n\n");
 		list = list->next;
 	}
 	printf("\n------------------\n\n");

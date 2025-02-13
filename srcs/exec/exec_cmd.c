@@ -1,64 +1,61 @@
 #include "minishell.h"
 
-static void	open_outfile(t_cmd *cmd, t_ms *ms, int i)
+static void	open_outfile(t_ms *ms, int i, char *name, t_redir type)
 {
-	size_t	index;
-
-	index = 0;
-	while (cmd->outfile_size > index)
+	if (ms->exec->pipe_fd[i % 2][1] >= 0)
+		close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
+	if (type == OUT_TRUNC)
+		ms->exec->pipe_fd[i % 2][1] = open(name,
+				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else
+		ms->exec->pipe_fd[i % 2][1] = open(name,
+				O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (ms->exec->pipe_fd[i % 2][1] < 0)
 	{
-		if (ms->exec->pipe_fd[i % 2][1] >= 0)
-			close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
-		if (cmd->outfile[index]->type == OUT_TRUNC)
-			ms->exec->pipe_fd[i % 2][1] = open(cmd->outfile[index]->name,
-					O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else
-			ms->exec->pipe_fd[i % 2][1] = open(cmd->outfile[index]->name,
-					O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (ms->exec->pipe_fd[i % 2][1] < 0)
-		{
-			ft_printf("%s: %s \n", strerror(errno), cmd->outfile[index]->name);
-			exit_handler(ms, -1);
-		}
-		index++;
+		ft_printf("%s: %s \n", strerror(errno), name);
+		exit_handler(ms, -1);
 	}
 }
 
-static void	open_infile(t_cmd *cmd, t_ms *ms, int i)
+static void	open_infile(t_ms *ms, int i, char *name, int is_lim)
+{
+	if (ms->exec->pipe_fd[(i % 2) % 2][0] >= 0)
+		close_fd(ms, &ms->exec->pipe_fd[(i % 2) % 2][0]);
+	if (is_lim)
+		exec_here_doc(ms, name, i);
+	else
+		ms->exec->pipe_fd[(i + 1) % 2][0] = open(name, O_RDONLY);
+	if (ms->exec->pipe_fd[(i + 1) % 2][0] < 0)
+	{
+		if (access(name, R_OK) < 0 && access(name, F_OK) == 0)
+			ft_printf("%s: %s \n", strerror(errno), name);
+		else
+			ft_printf("%s: %s \n", strerror(errno), name);
+		exit_handler(ms, -1);
+	}
+}
+
+static void	file_handler(t_cmd *cmd, t_ms *ms, int i)
 {
 	size_t	index;
 
 	index = 0;
-	while (cmd->infile_size > index)
+	while (cmd->files_size > index)
 	{
-		if (ms->exec->pipe_fd[(i % 2) % 2][0] >= 0)
-			close_fd(ms, &ms->exec->pipe_fd[(i % 2) % 2][0]);
-		if (cmd->infile[i]->is_lim)
-			exec_here_doc(ms, cmd->infile[i]->name, i);
+		if (cmd->files[index]->type == IN)
+			open_infile(ms, i, cmd->files[index]->name,
+				cmd->files[index]->is_lim);
 		else
-			ms->exec->pipe_fd[(i + 1) % 2][0] = open(cmd->infile[index]->name,
-					O_RDONLY);
-		if (ms->exec->pipe_fd[(i + 1) % 2][0] < 0)
-		{
-			if (access(cmd->infile[index]->name, R_OK) < 0
-				&& access(cmd->infile[index]->name, F_OK) == 0)
-				ft_printf("%s: %s \n", strerror(errno),
-					cmd->infile[index]->name);
-			else
-				ft_printf("%s: %s \n", strerror(errno),
-					cmd->infile[index]->name);
-			exit_handler(ms, -1);
-		}
+			open_outfile(ms, i, cmd->files[index]->name,
+				cmd->files[index]->type);
 		index++;
 	}
 }
 
 static void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 {
-	if (cmd->infile_size)
-		open_infile(cmd, ms, i);
-	if (cmd->outfile_size)
-		open_outfile(cmd, ms, i);
+	if (cmd->files_size)
+		file_handler(cmd, ms, i);
 	if (cmd->cmd[0])
 		ms->exec->cmd = parse_arg(cmd, ms);
 	if (dup2(ms->exec->pipe_fd[(i + 1) % 2][0], STDIN_FILENO) < 0

@@ -1,31 +1,20 @@
 #include "minishell.h"
 
-t_infile	*ft_new_infile(t_token *token, t_ms *ms)
+t_files	*ft_new_file(t_token *token, t_ms *ms)
 {
-	t_infile	*new;
+	t_files	*new;
 
-	new = malloc(sizeof(t_infile));
+	new = malloc(sizeof(t_files));
 	if (!new)
 		exit_handler(ms, 12);
 	new->name = token->content;
-	if (ft_strcmp(token->prev->content, "<<") == 0)
+	new->is_lim = 0;
+	if (!ft_strcmp(token->prev->content, "<<"))
 		new->is_lim = 1;
-	else
-		new->is_lim = 0;
-	return (new);
-}
-
-t_outfile	*ft_new_outfile(t_token *token, t_ms *ms)
-{
-	t_outfile	*new;
-
-	new = malloc(sizeof(t_outfile));
-	if (!new)
-		exit_handler(ms, 12);
-	new->name = token->content;
-	if (ft_strcmp(token->prev->content, ">>") == 0)
+	new->type = IN;
+	if (token->prev && !ft_strcmp(token->prev->content, ">>"))
 		new->type = OUT_APPEND;
-	else
+	else if (token->prev && !ft_strcmp(token->prev->content, ">"))
 		new->type = OUT_TRUNC;
 	return (new);
 }
@@ -39,10 +28,8 @@ t_cmd	*ft_lst_new_cmd(t_ms *ms)
 		exit_handler(ms, 12);
 	new->cmd = NULL;
 	new->cmd_size = 0;
-	new->infile = NULL;
-	new->infile_size = 0;
-	new->outfile = NULL;
-	new->outfile_size = 0;
+	new->files = NULL;
+	new->files_size = 0;
 	new->redir = UNDEFINED;
 	new->next = NULL;
 	return (new);

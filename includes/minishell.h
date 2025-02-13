@@ -42,9 +42,9 @@ typedef enum	e_redir
 	UNDEFINED,
 	OUT_TRUNC,
 	OUT_APPEND,
+	IN,
 	PIPE
 }				t_redir;
-
 
 typedef struct		s_token
 {
@@ -59,29 +59,23 @@ typedef struct 	s_lexer
 	t_type		state;
 	const char	*str_start;
 	const char	*str_ptr;
-	int			quote_open;
+	int			d_quo_open;
+	int			s_quo_open;
 }				t_lexer;
 
-typedef struct	s_infile
+typedef struct	s_files
 {
 	char	*name;
 	int		is_lim;
-}				t_infile;
-
-typedef struct	s_outfile
-{
-	char		*name;
 	t_redir		type;
-}				t_outfile;
+}				t_files;
 
 typedef struct s_cmd
 {
 	char				**cmd;
 	size_t				cmd_size;
-	struct s_infile		**infile;
-	size_t				infile_size;
-	struct s_outfile	**outfile;
-	size_t				outfile_size;
+	struct s_files		**files;
+	size_t				files_size;
 	t_redir				redir;
 	struct s_cmd		*next;
 }				t_cmd;
@@ -89,8 +83,7 @@ typedef struct s_cmd
 typedef struct s_index
 {
 	size_t	cmd_i;
-	size_t	in_i;
-	size_t	out_i;
+	size_t	file_i;
 }			t_index;
 
 typedef struct s_var
@@ -131,8 +124,6 @@ typedef struct s_ms
 /******************    UTILS    ******************/
 int		ft_strcmp(const char *s1, const char *s2);
 void	clean_ms(t_ms *ms, int exit_code);
-size_t	ft_strlen_ms(const char *s);
-size_t	ft_strlcpy_ms(char *dst, const char *src, size_t size);
 char	*ft_getenv(t_ms *ms, char *str);
 int		ft_is_special_cmd(char *big, char *little);
 
@@ -141,11 +132,10 @@ void		create_tokens(char *input, t_ms *ms);
 t_token		*ft_lstnew_tk(t_ms *ms, char *content);
 t_token		*ft_lstlast_tk(t_token *lst);
 void		ft_lstadd_back_tk(t_token **lst, t_token *new);
-char		*ft_strndup_tk(t_ms *ms);
 char		*ft_strchr_set(char *set, int c);
 void		exit_handler(t_ms *ms, int exit_code);
-void		ft_lstclear_token(t_token **token);
 size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
+char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
 char		*expanser(char *s, t_ms *ms);
@@ -165,8 +155,10 @@ void		*ft_free(char **data);
 t_cmd		*ft_lst_new_cmd(t_ms *ms);
 t_cmd		*ft_lstlast_cmd(t_cmd *lst);
 void		ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
-t_infile	*ft_new_infile(t_token *token, t_ms *ms);
-t_outfile	*ft_new_outfile(t_token *token, t_ms *ms);
+size_t		is_opp_file(const char *s1);
+t_files		*ft_new_file(t_token *token, t_ms *ms);
+void		ft_find_cmd_size(t_token *token, t_cmd *new);
+void		ft_initialize_index(t_index *index);
 
 /******************    EXEC    ******************/
 void		exec_init(t_ms *ms);

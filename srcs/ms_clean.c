@@ -44,15 +44,10 @@ static void	clean_t_cmd(t_ms *ms)
 		while (tmp)
 		{
 			i = 0;
-			while (tmp->outfile[i])
-				free(tmp->outfile[i++]);
-			free(tmp->outfile);
-			tmp->outfile = NULL;
-			i = 0;
-			while (tmp->infile[i])
-				free(tmp->infile[i++]);
-			free(tmp->infile);
-			tmp->infile = NULL;
+			while (tmp->files[i])
+				free(tmp->files[i++]);
+			free(tmp->files);
+			tmp->files = NULL;
 			if (ms->cmd->cmd)
 				free(ms->cmd->cmd);
 			ms->cmd->cmd = NULL;
