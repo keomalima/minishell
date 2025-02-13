@@ -96,5 +96,5 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 	cmd->cmd[0] = exec_path;
 	return (cmd->cmd);
 	return (NULL);
-		
+
 }

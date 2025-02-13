@@ -90,3 +90,15 @@
 // 	ft_strndup_loop(ms, str);
 // 	return (str);
 // }
+
+// char	*token_cleaner(t_ms *ms, t_token *token)
+// {
+// 	char	*new_token;
+
+// 	if (token)
+// 	{
+// 		free(token)
+
+// 	}
+// 	return (NULL);
+// }
