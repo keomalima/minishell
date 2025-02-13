@@ -64,12 +64,11 @@ int	main(int arc, char **arv, char **env)
 	t_ms	ms;
 	char *input;
 
-	(void)env;
-	input = readline("minishell$ ");
-	input = ft_translate(input, &ms);
-	printf("translate : %s\n", input);
-
-/* 	signal(SIGINT, sigint_handler);
+	//(void)env;
+	// input = readline("minishell$ ");
+	// input = ft_translate(input, &ms);
+	// printf("translate : %s\n", input);
+	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 	ms.exit_status = 0;
 	ms.env = ft_duplicate_env(&ms, env);
@@ -84,6 +83,6 @@ int	main(int arc, char **arv, char **env)
 			minishell(&ms, input);
 		}
 		free(input);
-	} */
+	}
 	return (0);
 }
