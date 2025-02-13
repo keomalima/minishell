@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	ft_check_var_spelling(t_var **env_var, t_ms *ms)
+static int	ft_check_var_spelling(t_var **env_var, t_ms *ms)
 {
 	int	i;
 
@@ -23,7 +23,7 @@ int	ft_check_var_spelling(t_var **env_var, t_ms *ms)
 	return (1);
 }
 
-int	ft_is_valid_export(t_ms *ms, t_cmd *cmd)
+static int	ft_is_valid_export(t_ms *ms, t_cmd *cmd)
 {
 	int	i;
 
@@ -47,7 +47,7 @@ int	ft_is_valid_export(t_ms *ms, t_cmd *cmd)
 	return (1);
 }
 
-int	ft_export_alloc_n_fill(t_var *var, t_var **env_var, t_ms *ms, char *str)
+static int	ft_export_alloc_n_fill(t_var *var, t_var **env_var, t_ms *ms, char *str)
 {
 	size_t	len;
 
@@ -70,7 +70,7 @@ int	ft_export_alloc_n_fill(t_var *var, t_var **env_var, t_ms *ms, char *str)
 	return (1);
 }
 
-int	ft_initialize_var(t_var **env_var, t_ms *ms, t_cmd *cmd)
+static int	ft_initialize_var(t_var **env_var, t_ms *ms, t_cmd *cmd)
 {
 	int	i;
 

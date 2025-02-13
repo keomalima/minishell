@@ -10,13 +10,14 @@ void	initialize_var(t_ms *ms)
 
 int	handle_key(t_ms *ms, char *rl)
 {
-	if (!ft_strcmp(rl, "clear"))
+	if (ft_is_special_cmd(rl, "clear"))
 	{
 		printf("\033[H\033[J");
 		return (1);
 	}
-	if (!ft_strcmp(rl, "exit"))
+	if (ft_is_special_cmd(rl, "exit"))
 	{
+		free_split(ms->env);
 		clean_ms(ms, 2);
 		exit (0);
 	}
@@ -28,11 +29,11 @@ void	minishell(t_ms *ms, char *rl)
 	initialize_var(ms);
 	if (handle_key(ms, rl))
 	{
-		clean_ms(ms, 1);
+		clean_ms(ms, 0);
 		return ;
 	}
 	create_tokens(rl, ms);
-	print_token(ms->token);
+	// print_token(ms->token);
 	if (lexical_analysis(ms))
 	{
 		clean_ms(ms, 2);
@@ -41,12 +42,10 @@ void	minishell(t_ms *ms, char *rl)
 	parse_cmd(ms);
 	print_cmd(ms->cmd);
 	ms->cmd_count = ft_cmd_count(ms);
-	// Builtin
-	// if (exec_builtin(ms) == 0)
+	if (solo_builtin(ms) == 0)
 		exec_init(ms);
-	clean_ms(ms, 2);
-
-}
+	clean_ms(ms, -1);
+}	
 
 void sigint_handler(int sig)
 {
@@ -64,10 +63,16 @@ int	main(int arc, char **arv, char **env)
 	(void)arv;
 	t_ms	ms;
 	char *input;
-	signal(SIGINT, sigint_handler);
+
+	(void)env;
+	input = readline("minishell$ ");
+	input = ft_translate(input, &ms);
+	printf("translate : %s\n", input);
+
+/* 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
-	ms.exit_status = 42;
-	ms.env = env;
+	ms.exit_status = 0;
+	ms.env = ft_duplicate_env(&ms, env);
 	while (1)
 	{
 		input = readline("minishell$ ");
@@ -79,6 +84,6 @@ int	main(int arc, char **arv, char **env)
 			minishell(&ms, input);
 		}
 		free(input);
-	}
+	} */
 	return (0);
 }

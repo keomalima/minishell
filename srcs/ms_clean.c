@@ -14,21 +14,19 @@ static void	clean_t_exec(t_exec *args, t_ms *ms)
 
 static void	clean_t_token(t_ms *ms)
 {
-	t_token	*token;
 	t_token	*tmp;
 
-	token = ms->token;
-	if (token)
+	if (ms->token)
 	{
-		while (token)
+		while (ms->token)
 		{
-			tmp = token;
-			if (tmp->content)
+			if (ms->token->content)
 			{
-				free(tmp->content);
-				tmp->content = NULL;
+				free(ms->token->content);
+				ms->token->content = NULL;
 			}
-			token = token->next;
+			tmp = ms->token;
+			ms->token = ms->token->next;
 			free(tmp);
 			tmp = NULL;
 		}
@@ -71,7 +69,8 @@ void	clean_ms(t_ms *ms, int exit_code)
 	clean_t_token(ms);
 	clean_t_cmd(ms);
 	clean_t_exec(ms->exec, ms);
-	ms->exit_status = exit_code;
+	if (exit_code >= 0)
+		ms->exit_status = exit_code;
 }
 
 void	exit_handler(t_ms *ms, int exit_code)
