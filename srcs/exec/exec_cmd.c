@@ -68,14 +68,7 @@ static void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 		&& dup2(ms->exec->pipe_fd[i % 2][1], STDOUT_FILENO) < 0)
 		exit_handler(ms, 1);
 	close_all_fds(ms);
-	if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "cd") == 0)
-		cd_command(ms, cmd);
-	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "export") == 0)
-		export_command(ms, cmd);
-	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "unset") == 0)
-		unset_command(ms, cmd);
-	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "env") == 0)
-		env_command(ms);
+	exec_builtin(ms, cmd);
 	if (execve(ms->exec->cmd[0], ms->exec->cmd, NULL) == -1)
 	{
 		if (dup2(2, STDOUT_FILENO) < 0)

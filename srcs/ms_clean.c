@@ -69,7 +69,8 @@ void	clean_ms(t_ms *ms, int exit_code)
 	clean_t_token(ms);
 	clean_t_cmd(ms);
 	clean_t_exec(ms->exec, ms);
-	ms->exit_status = exit_code;
+	if (exit_code >= 0)
+		ms->exit_status = exit_code;
 }
 
 void	exit_handler(t_ms *ms, int exit_code)

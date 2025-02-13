@@ -29,7 +29,7 @@ void	minishell(t_ms *ms, char *rl)
 	initialize_var(ms);
 	if (handle_key(ms, rl))
 	{
-		clean_ms(ms, 1);
+		clean_ms(ms, 0);
 		return ;
 	}
 	create_tokens(rl, ms);
@@ -40,14 +40,12 @@ void	minishell(t_ms *ms, char *rl)
 		return ;
 	}
 	parse_cmd(ms);
-	// print_cmd(ms->cmd);
+	print_cmd(ms->cmd);
 	ms->cmd_count = ft_cmd_count(ms);
-	// Builtin
-	if (exec_builtin(ms) == 0)
+	if (solo_builtin(ms) == 0)
 		exec_init(ms);
-	clean_ms(ms, 2);
-
-}
+	clean_ms(ms, -1);
+}	
 
 void sigint_handler(int sig)
 {
@@ -65,9 +63,15 @@ int	main(int arc, char **arv, char **env)
 	(void)arv;
 	t_ms	ms;
 	char *input;
-	signal(SIGINT, sigint_handler);
+
+	(void)env;
+	input = readline("minishell$ ");
+	input = ft_translate(input, &ms);
+	printf("translate : %s\n", input);
+
+/* 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
-	ms.exit_status = 42;
+	ms.exit_status = 0;
 	ms.env = ft_duplicate_env(&ms, env);
 	while (1)
 	{
@@ -80,6 +84,6 @@ int	main(int arc, char **arv, char **env)
 			minishell(&ms, input);
 		}
 		free(input);
-	}
+	} */
 	return (0);
 }

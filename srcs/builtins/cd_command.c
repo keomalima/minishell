@@ -66,9 +66,9 @@ void	ft_update_pwd(t_ms *ms)
 	new_pwd = getcwd(NULL, 0);
 	if (!new_pwd)
 	{
-		printf("chdir: error retrieving current directory: \
-			getcwd: cannot access parent directories: \
-			No such file or directory\n");
+		printf("chdir: error retrieving current directory: ");
+		printf("getcwd: cannot access parent directories: ");
+		printf("No such file or directory\n");
 		return ;
 	}
 	i_old = ft_find_var("OLDPWD", ms);

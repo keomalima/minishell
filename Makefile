@@ -13,6 +13,7 @@ OBJDIR := objects
 
 TOKENDIR := $(SRCSDIR)/token
 PARSERDIR := $(SRCSDIR)/parsing
+TRANSLATOR := $(SRCSDIR)/translator
 EXPANSER := $(SRCSDIR)/expanser
 TESTER := $(SRCSDIR)/tester
 EXECDIR := $(SRCSDIR)/exec
@@ -22,6 +23,7 @@ LEXICALDIR := $(SRCSDIR)/lexical
 SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
+		$(TRANSLATOR)/translator.c  \
 		$(EXPANSER)/expanser.c $(EXPANSER)/expanser_utils.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c  \
 		$(TOKENDIR)/token_utils.c $(TOKENDIR)/token_copy.c\
@@ -30,7 +32,9 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
 		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/builtins_clean.c \
 		$(BUILTINDIR)/env_management.c \
 		$(BUILTINDIR)/cd_command.c \
+		$(BUILTINDIR)/pwd_command.c \
 		$(BUILTINDIR)/env_command.c \
+		$(BUILTINDIR)/echo_command.c \
 		$(BUILTINDIR)/export_command.c $(BUILTINDIR)/export_utils.c $(BUILTINDIR)/export_get_variable.c $(BUILTINDIR)/export_modify_env.c \
 		$(BUILTINDIR)/unset_command.c \
 		$(LEXICALDIR)/lex_analysis.c $(LEXICALDIR)/lex_heredoc.c
@@ -69,7 +73,7 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 
-$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/expanser $(OBJDIR)/exec $(OBJDIR)/tester $(OBJDIR)/builtins $(OBJDIR)/lexical
+$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/translator $(OBJDIR)/expanser $(OBJDIR)/exec $(OBJDIR)/tester $(OBJDIR)/builtins $(OBJDIR)/lexical
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):
@@ -80,6 +84,9 @@ $(OBJDIR)/token:
 
 $(OBJDIR)/parsing:
 	mkdir -p $(OBJDIR)/parsing
+
+$(OBJDIR)/translator:
+	mkdir -p $(OBJDIR)/translator
 
 $(OBJDIR)/expanser:
 	mkdir -p $(OBJDIR)/expanser
