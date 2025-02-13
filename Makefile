@@ -23,7 +23,7 @@ LEXICALDIR := $(SRCSDIR)/lexical
 SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
-		$(TRANSLATOR)/translator.c  \
+		$(TRANSLATOR)/translator.c $(TRANSLATOR)/cut_string.c\
 		$(EXPANSER)/expanser.c $(EXPANSER)/expanser_utils.c \
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c \
 		$(TOKENDIR)/token_cleaner.c \

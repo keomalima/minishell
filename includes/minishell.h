@@ -139,12 +139,14 @@ char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
 char		*expanser(char *s, t_ms *ms);
+size_t	ft_count_exp(char *s);
 // PARSING UTILS
 char	*ft_extract_var(char *s, t_ms *ms);
 void	ft_fill_exp(char **dest, t_exp exp);
 char	*ft_clear_space(char *src, t_ms *ms);
 
 /******************    TRANSLATOR    ******************/
+char	**ft_cut_string(char *s, t_ms *ms);
 char	*ft_translate(char *s, t_ms *ms);
 
 /******************    PARSER    ******************/

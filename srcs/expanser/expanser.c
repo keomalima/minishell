@@ -57,12 +57,10 @@ char	*exp_exit_code(char *s, t_ms *ms)
 	char	*exit_code;
 	size_t	len;
 
-	tmp = ft_strchr(s, '$') + 1;
-	while (*tmp != '?')
-		tmp = ft_strchr(tmp, '$') + 1;
 	exit_code = ft_itoa(ms->exit_status);
 	if (!exit_code)
 		exit_handler(ms, 12);
+	tmp = ft_strchr(s, '$') + 1;
 	src = s;
 	len = ft_strlen(src) - ft_strlen(tmp) - 1;
 	tmp++;
@@ -82,6 +80,13 @@ char	*exp_exit_code(char *s, t_ms *ms)
 	return (dest);
 }
 
+int	ft_isquote(char c)
+{
+	if (c == '\'' || c == '\"')
+		return (1);
+	return (0);
+}
+
 size_t	ft_count_exp(char *s)
 {
 	char	*tmp;
@@ -91,7 +96,7 @@ size_t	ft_count_exp(char *s)
 	tmp = ft_strchr(s, '$');
 	while (tmp)
 	{
-		if (ft_isalnum(*(tmp + 1)) || *(tmp + 1) == '?')
+		if (ft_isalnum(*(tmp + 1)) || *(tmp + 1) == '?' || ft_isquote(*(tmp + 1)))
 			count_exp++;
 		tmp = ft_strchr((tmp + 1), '$');
 	}
@@ -101,22 +106,14 @@ size_t	ft_count_exp(char *s)
 char	*expanser(char *s, t_ms *ms)
 {
 	char	*str;
-	size_t	count_exp;
 
-	str = s;
-	count_exp = ft_count_exp(s);
-	while (count_exp > 0)
-	{
-		str = ft_strchr(s, '$');
-		while (!ft_isalnum(*(str + 1)) && *(str + 1) != '?')
-			str = ft_strchr((str + 1), '$');
-		if (*(str + 1) == '?')
-			s = exp_exit_code(s, ms);
-		else if (ft_isalpha(*(str + 1)))
-			s = exp_valid_variable(s, ms);
-		else if (ft_isdigit(*(str + 1)))
-			s = exp_digit_variable(s, ms);
-		count_exp--;
-	}
+	str = ft_strchr(s, '$');
+	if (*(str + 1) == '?')
+		s = exp_exit_code(s, ms);
+	else if (ft_isalpha(*(str + 1)))
+		s = exp_valid_variable(s, ms);
+	else if (ft_isdigit(*(str + 1)))
+		s = exp_digit_variable(s, ms);
+
 	return (s);
 }
