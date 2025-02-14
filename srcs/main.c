@@ -40,7 +40,7 @@ void	minishell(t_ms *ms, char *rl)
 		return ;
 	}
 	parse_cmd(ms);
-	print_cmd(ms->cmd);
+	// print_cmd(ms->cmd);
 	ms->cmd_count = ft_cmd_count(ms);
 	if (solo_builtin(ms) == 0)
 		exec_init(ms);

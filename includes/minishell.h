@@ -141,16 +141,18 @@ char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
 char	*expand(char *s, t_ms *ms);
-char	*expanser(char *s, t_ms *ms);
+char	*exp_exit_code(char *s, t_ms *ms);
+char	*exp_digit_variable(char *s);
+char	*exp_quote_variable(char *s);
+char	*exp_valid_variable(char *s, t_ms *ms);
+// EXPANSER UTILS
+size_t	ft_count_word_exp(char *s, size_t *count);
 size_t	ft_count_exp(char *s);
-// PARSING UTILS
-char	*ft_extract_var(char *s);
-void	ft_fill_exp(char **dest, t_exp exp);
-char	*ft_clear_space(char *src);
 
 /******************    TRANSLATOR    ******************/
 char	**ft_cut_string(char *s, t_ms *ms);
 char	*ft_translate(char *s, t_ms *ms);
+void	ft_skip_quote(char *s, int *i);
 
 /******************    PARSER    ******************/
 void		parse_cmd(t_ms *ms);
@@ -190,6 +192,7 @@ void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
 void	cd_command(t_ms *ms, t_cmd *cmd);
 // PWD
 void	pwd_command(t_ms *ms, t_cmd *cmd);
+void	ft_print_cwd_error(void);
 // ENV
 void	env_command(t_ms *ms);
 // EXPORT

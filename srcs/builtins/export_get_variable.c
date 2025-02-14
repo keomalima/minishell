@@ -15,7 +15,8 @@ static int	ft_check_var_spelling(t_var **env_var, t_ms *ms)
 		}
 		if (env_var[i]->value && ft_strchr(env_var[i]->value, ';'))
 		{
-			printf("%s: command not found\n", ft_strchr(env_var[i]->value, ';') + 1);
+			printf("%s: command not found\n",
+				ft_strchr(env_var[i]->value, ';') + 1);
 			ft_builtins_exit(ms, env_var, 127);
 			return (0);
 		}
@@ -47,7 +48,7 @@ static int	ft_is_valid_export(t_ms *ms, t_cmd *cmd)
 	return (1);
 }
 
-static int	ft_export_alloc_n_fill(t_var *var, t_var **env_var, t_ms *ms, char *str)
+static int	ft_export_fill(t_var *var, t_var **env_var, t_ms *ms, char *str)
 {
 	size_t	len;
 
@@ -65,8 +66,10 @@ static int	ft_export_alloc_n_fill(t_var *var, t_var **env_var, t_ms *ms, char *s
 		ft_builtins_exit(ms, env_var, 12);
 		return (0);
 	}
-	ft_strlcpy(var->name, str, (ft_strlen(str) - ft_strlen(ft_strchr(str, '=')) + 1));
-	ft_strlcpy(var->value, ft_strchr(str, '=') + 1, ft_strlen(ft_strchr(str, '=')));
+	ft_strlcpy(var->name, str,
+		(ft_strlen(str) - ft_strlen(ft_strchr(str, '=')) + 1));
+	ft_strlcpy(var->value, ft_strchr(str, '=') + 1,
+		ft_strlen(ft_strchr(str, '=')));
 	return (1);
 }
 
@@ -91,7 +94,7 @@ static int	ft_initialize_var(t_var **env_var, t_ms *ms, t_cmd *cmd)
 			env_var[i]->value = NULL;
 		}
 		else
-			if (!ft_export_alloc_n_fill(env_var[i], env_var, ms, cmd->cmd[i + 1]))
+			if (!ft_export_fill(env_var[i], env_var, ms, cmd->cmd[i + 1]))
 				return (0);
 		i++;
 	}

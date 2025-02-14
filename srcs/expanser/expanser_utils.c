@@ -1,87 +1,46 @@
 #include "minishell.h"
 
-char	*ft_extract_var(char *s)
+size_t	ft_count_word_exp(char *s, size_t *count)
 {
-	int		len;
-	char	*str;
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == '$')
+		{
+			i++;
+			if (ft_isquote(s[i]))
+				ft_skip_quote(s, &i);
+			else if (s[i] == '?')
+				i++;
+			else
+			{
+				while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
+					i++;
+			}
+		}
+		else
+			while (s[i] && s[i] != '$')
+				i++;
+		(*count)++;
+	}
+	return (*count);
+}
+
+size_t	ft_count_exp(char *s)
+{
 	char	*tmp;
+	size_t	count_exp;
 
-	tmp = ft_strchr(s, '$') + 1;
-	len = 0;
-	while (tmp[len] && (ft_isalnum(tmp[len]) || tmp[len] == '_'))
-		len++;
-	str = ft_calloc((len + 1), sizeof(char));
-	if (!str)
-		return (NULL);
-	ft_strlcpy(str, tmp, len + 1);
-	return (str);
-}
-
-char	*ft_clear_space(char *src)
-{
-	char	*dest;
-	size_t	i;
-	size_t	len;
-
-	if (!src)
-		return (NULL);
-	i = 0;
-	len = 0;
-	while (src[i])
+	count_exp = 0;
+	tmp = ft_strchr(s, '$');
+	while (tmp)
 	{
-		if (src[i] == ' ')
-		{
-			i++;
-			len++;
-		}
-		while (src[i] && src[i] == ' ')
-			i++;
-		while (src[i] && src[i] != ' ')
-		{
-			i++;
-			len++;
-		}
+		if (ft_isalnum(*(tmp + 1)) || *(tmp + 1) == '?'
+			|| ft_isquote(*(tmp + 1)))
+			count_exp++;
+		tmp = ft_strchr((tmp + 1), '$');
 	}
-	dest = ft_calloc((len + 1), sizeof(char));
-	if (!dest)
-		return (NULL);
-	len = 0;
-	i = 0;
-	while (src[i])
-	{
-		if (src[i] == ' ')
-			dest[len++] = src[i++];
-		while (src[i] && src[i] == ' ')
-			i++;
-		while (src[i] && src[i] != ' ')
-			dest[len++] = src[i++];
-	}
-	// ft_free(&src);
-	return (dest);
-}
-
-void	ft_fill_exp(char **dest, t_exp exp)
-{
-	int		i;
-	int		j;
-	int		k;
-
-	j = 0;
-	while (exp.src[j])
-	{
-		if (exp.src[j] == '$' && ft_isalpha(exp.src[j + 1]))
-			break ;
-		j++;
-	}
-	i = 0;
-	while (i < j)
-	{
-		(*dest)[i] = exp.src[i];
-		i++;
-	}
-	k = i + ft_strlen(exp.extract) + 1;
-	while (exp.env_var && *exp.env_var)
-		(*dest)[i++] = *exp.env_var++;
-	while (exp.src[k])
-		(*dest)[i++] = exp.src[k++];
+	return (count_exp);
 }

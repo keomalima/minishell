@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	clean_var(t_var **env_var)
+static void	clean_var(t_var **env_var)
 {
 	int	i;
 
