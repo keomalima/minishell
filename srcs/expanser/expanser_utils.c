@@ -1,25 +1,23 @@
 #include "minishell.h"
 
-char	*ft_extract_var(char *s, t_ms *ms)
+char	*ft_extract_var(char *s)
 {
 	int		len;
 	char	*str;
 	char	*tmp;
 
 	tmp = ft_strchr(s, '$') + 1;
-	while (!ft_isalpha(*tmp))
-		tmp = ft_strchr(tmp, '$') + 1;
 	len = 0;
 	while (tmp[len] && (ft_isalnum(tmp[len]) || tmp[len] == '_'))
 		len++;
 	str = ft_calloc((len + 1), sizeof(char));
 	if (!str)
-		exit_handler(ms, 12);
+		return (NULL);
 	ft_strlcpy(str, tmp, len + 1);
 	return (str);
 }
 
-char	*ft_clear_space(char *src, t_ms *ms)
+char	*ft_clear_space(char *src)
 {
 	char	*dest;
 	size_t	i;
@@ -44,10 +42,9 @@ char	*ft_clear_space(char *src, t_ms *ms)
 			len++;
 		}
 	}
-	printf("len = %zu\n", len);
-	dest = ft_calloc((len +1), sizeof(char));
+	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
-		exit_handler(ms, 12);
+		return (NULL);
 	len = 0;
 	i = 0;
 	while (src[i])

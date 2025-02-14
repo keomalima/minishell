@@ -126,6 +126,8 @@ int		ft_strcmp(const char *s1, const char *s2);
 void	clean_ms(t_ms *ms, int exit_code);
 char	*ft_getenv(t_ms *ms, char *str);
 int		ft_is_special_cmd(char *big, char *little);
+int		ft_isquote(char c);
+char	*ft_strjoin_multi(char **cut);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
@@ -138,12 +140,13 @@ size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
 char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
-char		*expanser(char *s, t_ms *ms);
+char	*expand(char *s, t_ms *ms);
+char	*expanser(char *s, t_ms *ms);
 size_t	ft_count_exp(char *s);
 // PARSING UTILS
-char	*ft_extract_var(char *s, t_ms *ms);
+char	*ft_extract_var(char *s);
 void	ft_fill_exp(char **dest, t_exp exp);
-char	*ft_clear_space(char *src, t_ms *ms);
+char	*ft_clear_space(char *src);
 
 /******************    TRANSLATOR    ******************/
 char	**ft_cut_string(char *s, t_ms *ms);
