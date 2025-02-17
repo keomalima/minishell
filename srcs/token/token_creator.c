@@ -8,7 +8,7 @@ static void	ft_add_to_list(t_ms *ms)
 
 	start_ptr = ms->lexer.str_start;
 	end_ptr = ms->lexer.str_ptr;
-	new_token = ft_lstnew_tk(ms, strndup(start_ptr, end_ptr - start_ptr));
+	new_token = ft_lstnew_tk(ms, ft_strndup(start_ptr, end_ptr - start_ptr));
 	ft_lstadd_back_tk(&ms->token, new_token);
 	ms->lexer.state = START;
 }

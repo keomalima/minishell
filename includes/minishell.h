@@ -26,6 +26,7 @@
 # include <readline/readline.h>
 # include <sys/stat.h>
 # include <signal.h>
+# include <sys/stat.h>
 
 typedef enum	e_type
 {
@@ -177,6 +178,7 @@ void		free_split(char **arr);
 void		close_fd(t_ms *ms, int *fd);
 void		close_all_fds(t_ms *ms);
 void		exec_here_doc(t_ms *ms, char *limiter, int i);
+void		file_handler(t_cmd *cmd, t_ms *ms, int i);
 
 /******************    BUILTIN    ******************/
 int		solo_builtin(t_ms *ms);

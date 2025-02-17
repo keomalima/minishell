@@ -57,12 +57,12 @@ void	error_handler(t_ms *ms, char **cmd)
 {
 	if (cmd[0] && ft_strncmp(cmd[0], "/", 1) == 0)
 	{
-		ft_printf("%s: %s\n", strerror(errno), cmd[0]);
+		ft_printf("%s: %s\n", cmd[0], strerror(errno));
 		exit_handler(ms, 127);
 	}
 	else if (cmd[0])
 	{
-		ft_printf("command not found: %s\n", cmd[0]);
+		ft_printf("minishell: %s: command not found\n", cmd[0]);
 		exit_handler(ms, 127);
 	}
 	else
@@ -72,13 +72,34 @@ void	error_handler(t_ms *ms, char **cmd)
 	}
 }
 
+void dir_check(t_ms *ms, const char *path)
+{
+	struct stat path_stat;
+
+	if (!stat(path, &path_stat))
+	{
+		if (S_ISDIR(path_stat.st_mode))
+		{
+			printf("minishell: %s: Is a directory\n", path);
+			exit_handler(ms, 126);
+		}
+	}
+	else
+	{
+		printf("minishell: %s: Is not a directory\n", path);
+		exit_handler(ms, 127);
+	}
+}
+
 char	**parse_arg(t_cmd *cmd, t_ms *ms)
 {
 	char	*exec_path;
 	char	*path;
 
-	if (is_builtin_cmd(cmd->cmd[0]))			//////////
+	if (is_builtin_cmd(cmd->cmd[0]))
 		return (cmd->cmd);
+	if (ft_strchr(cmd->cmd[0], '/'))
+		dir_check(ms, cmd->cmd[0]) ;
 	exec_path = NULL;
 	path = ft_getenv(ms, "PATH");
 	if (cmd->cmd[0])
@@ -95,6 +116,4 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 	free(cmd->cmd[0]);
 	cmd->cmd[0] = exec_path;
 	return (cmd->cmd);
-	return (NULL);
-
 }
