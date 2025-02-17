@@ -40,11 +40,7 @@ void	minishell(t_ms *ms, char *rl)
 		return ;
 	}
 	parse_cmd(ms);
-<<<<<<< HEAD
 	// print_cmd(ms->cmd);
-=======
-	//print_cmd(ms->cmd);
->>>>>>> 80ce8be (echo -n and dir check)
 	ms->cmd_count = ft_cmd_count(ms);
 	if (solo_builtin(ms) == 0)
 		exec_init(ms);
