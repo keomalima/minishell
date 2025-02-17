@@ -1,98 +1,76 @@
 #include "minishell.h"
 
-size_t	ft_count_string(char *s)
+void	ft_skip_quote(char *s, int *i)
 {
-	size_t	count;
-	size_t	i;
 	char	quote;
 
-	count = 0;
+	quote = s[*i];
+	(*i)++;
+	while (s[*i] && s[*i] != quote)
+		(*i)++;
+	if (s[*i])
+		(*i)++;
+}
+
+static void	ft_count_string(char *s, size_t	*count)
+{
+	int	i;
+
 	i = 0;
 	while (s[i])
 	{
 		if (s[i] == '$')
 		{
 			i++;
-			if (s[i] == '\'' || s[i] == '\"')
-			{
-				quote = s[i];
+			if (ft_isquote(s[i]))
+				ft_skip_quote(s, &i);
+			else if (s[i] == '?')
 				i++;
-				while (s[i] && s[i] != quote)
-					i++;
-				if (s[i])
-					i++;
-			}
 			else
-			{
-				while (s[i] && (s[i] != '$' && s[i] != '\'' && s[i] != '\"'))
+				while (s[i] && s[i] != '$' && !ft_isquote(s[i]))
 					i++;
-			}
 		}
-		else if (s[i] == '\"' || s[i] == '\'')
-		{
-			quote = s[i];
-			i++;
-			while (s[i] && s[i] != quote)
-				i++;
-			if (s[i])
-				i++;
-		}
+		else if (ft_isquote(s[i]))
+			ft_skip_quote(s, &i);
 		else
-		{
-			while (s[i] && (s[i] != '$' && s[i] != '\'' && s[i] != '\"'))
+			while (s[i] && (s[i] != '$' && !ft_isquote(s[i])))
 				i++;
-		}
-		count++;
+		(*count)++;
 	}
-	return (count);
 }
 
-size_t	ft_strlen_trans(char *s, int i)
+static size_t	ft_strlen_trans(char *s, int k)
 {
-	size_t	j;
-	char	quote;
+	int	i;
 
-	j = i;
-	if (s[j] == '$')
+	i = k;
+	if (s[i] == '$')
 	{
-		j++;
-		if (s[j] == '\'' || s[j] == '\"')
-		{
-			quote = s[j];
-			j++;
-			while (s[j] && s[j] != quote)
-				j++;
-			j++;
-		}
+		i++;
+		if (ft_isquote(s[i]))
+			ft_skip_quote(s, &i);
+		else if (s[i] == '?')
+			i++;
 		else
 		{
-			while (s[j] && (s[j] != '$' && s[j] != '\'' && s[j] != '\"'))
-				j++;
+			while (s[i] && s[i] != '$' && !ft_isquote(s[i]))
+				i++;
 		}
 	}
-	else if (s[j] == '\"' || s[j] == '\'')
-	{
-		quote = s[j];
-		j++;
-		while (s[j] && s[j] != quote)
-			j++;
-		j++;
-	}
+	else if (ft_isquote(s[i]))
+		ft_skip_quote(s, &i);
 	else
-	{
-		while (s[j] && (s[j] != '$' && s[j] != '\'' && s[j] != '\"'))
-			j++;
-	}
-	return (j - i);
+		while (s[i] && (s[i] != '$' && !ft_isquote(s[i])))
+			i++;
+	return (i - k);
 }
 
-char	*ft_strdup_trans(char *s, size_t *i)
+static char	*ft_strdup_trans(char *s, size_t *i)
 {
 	char	*dest;
 	size_t	len;
 
 	len = ft_strlen_trans(s, *i);
-	// printf("len word = %zu\n", len);
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
 		return (NULL);
@@ -104,16 +82,18 @@ char	*ft_strdup_trans(char *s, size_t *i)
 char	**ft_cut_string(char *s, t_ms *ms)
 {
 	size_t	i;
-	size_t j;
+	size_t	j;
 	char	**cut;
+	size_t	count;
 
-	//printf("nb word = %zu\n", ft_count_string(s));
-	cut = ft_calloc((ft_count_string(s) + 1), sizeof(char *));
+	count = 0;
+	ft_count_string(s, &count);
+	cut = ft_calloc((count + 1), sizeof(char *));
 	if (!cut)
 		exit_handler(ms, 12);
 	j = 0;
 	i = 0;
-	while (i < ft_count_string(s))
+	while (i < count)
 	{
 		cut[i] = ft_strdup_trans(s, &j);
 		if (!cut[i])
