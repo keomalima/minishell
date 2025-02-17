@@ -126,6 +126,8 @@ int		ft_strcmp(const char *s1, const char *s2);
 void	clean_ms(t_ms *ms, int exit_code);
 char	*ft_getenv(t_ms *ms, char *str);
 int		ft_is_special_cmd(char *big, char *little);
+int		ft_isquote(char c);
+char	*ft_strjoin_multi(char **cut);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
@@ -138,14 +140,19 @@ size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
 char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
-char		*expanser(char *s, t_ms *ms);
-// PARSING UTILS
-char	*ft_extract_var(char *s, t_ms *ms);
-void	ft_fill_exp(char **dest, t_exp exp);
-char	*ft_clear_space(char *src, t_ms *ms);
+char	*expand(char *s, t_ms *ms);
+char	*exp_exit_code(char *s, t_ms *ms);
+char	*exp_digit_variable(char *s);
+char	*exp_quote_variable(char *s);
+char	*exp_valid_variable(char *s, t_ms *ms);
+// EXPANSER UTILS
+size_t	ft_count_word_exp(char *s, size_t *count);
+size_t	ft_count_exp(char *s);
 
 /******************    TRANSLATOR    ******************/
+char	**ft_cut_string(char *s, t_ms *ms);
 char	*ft_translate(char *s, t_ms *ms);
+void	ft_skip_quote(char *s, int *i);
 
 /******************    PARSER    ******************/
 void		parse_cmd(t_ms *ms);
@@ -185,6 +192,7 @@ void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
 void	cd_command(t_ms *ms, t_cmd *cmd);
 // PWD
 void	pwd_command(t_ms *ms, t_cmd *cmd);
+void	ft_print_cwd_error(void);
 // ENV
 void	env_command(t_ms *ms);
 // EXPORT

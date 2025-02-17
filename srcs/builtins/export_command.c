@@ -13,11 +13,12 @@ static void	ft_print_export(char **env)
 		while (env[j][i] && env[j][i] != '=')
 			printf("%c", env[j][i++]);
 		if (env[j][i])
+		{
 			printf("%c\"", env[j][i++]);
-		while (env[j][i])
-			printf("%c", env[j][i++]);
-		if (env[j][i])
+			while (env[j][i])
+				printf("%c", env[j][i++]);
 			printf("\"");
+		}
 		printf("\n");
 		j++;
 	}
@@ -34,8 +35,7 @@ void	export_command(t_ms *ms, t_cmd *cmd)
 	{
 		env_var = ft_get_variable(ms, cmd);
 		if (!env_var)
-			return (ft_builtins_exit(ms, NULL, 0)) ;
-		// ft_print_res_export(env_var);
+			return (ft_builtins_exit(ms, NULL, 0));
 		if (!ft_modify_env(env_var, ms))
 			return (ft_builtins_exit(ms, NULL, 0));
 	}

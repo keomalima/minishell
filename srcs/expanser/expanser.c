@@ -1,122 +1,103 @@
 #include "minishell.h"
 
-char	*exp_valid_variable(char *s, t_ms *ms)
+static size_t	ft_strlen_expand(char *s)
 {
-	t_exp	exp;
-	char	*dest;
+	int	i;
 
-	exp.src = s;
-	exp.size = 0;
-	exp.extract = ft_extract_var(s, ms);
-	exp.env_var = ft_getenv(ms, exp.extract);
-	printf("env var = [%s]\n", exp.env_var);
-	exp.env_var = ft_clear_space(exp.env_var, ms);
-	printf("env var = [%s]\n", exp.env_var);
-
-	exp.size = ft_strlen(s) - ft_strlen(exp.extract)
-		+ ft_strlen(exp.env_var) - 1;
-	dest = ft_calloc((exp.size + 1), sizeof(char));
-	if (!dest)
+	if (!s)
+		return (0);
+	i = 0;
+	if (s[i] == '$')
 	{
-		ft_free(&exp.extract);
-		exit_handler(ms, 12);
+		i++;
+		if (ft_isquote(s[i]))
+		{
+			ft_skip_quote(s, &i);
+			return (i);
+		}
+		else if (s[i] == '?')
+			i++;
+		else
+		{
+			while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
+				i++;
+			return (i);
+		}
 	}
-	ft_fill_exp(&dest, exp);
-	ft_free(&s);
-	ft_free(&exp.extract);
-	ft_free(&exp.env_var);
-	return (dest);
+	while (s[i] && s[i] != '$')
+		i++;
+	return (i);
 }
 
-char	*exp_digit_variable(char *s, t_ms *ms)
+static char	*ft_fill_cut_expand(char *s, int *j)
 {
-	char	*src;
 	char	*dest;
 	size_t	len;
 
-	src = s;
-	len = ft_strlen(src) - 2;
+	len = ft_strlen_expand(&s[*j]);
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
-		exit_handler(ms, 12);
-	len = 0;
-	while (*src && !(*src == '$' && ft_isalnum(*(src + 1))))
-		dest[len++] = *src++;
-	src +=2;
-	while (*src)
-		dest[len++] = *src++;
-	ft_free(&s);
+		return (NULL);
+	ft_strlcpy(dest, &s[*j], (len + 1));
+	*j = *j + len;
 	return (dest);
 }
 
-char	*exp_exit_code(char *s, t_ms *ms)
-{
-	char	*dest;
-	char	*tmp;
-	char	*src;
-	char	*exit_code;
-	size_t	len;
-
-	tmp = ft_strchr(s, '$') + 1;
-	while (*tmp != '?')
-		tmp = ft_strchr(tmp, '$') + 1;
-	exit_code = ft_itoa(ms->exit_status);
-	if (!exit_code)
-		exit_handler(ms, 12);
-	src = s;
-	len = ft_strlen(src) - ft_strlen(tmp) - 1;
-	tmp++;
-	len = len + ft_strlen(tmp) + ft_strlen(exit_code);
-	dest = ft_calloc((len + 1), sizeof(char));
-	if (!dest)
-		exit_handler(ms, 12);
-	len = 0;
-	while (*src && !(*src == '$' && *(src + 1) == '?'))
-		dest[len++] = *src++;
-	src = exit_code;
-	while (*src)
-		dest[len++] = *src++;
-	while (*tmp)
-		dest[len++] = *tmp++;
-	ft_free(&s);
-	return (dest);
-}
-
-size_t	ft_count_exp(char *s)
-{
-	char	*tmp;
-	size_t	count_exp;
-
-	count_exp = 0;
-	tmp = ft_strchr(s, '$');
-	while (tmp)
-	{
-		if (ft_isalnum(*(tmp + 1)) || *(tmp + 1) == '?')
-			count_exp++;
-		tmp = ft_strchr((tmp + 1), '$');
-	}
-	return (count_exp);
-}
-
-char	*expanser(char *s, t_ms *ms)
+static char	*ft_remplace_exp(char *s, t_ms *ms)
 {
 	char	*str;
-	size_t	count_exp;
 
-	str = s;
-	count_exp = ft_count_exp(s);
-	while (count_exp > 0)
-	{
-		str = ft_strchr(s, '$');
-		while (!ft_isalnum(*(str + 1)) && *(str + 1) != '?')
-			str = ft_strchr((str + 1), '$');
-		if (*(str + 1) == '?')
-			s = exp_exit_code(s, ms);
-		else if (ft_isalpha(*(str + 1)))
-			s = exp_valid_variable(s, ms);
-		else if (ft_isdigit(*(str + 1)))
-			s = exp_digit_variable(s, ms);
-		count_exp--;
-	}
+	str = ft_strchr(s, '$');
+	if (*(str + 1) == '?')
+		s = exp_exit_code(s, ms);
+	else if (ft_isalpha(*(str + 1)))
+		s = exp_valid_variable(s, ms);
+	else if (ft_isdigit(*(str + 1)))
+		s = exp_digit_variable(s);
+	else if (ft_isquote(*(str + 1)))
+		s = exp_quote_variable(s);
 	return (s);
+}
+
+static char	**ft_cut_n_expand(char *s, t_ms *ms)
+{
+	size_t	count;
+	char	**cut_expand;
+	size_t	i;
+	int		j;
+
+	count = 0;
+	ft_count_word_exp(s, &count);
+	cut_expand = ft_calloc((count + 1), sizeof(char *));
+	if (!cut_expand)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (i < count)
+	{
+		cut_expand[i] = ft_fill_cut_expand(s, &j);
+		if (cut_expand[i] && cut_expand[i][0] == '$')
+			cut_expand[i] = ft_remplace_exp(cut_expand[i], ms);
+		i++;
+	}
+	return (cut_expand);
+}
+
+char	*expand(char *s, t_ms *ms)
+{
+	char	**cut_expand;
+	char	*dest;
+
+	cut_expand = ft_cut_n_expand(s, ms);
+	if (!cut_expand)
+		return (NULL);
+	dest = ft_strjoin_multi(cut_expand);
+	if (!dest)
+	{
+		free_split(cut_expand);
+		return (NULL);
+	}
+	free_split(cut_expand);
+	ft_free(&s);
+	return (dest);
 }

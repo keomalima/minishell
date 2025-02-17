@@ -1,119 +1,33 @@
 #include "minishell.h"
 
-size_t	ft_count_string(char *s)
-{
-	size_t	count;
-	size_t	i;
-	char	quote;
-
-	count = 0;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '$')
-		{
-			i++;
-			if (s[i] == '\'' || s[i] == '\"')
-			{
-				quote = s[i];
-				i++;
-				while (s[i] && s[i] != quote)
-					i++;
-				if (s[i])
-					i++;
-			}
-			else
-			{
-				while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
-					i++;
-			}
-		}
-		else if (s[i] == '\"' || s[i] == '\'')
-		{
-			quote = s[i];
-			i++;
-			while (s[i] && s[i] != quote)
-				i++;
-			if (s[i])
-				i++;
-		}
-		else
-		{
-			while (s[i] && (s[i] != '$' && s[i] != '\'' && s[i] != '\"'))
-				i++;
-		}
-		count++;
-	}
-	return (count);
-}
-
-size_t	ft_strlen_trans(char *s, int i)
-{
-	size_t	j;
-	char	quote;
-
-	j = i;
-	if (s[j] == '$')
-	{
-		j++;
-		if (s[j] == '\'' || s[j] == '\"')
-		{
-			quote = s[j];
-			j++;
-			while (s[j] && s[j] != quote)
-				j++;
-			j++;
-		}
-		else
-		{
-			while (s[j] && (ft_isalnum(s[j]) || s[j] == '_'))
-				j++;
-		}
-	}
-	else if (s[j] == '\"' || s[j] == '\'')
-	{
-		quote = s[j];
-		j++;
-		while (s[j] && s[j] != quote)
-			j++;
-		j++;
-	}
-	else
-	{
-		while (s[j] && (s[j] != '$' && s[j] != '\'' && s[j] != '\"'))
-			j++;
-	}
-	return (j - i);
-}
-
-char	*ft_strdup_trans(char *s, size_t *i)
+static char	*clean_quote(char *s)
 {
 	char	*dest;
-	size_t	len;
 
-	len = ft_strlen_trans(s, *i);
-	dest = ft_calloc((len + 1), sizeof(char));
+	dest = ft_calloc((ft_strlen(s) - 1), sizeof(char));
 	if (!dest)
 		return (NULL);
-	ft_strlcpy(dest, &s[*i], (len + 1));
-	*i = *i + len;
+	ft_strlcpy(dest, &s[1], (ft_strlen(s) - 1));
+	ft_free(&s);
 	return (dest);
 }
 
-char	**ft_cut_string(char *s, t_ms *ms)
+static char	**ft_clear_n_expand(char **cut, t_ms *ms)
 {
-	size_t	i;
-	size_t j;
-	char	**cut;
+	int	i;
 
-	cut = ft_calloc((ft_count_string(s) + 1), sizeof(char *));
-	if (!cut)
-		exit_handler(ms, 12);
-	j = 0;
 	i = 0;
-	while (i < ft_count_string(s))
+	while (cut[i])
 	{
-		cut[i] = ft_strdup_trans(s, &j);
+		if (cut[i][0] && ft_isquote(cut[i][0]))
+		{
+			if (cut[i][0] == '\"' && ft_count_exp(cut[i]) > 0)
+				cut[i] = expand(clean_quote(cut[i]), ms);
+			else
+				cut[i] = clean_quote(cut[i]);
+		}
+		else if (ft_count_exp(cut[i]) > 0)
+			cut[i] = expand(cut[i], ms);
 		if (!cut[i])
 		{
 			free_split(cut);
@@ -124,39 +38,15 @@ char	**ft_cut_string(char *s, t_ms *ms)
 	return (cut);
 }
 
-char	*ft_strjoin_trans(char **cut)
-{
-	size_t	len;
-	int		i;
-	char	*dest;
-
-	len = 0;
-	i = 0;
-	while (cut[i])
-	{
-		len = len + ft_strlen(cut[i]);
-		i++;
-	}
-	dest = ft_calloc((len + 1), sizeof(char));
-	if (!dest)
-		return (NULL);
-	len = 0;
-	i = 0;
-	while (cut[i])
-	{
-		ft_strlcpy(&dest[ft_strlen(dest)], cut[i], (ft_strlen(cut[i]) + 1));
-		i++;
-	}
-	return (dest);
-}
-
 char	*ft_translate(char *s, t_ms *ms)
 {
 	char	*ret;
 	char	**cut;
 
 	cut = ft_cut_string(s, ms);
-	ret = ft_strjoin_trans(cut);
+	cut = ft_clear_n_expand(cut, ms);
+	ret = ft_strjoin_multi(cut);
 	free_split(cut);
+	ft_free(&s);
 	return (ret);
 }

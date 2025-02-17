@@ -1,31 +1,6 @@
 #include "minishell.h"
 
-int	ft_check_valid_dir(t_ms *ms, t_cmd *cmd)
-{
-	struct stat	sb;
-
-	if (stat(cmd->cmd[1], &sb) == -1)
-	{
-		printf("cd: %s: No such file or directory\n", cmd->cmd[1]);
-		ft_builtins_exit(ms, NULL, 1);
-		return (0);
-	}
-	if (!S_ISDIR(sb.st_mode))
-	{
-		printf("cd: %s: Not a directory\n", cmd->cmd[1]);
-		ft_builtins_exit(ms, NULL, 1);
-		return (0);
-	}
-	if (access(cmd->cmd[1], X_OK) == -1)
-	{
-		printf("cd: %s: Permission denied\n", cmd->cmd[1]);
-		ft_builtins_exit(ms, NULL, 1);
-		return (0);
-	}
-	return (1);
-}
-
-char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
+static char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
 {
 	char	*tmp;
 
@@ -41,7 +16,7 @@ char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
 	return (tmp);
 }
 
-char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
+static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
 {
 	char	*tmp;
 
@@ -57,7 +32,7 @@ char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
 	return (tmp);
 }
 
-void	ft_update_pwd(t_ms *ms)
+static void	ft_update_pwd(t_ms *ms)
 {
 	char	*new_pwd;
 	int		i_old;
@@ -66,9 +41,7 @@ void	ft_update_pwd(t_ms *ms)
 	new_pwd = getcwd(NULL, 0);
 	if (!new_pwd)
 	{
-		printf("chdir: error retrieving current directory: ");
-		printf("getcwd: cannot access parent directories: ");
-		printf("No such file or directory\n");
+		ft_print_cwd_error();
 		return ;
 	}
 	i_old = ft_find_var("OLDPWD", ms);

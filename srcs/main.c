@@ -40,7 +40,7 @@ void	minishell(t_ms *ms, char *rl)
 		return ;
 	}
 	parse_cmd(ms);
-	print_cmd(ms->cmd);
+	// print_cmd(ms->cmd);
 	ms->cmd_count = ft_cmd_count(ms);
 	if (solo_builtin(ms) == 0)
 		exec_init(ms);
@@ -64,10 +64,7 @@ int	main(int arc, char **arv, char **env)
 	t_ms	ms;
 	char *input;
 
-	//(void)env;
-	// input = readline("minishell$ ");
-	// input = ft_translate(input, &ms);
-	// printf("translate : %s\n", input);
+	
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 	ms.exit_status = 0;
@@ -84,5 +81,12 @@ int	main(int arc, char **arv, char **env)
 		}
 		free(input);
 	}
+
+	// (void)env;
+	// input = readline("minishell$ ");
+	// input = ft_translate(input, &ms);
+	printf(red"translate : %s\n"RESET, input);
+
+
 	return (0);
 }
