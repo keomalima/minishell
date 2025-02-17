@@ -29,7 +29,7 @@ static void	ft_def_state(t_ms *ms)
 	}
 	else if (ft_strchr_set("|><&", *ms->lexer.str_ptr))
 		ms->lexer.state = OPP;
-	else if (*ms->lexer.str_ptr != ' ')
+	else if (!ft_isspace(*ms->lexer.str_ptr))
 		ms->lexer.state = CMD;
 	else
 		ms->lexer.str_ptr++;
@@ -49,16 +49,21 @@ static void	ft_def_delimiter(t_ms *ms, char str_char)
 	}
 	else if (str_char == '"')
 	{
-		if (ms->lexer.state != SQ)
-			ms->lexer.state = DQ;
-		ms->lexer.d_quo_open = !ms->lexer.d_quo_open;
+		if (ms->lexer.state == OPP && !ms->lexer.d_quo_open)
+			ft_add_to_list(ms);
+		else
+		{
+			if (ms->lexer.state != SQ)
+				ms->lexer.state = DQ;
+			ms->lexer.d_quo_open = !ms->lexer.d_quo_open;
+		}
 	}
 	else if (!ms->lexer.d_quo_open && !ms->lexer.s_quo_open)
 	{
 		if ((ms->lexer.state == OPP &&
 			is_val_opp(ms->lexer.str_start, ms->lexer.str_ptr)))
 			ft_add_to_list(ms);
-		else if (str_char == ' ' || (ms->lexer.state != OPP
+		else if (ft_isspace(str_char) || (ms->lexer.state != OPP
 			&& ft_strchr_set("|><&", str_char)))
 			ft_add_to_list(ms);
 	}

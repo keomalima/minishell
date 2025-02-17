@@ -7,7 +7,8 @@ int	is_builtin_cmd(char *cmd)
 		|| ft_strcmp(cmd, "export") == 0
 		|| ft_strcmp(cmd, "unset") == 0
 		|| ft_strcmp(cmd, "env") == 0
-		|| ft_strcmp(cmd, "echo") == 0)
+		|| ft_strcmp(cmd, "echo") == 0
+		|| ft_strcmp(cmd, "exit") == 0)
 		return (1);
 	return (0);
 }
@@ -16,7 +17,8 @@ int	solo_builtin(t_ms *ms)
 {
 	if (!ms->cmd)
 		return (0);
-	else if (is_builtin_cmd(ms->cmd->cmd[0]) && ms->cmd_count == 1)
+	else if (ms->cmd->cmd[0] && is_builtin_cmd(ms->cmd->cmd[0])
+		&& ms->cmd_count == 1)
 	{
 		if (ft_strcmp(ms->cmd->cmd[0], "cd") == 0)
 			cd_command(ms, ms->cmd);
@@ -30,6 +32,8 @@ int	solo_builtin(t_ms *ms)
 			env_command(ms);
 		else if (ft_strcmp(ms->cmd->cmd[0], "echo") == 0)
 			echo_command(ms, ms->cmd);
+		else if (ft_strcmp(ms->cmd->cmd[0], "exit") == 0)
+			exit_command(ms, ms->cmd);
 		return (1);
 	}
 	return (0);
@@ -48,5 +52,7 @@ void	exec_builtin(t_ms *ms, t_cmd *cmd)
 	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "env") == 0)
 		env_command(ms);
 	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "echo") == 0)
-		echo_command(ms, cmd);
+		echo_command(ms, ms->cmd);
+	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "exit") == 0)
+		exit_command(ms, cmd);
 }

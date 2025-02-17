@@ -6,7 +6,7 @@
 /*   By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 12:42:41 by kricci-d          #+#    #+#             */
-/*   Updated: 2025/02/17 07:46:50 by kricci-d         ###   ########.fr       */
+/*   Updated: 2025/02/17 11:28:40 by kricci-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	*ft_memchr(const void *s, int c, size_t n);
 void	ft_bzero(void *s, size_t n);
 int		ft_isprint(int c);
 int		ft_tolower(int c);
+int		ft_isspace(char c);
 int		ft_toupper(int c);
 int		ft_isdigit(int c);
 int		ft_isalpha(int c);

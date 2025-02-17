@@ -8,18 +8,12 @@ void	initialize_var(t_ms *ms)
 	ms->lex_err = NULL;
 }
 
-int	handle_key(t_ms *ms, char *rl)
+int	handle_key(char *rl)
 {
 	if (ft_is_special_cmd(rl, "clear"))
 	{
 		printf("\033[H\033[J");
 		return (1);
-	}
-	if (ft_is_special_cmd(rl, "exit"))
-	{
-		free_split(ms->env);
-		clean_ms(ms, 2);
-		exit (0);
 	}
 	return (0);
 }
@@ -27,20 +21,20 @@ int	handle_key(t_ms *ms, char *rl)
 void	minishell(t_ms *ms, char *rl)
 {
 	initialize_var(ms);
-	if (handle_key(ms, rl))
+	if (handle_key(rl))
 	{
 		clean_ms(ms, 0);
 		return ;
 	}
 	create_tokens(rl, ms);
-	// print_token(ms->token);
+	//print_token(ms->token);
 	if (lexical_analysis(ms))
 	{
 		clean_ms(ms, 2);
 		return ;
 	}
 	parse_cmd(ms);
-	// print_cmd(ms->cmd);
+	//print_cmd(ms->cmd);
 	ms->cmd_count = ft_cmd_count(ms);
 	if (solo_builtin(ms) == 0)
 		exec_init(ms);

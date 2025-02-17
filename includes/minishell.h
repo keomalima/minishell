@@ -209,6 +209,8 @@ size_t	ft_count_arg(char **cmd);
 void	unset_command(t_ms *ms, t_cmd *cmd);
 // ECHO
 void	echo_command(t_ms *ms, t_cmd *cmd);
+// EXIT
+void	exit_command(t_ms *ms, t_cmd *cmd);
 
 
 /******************    TESTER    ******************/
