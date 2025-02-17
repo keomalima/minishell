@@ -1,5 +1,21 @@
 #include "minishell.h"
 
+size_t	is_opp_file(const char *s1)
+{
+	int			i;
+	const char	*valid_ops[] = {">", ">>", "<", "<>", "<<",
+		"<<<", NULL};
+
+	i = 0;
+	while (valid_ops[i])
+	{
+		if (!ft_strcmp(s1, valid_ops[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 void	ft_find_cmd_size(t_token *token, t_cmd *new)
 {
 	size_t	redir;
@@ -23,22 +39,6 @@ void	ft_initialize_index(t_index *index)
 {
 	index->cmd_i = 0;
 	index->file_i = 0;
-}
-
-size_t	is_opp_file(const char *s1)
-{
-	int			i;
-	const char	*valid_ops[] = {">", ">>", "<", "<>", "<<",
-		"<<<", NULL};
-
-	i = 0;
-	while (valid_ops[i])
-	{
-		if (!ft_strcmp(s1, valid_ops[i]))
-			return (0);
-		i++;
-	}
-	return (1);
 }
 
 void	*ft_free(char **data)

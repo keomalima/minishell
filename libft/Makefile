@@ -6,7 +6,7 @@
 #    By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/15 14:26:45 by keomalima         #+#    #+#              #
-#    Updated: 2025/01/07 10:25:53 by kricci-d         ###   ########.fr        #
+#    Updated: 2025/02/17 07:47:08 by kricci-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c 
 			$(LIBSRCS)/ft_striteri.c $(LIBSRCS)/ft_strjoin.c  $(LIBSRCS)/ft_strtrim.c \
 			$(LIBSRCS)/ft_strmapi.c $(LIBSRCS)/ft_printf.c $(LIBSRCS)/ft_print_char.c \
 			$(LIBSRCS)/ft_print_hex.c $(LIBSRCS)/ft_print_int.c $(LIBSRCS)/ft_print_ptr.c \
-			$(LIBSRCS)/get_next_line.c $(LIBSRCS)/get_next_line_utils.c
+			$(LIBSRCS)/get_next_line.c $(LIBSRCS)/get_next_line_utils.c $(LIBSRCS)/ft_strndup.c \
 
 BONUS_SRCS := $(LIBSRCS)/ft_lstadd_back.c $(LIBSRCS)/ft_lstadd_front.c \
 			$(LIBSRCS)/ft_lstclear.c $(LIBSRCS)/ft_lstdelone.c \

@@ -72,14 +72,11 @@ void	error_handler(t_ms *ms, char **cmd)
 	}
 }
 
-#include <sys/stat.h>
-#include <stdio.h>
-
 void dir_check(t_ms *ms, const char *path)
 {
 	struct stat path_stat;
 
-	if (stat(path, &path_stat) == 0)
+	if (!stat(path, &path_stat))
 	{
 		if (S_ISDIR(path_stat.st_mode))
 		{
@@ -93,7 +90,6 @@ void dir_check(t_ms *ms, const char *path)
 		exit_handler(ms, 127);
 	}
 }
-
 
 char	**parse_arg(t_cmd *cmd, t_ms *ms)
 {

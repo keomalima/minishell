@@ -29,7 +29,7 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
 		$(TOKENDIR)/token_cleaner.c \
 		$(TOKENDIR)/token_utils.c \
 		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c \
-		$(EXECDIR)/exec_heredoc.c \
+		$(EXECDIR)/exec_heredoc.c $(EXECDIR)/exec_file_handler.c\
 		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/builtins_clean.c \
 		$(BUILTINDIR)/env_management.c \
 		$(BUILTINDIR)/cd_command.c \
