@@ -1,31 +1,31 @@
 #include "minishell.h"
 
-size_t	ft_count_word_exp(char *s, size_t *count)
+size_t	ft_count_word_exp(char *s)
 {
-	int	i;
+	int		i;
+	size_t	count;
 
 	i = 0;
+	count = 0;
 	while (s[i])
 	{
 		if (s[i] == '$')
 		{
 			i++;
-			if (ft_isquote(s[i]))
+			if (s[i] && ft_isquote(s[i]))
 				ft_skip_quote(s, &i);
 			else if (s[i] == '?')
 				i++;
 			else
-			{
 				while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
 					i++;
-			}
 		}
 		else
 			while (s[i] && s[i] != '$')
 				i++;
-		(*count)++;
+		count++;
 	}
-	return (*count);
+	return (count);
 }
 
 size_t	ft_count_exp(char *s)

@@ -22,7 +22,7 @@ static void	ft_count_string(char *s, size_t	*count)
 		if (s[i] == '$')
 		{
 			i++;
-			if (ft_isquote(s[i]))
+			if (s[i] && ft_isquote(s[i]))
 				ft_skip_quote(s, &i);
 			else if (s[i] == '?')
 				i++;

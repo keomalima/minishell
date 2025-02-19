@@ -45,13 +45,6 @@ static char	*ft_set_new_variable(t_var *cur_var, t_var **env_var, t_ms *ms)
 	return (new_var);
 }
 
-static void	ft_copy_env(char **n_env, char **o_env, size_t i_new, size_t *i_old)
-{
-	n_env[i_new] = o_env[*i_old];
-	i_new++;
-	(*i_old)++;
-}
-
 static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 {
 	size_t	i;
@@ -64,8 +57,11 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 		return (NULL);
 	}
 	i = 0;
-	while (ms->env[i] && ft_strcmp(current_var->name, ms->env[i]) > 0)
-		ft_copy_env(new_env, ms->env, i, &i);
+	while (ms->env[i])
+	{
+		new_env[i] = ms->env[i];
+		i++;
+	}
 	new_env[i] = ft_set_new_variable(current_var, env_var, ms);
 	if (!new_env[i])
 	{
@@ -73,14 +69,29 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 		ft_builtins_exit(ms, env_var, 12);
 		return (NULL);
 	}
-	while (ms->env[i])
-		ft_copy_env(new_env, ms->env, i + 1, &i);
 	free(ms->env);
 	ms->env = NULL;
 	return (new_env);
 }
 
-int	ft_modify_env(t_var **env_var, t_ms *ms)
+static int	ft_valid_variable(t_var *env_var, char *arg, t_cmd *cmd)
+{
+	if (!*env_var->name && (ft_count_arg(cmd->cmd) - cmd->nb_expand > 0))
+	{
+		printf("export: '%s': not a valid identifier\n", arg);
+		cmd->nb_expand += 1;
+		// printf("nb of expand : %zu\n", cmd->nb_expand);
+		return (0);
+	}
+	else if ((*env_var->name && !ft_is_all_alnum(env_var->name)) || (*env_var->name && !ft_isalpha(env_var->name[0]) && env_var->name[0] != '_'))
+	{
+		printf("export: '%s': not a valid identifier\n", arg);
+		return (0);
+	}
+	return (1);
+}
+
+int	ft_modify_env(t_var **env_var, t_ms *ms, t_cmd *cmd)
 {
 	int		i;
 	int		index;
@@ -90,15 +101,16 @@ int	ft_modify_env(t_var **env_var, t_ms *ms)
 	i = -1;
 	while (env_var[++i])
 	{
+		if (!ft_valid_variable(env_var[i], cmd->cmd[i + 1], cmd))
+			continue;
 		index = ft_find_var(env_var[i]->name, ms);
 		if (index >= 0 && env_var[i]->value)
 		{
-			index = ft_find_var(env_var[i]->name, ms);
 			ms->env[index] = ft_remplace_value(env_var[i], env_var, ms, index);
 			if (!ms->env[index])
 				return (0);
 		}
-		else if (index == -1)
+		else if (index == -1 && env_var[i]->value)
 		{
 			ms->env = ft_add_var_to_env(env_var[i], env_var, ms);
 			if (!ms->env)

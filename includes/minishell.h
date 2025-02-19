@@ -79,6 +79,7 @@ typedef struct s_cmd
 	size_t				files_size;
 	t_redir				redir;
 	struct s_cmd		*next;
+	size_t				nb_expand;
 }				t_cmd;
 
 typedef struct s_index
@@ -102,13 +103,6 @@ typedef struct s_exec
 	pid_t	*child_pids;
 }				t_exec;
 
-typedef struct s_exp
-{
-	char	*src;
-	char	*extract;
-	char	*env_var;
-	size_t	size;
-}				t_exp;
 
 typedef struct s_ms
 {
@@ -141,18 +135,19 @@ size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
 char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
-char	*expand(char *s, t_ms *ms);
+char	*expand(char *s, t_ms *ms, char quote, t_cmd *cmd);
 char	*exp_exit_code(char *s, t_ms *ms);
 char	*exp_digit_variable(char *s);
 char	*exp_quote_variable(char *s);
+char	*exp_uid(char *s);
 char	*exp_valid_variable(char *s, t_ms *ms);
 // EXPANSER UTILS
-size_t	ft_count_word_exp(char *s, size_t *count);
+size_t	ft_count_word_exp(char *s);
 size_t	ft_count_exp(char *s);
 
 /******************    TRANSLATOR    ******************/
 char	**ft_cut_string(char *s, t_ms *ms);
-char	*ft_translate(char *s, t_ms *ms);
+char	*ft_translate(char *s, t_ms *ms, t_cmd *cmd);
 void	ft_skip_quote(char *s, int *i);
 
 /******************    PARSER    ******************/
@@ -186,24 +181,25 @@ void	exec_builtin(t_ms *ms, t_cmd *cmd);
 int		is_builtin_cmd(char *cmd);
 // ENVIRONNEMENT MANAGEMENT
 size_t	ft_env_count(char **env);
-int		ft_find_var(char *path, t_ms *ms);
+int		ft_find_var(char *name, t_ms *ms);
 char	**ft_duplicate_env(t_ms *ms, char **env);
 // UTILS
 void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
 // CD
 void	cd_command(t_ms *ms, t_cmd *cmd);
 // PWD
-void	pwd_command(t_ms *ms, t_cmd *cmd);
+void	pwd_command(t_ms *ms);
 void	ft_print_cwd_error(void);
 // ENV
 void	env_command(t_ms *ms);
 // EXPORT
 void	export_command(t_ms *ms, t_cmd *cmd);
 t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd);
-int		ft_modify_env(t_var **env_var, t_ms *ms);
+int	ft_modify_env(t_var **env_var, t_ms *ms, t_cmd *cmd);
 size_t	ft_find_var_count(t_cmd *cmd);
 int		ft_is_all_alnum(char *str);
 t_var	*ft_create_new_var(t_ms *ms, t_var **env_var);
+size_t	ft_count_arg(char **cmd);
 // UNSET
 void	unset_command(t_ms *ms, t_cmd *cmd);
 // ECHO

@@ -58,7 +58,7 @@ int	ft_isquote(char c)
 char	*ft_strjoin_multi(char **cut)
 {
 	size_t	len;
-	int		i;
+	size_t		i;
 	char	*dest;
 
 	len = 0;

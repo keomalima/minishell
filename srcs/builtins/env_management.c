@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	ft_find_var(char *path, t_ms *ms)
+int	ft_find_var(char *name, t_ms *ms)
 {
 	int		i;
 	int		comp;
@@ -8,7 +8,7 @@ int	ft_find_var(char *path, t_ms *ms)
 	i = 0;
 	while (ms->env[i])
 	{
-		comp = ft_strncmp(ms->env[i], path, ft_strlen(path));
+		comp = ft_strncmp(ms->env[i], name, ft_strlen(name));
 		if (comp == 0)
 			return (i);
 		i++;
@@ -28,7 +28,7 @@ size_t	ft_env_count(char **env)
 	return (i);
 }
 
-char	**ft_duplicate_env(t_ms *ms, char	**env)
+char	**ft_duplicate_env(t_ms *ms, char **env)
 {
 	char	**new_env;
 	int		i;

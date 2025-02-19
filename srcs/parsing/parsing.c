@@ -2,7 +2,7 @@
 
 void	ft_complete_cmd(t_cmd *new, t_token *token, t_index *index, t_ms *ms)
 {
-	token->content = ft_translate(token->content, ms);
+	token->content = ft_translate(token->content, ms, new);
 	if (!new->cmd || !new->files)
 		exit_handler(ms, 12);
 	if (token->type == OPP && !ft_strcmp(token->content, ">"))
