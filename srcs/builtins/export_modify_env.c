@@ -11,7 +11,7 @@ static char	*ft_remplace_value(t_var *cur_var, t_var **env_var, t_ms *ms, int i)
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
 	{
-		ft_builtins_exit(ms, env_var, 12);
+		ft_builtins_env_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	ft_strlcpy(dest, cur_var->name, (ft_strlen(cur_var->name) + 1));
@@ -34,7 +34,7 @@ static char	*ft_set_new_variable(t_var *cur_var, t_var **env_var, t_ms *ms)
 	new_var = ft_calloc((len + 1), sizeof(char));
 	if (!new_var)
 	{
-		ft_builtins_exit(ms, env_var, 12);
+		ft_builtins_env_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	ft_strlcpy(new_var, cur_var->name, (ft_strlen(cur_var->name) + 1));
@@ -53,7 +53,7 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	new_env = ft_calloc((ft_env_count(ms->env) + 2), sizeof(char *));
 	if (!new_env)
 	{
-		ft_builtins_exit(ms, env_var, 12);
+		ft_builtins_env_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	i = 0;
@@ -66,7 +66,7 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	if (!new_env[i])
 	{
 		free_split(new_env);
-		ft_builtins_exit(ms, env_var, 12);
+		ft_builtins_env_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	free(ms->env);

@@ -26,5 +26,5 @@ void	echo_command(t_ms *ms, t_cmd *cmd)
 	}
 	if (nl)
 		printf("\n");
-	ft_builtins_exit(ms, NULL, 0);
+	ft_builtins_exit(ms, 0);
 }

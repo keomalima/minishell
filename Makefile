@@ -20,7 +20,7 @@ EXECDIR := $(SRCSDIR)/exec
 BUILTINDIR := $(SRCSDIR)/builtins
 LEXICALDIR := $(SRCSDIR)/lexical
 
-SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
+SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_utils2.c $(SRCSDIR)/ms_clean.c \
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
 		$(TRANSLATOR)/translator.c $(TRANSLATOR)/list_management.c\

@@ -32,7 +32,7 @@ static int	parse_and_validate_args(t_ms *ms, t_cmd *cmd, int *num_arg)
 		if ((!is_str_num(cmd->cmd[i]) && *num_arg > 0) || *num_arg > 1)
 		{
 			printf("minishell: exit: too many arguments\n");
-			if (ms->cmd_count == 1)
+			if (ms->exec->cmd_count == 1)
 				ms->exit_status = 1;
 			else
 				exit_program(ms, 0);
@@ -54,7 +54,7 @@ void	exit_command(t_ms *ms, t_cmd *cmd)
 	int	num_arg;
 
 	num_arg = 0;
-	if (ms->cmd_count == 1)
+	if (ms->exec->cmd_count == 1)
 		printf("exit\n");
 	if (parse_and_validate_args(ms, cmd, &num_arg))
 	{
