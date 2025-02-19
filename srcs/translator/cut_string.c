@@ -27,7 +27,7 @@ static void	ft_count_string(char *s, size_t	*count)
 			else if (s[i] == '?')
 				i++;
 			else
-				while (s[i] && s[i] != '$' && !ft_isquote(s[i]))
+				while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
 					i++;
 		}
 		else if (ft_isquote(s[i]))
@@ -53,7 +53,7 @@ static size_t	ft_strlen_trans(char *s, int k)
 			i++;
 		else
 		{
-			while (s[i] && s[i] != '$' && !ft_isquote(s[i]))
+			while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
 				i++;
 		}
 	}

@@ -123,6 +123,7 @@ char	*ft_getenv(t_ms *ms, char *str);
 int		ft_is_special_cmd(char *big, char *little);
 int		ft_isquote(char c);
 char	*ft_strjoin_multi(char **cut);
+int		ft_isspace(char c);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
@@ -140,7 +141,7 @@ char	*exp_exit_code(char *s, t_ms *ms);
 char	*exp_digit_variable(char *s);
 char	*exp_quote_variable(char *s);
 char	*exp_uid(char *s);
-char	*exp_valid_variable(char *s, t_ms *ms);
+char	*exp_valid_variable(char *s, t_ms *ms, char quote);
 // EXPANSER UTILS
 size_t	ft_count_word_exp(char *s);
 size_t	ft_count_exp(char *s);

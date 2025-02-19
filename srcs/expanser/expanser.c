@@ -52,15 +52,15 @@ static char	*ft_remplace_exp(char *s, t_ms *ms, char quote, int *ex)
 
 	str = ft_strchr(s, '$');
 	if (*(str + 1) == '?')
-		s = exp_exit_code(s, ms);
+		return (exp_exit_code(s, ms));
 	else if (ft_strcmp((str + 1), "UID") == 0)
-		s = exp_uid(s);
+		return (exp_uid(s));
 	else if (ft_isalpha(*(str + 1)))
-		s = exp_valid_variable(s, ms);
+		return (exp_valid_variable(s, ms, quote));
 	else if (ft_isdigit(*(str + 1)))
-		s = exp_digit_variable(s);
+		return (exp_digit_variable(s));
 	else if (ft_isquote(*(str + 1)) && quote != '\"')
-		s = exp_quote_variable(s);
+		return (exp_quote_variable(s));
 	else
 		*ex = 0;
 	return (s);
@@ -100,6 +100,8 @@ static char	**ft_cut_n_expand(char *s, t_ms *ms, char quote, t_cmd *cmd)
 		cmd->nb_expand += 1;
 	return (cut_expand);
 }
+
+
 
 char	*expand(char *s, t_ms *ms, char quote, t_cmd *cmd)
 {

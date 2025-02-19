@@ -50,27 +50,63 @@ size_t	ft_count_cut(char **cut)
 	return (i);
 }
 
+char	*ft_strjoin_multi_space(char **cut)
+{
+	size_t	len;
+	size_t		i;
+	char	*dest;
+
+	len = 0;
+	i = 0;
+	while (cut[i])
+	{
+		len = len + ft_strlen(cut[i]);
+		i++;
+	}
+	if (cut[0] && cut[0][0] == ' ')
+		len--;
+	if (cut[i - 1] && cut[i - 1][ft_strlen(cut[i - 1]) - 1] == ' ')
+		len--;
+	dest = ft_calloc((len + 1), sizeof(char));
+	if (!dest)
+		return (NULL);
+	i = 0;
+	while (cut[i])
+	{
+		len = 0;
+		if (cut[0] && cut[0][0] == ' ')
+			len++;
+		if ((i == ft_count_cut(cut) - 1) && cut[i][ft_strlen(cut[i]) - 1] == ' ')
+			ft_strlcpy(&dest[ft_strlen(dest)], &cut[i][len], (ft_strlen(&cut[i][len])));
+		else
+			ft_strlcpy(&dest[ft_strlen(dest)], &cut[i][len], (ft_strlen(&cut[i][len]) + 1));
+		i++;
+	}
+	return (dest);
+}
+
+
 char	*ft_translate(char *s, t_ms *ms, t_cmd *cmd)
 {
 	char	*ret;
 	char	**cut;
 
 	cut = ft_cut_string(s, ms);
-	size_t i = 0;
-	while (cut[i])
-	{
-		printf(green"%zu [%s]\n"RESET, i, cut[i]);
-		i++;
-	}
+	// size_t i = 0;
+	// while (cut[i])
+	// {
+	// 	printf(green"%zu [%s]\n"RESET, i, cut[i]);
+	// 	i++;
+	// }
 	cut = ft_clear_n_expand(cut, ms, cmd);
-	i = 0;
-	while (cut[i])
-	{
-		printf(blue"%zu [%s]\n"RESET, i, cut[i]);
-		i++;
-	}
-	ret = ft_strjoin_multi(cut);
-	// printf(blue"join : [%s]\n"RESET, ret);
+	// i = 0;
+	// while (cut[i])
+	// {
+	// 	printf(blue"%zu [%s]\n"RESET, i, cut[i]);
+	// 	i++;
+	// }
+	ret = ft_strjoin_multi_space(cut);
+	// printf(red"join : [%s]\n"RESET, ret);
 	free_split(cut);
 	ft_free(&s);
 	return (ret);
