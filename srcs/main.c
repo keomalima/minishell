@@ -19,6 +19,7 @@ int	main(int arc, char **arv, char **env)
 {
 	(void)arc;
 	(void)arv;
+
 	t_ms	ms;
 	char *input;
 

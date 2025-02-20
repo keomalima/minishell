@@ -61,10 +61,6 @@ void	export_command(t_ms *ms, t_cmd *cmd)
 	t_var	**env_var;
 
 	env_var = NULL;
-	// printf(red"nb of arg = %zu\n"RESET, ft_count_arg(cmd->cmd));
-	// printf(red"is_expand = %zu\n"RESET, cmd->nb_expand);
-	// printf(red"all are null = %d\n"RESET, ft_all_arg_null(cmd->cmd));
-
 	if (!cmd->cmd[1] || (ft_all_arg_null(cmd->cmd) && (ft_count_arg(cmd->cmd) == cmd->nb_expand)))
 		ft_print_export(ms->env);
 	else

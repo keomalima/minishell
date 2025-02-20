@@ -101,6 +101,7 @@ typedef struct s_exec
 	char	**cmd;
 	int		pipe_fd[2][2];
 	pid_t	*child_pids;
+	char	*current_cmd;
 }				t_exec;
 
 
@@ -183,9 +184,9 @@ void		file_handler(t_cmd *cmd, t_ms *ms, int i);
 void		switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i);
 
 /******************    BUILTIN    ******************/
-int		solo_builtin(t_ms *ms);
 void	exec_builtin(t_ms *ms, t_cmd *cmd);
 int		is_builtin_cmd(char *cmd);
+int		is_builtin_env_cmd(t_ms *ms, char *cmd);
 // ENVIRONNEMENT MANAGEMENT
 size_t	ft_env_count(char **env);
 int		ft_find_var(char *name, t_ms *ms);

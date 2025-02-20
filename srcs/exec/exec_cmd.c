@@ -45,6 +45,8 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 		ms->exit_status = WEXITSTATUS(status);
 		i++;
 		current = current->next;
+		if (current)
+			ms->exec->current_cmd = current->cmd[0];
 	}
 }
 
@@ -61,6 +63,13 @@ void	exec_init(t_ms *ms)
 	if (!ms->exec->child_pids)
 		exit_handler(ms, 12);
 	current = ms->cmd;
-	if (!solo_builtin(ms))
-		exec_cmd(ms, current);
+	ms->exec->current_cmd = current->cmd[0];
+	if (is_builtin_env_cmd(ms, current->cmd[0]))
+	{
+		file_handler(ms->cmd, ms, 0);
+		exec_builtin(ms, current);
+		close_all_fds(ms);
+		return ;
+	}
+	exec_cmd(ms, current);
 }
