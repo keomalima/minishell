@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static size_t	ft_strlen_expand(char *s)
+size_t	ft_strlen_expand(char *s)
 {
 	int	i;
 
@@ -30,7 +30,7 @@ static size_t	ft_strlen_expand(char *s)
 	return (i);
 }
 
-static char	*ft_fill_cut_expand(char *s, int *j)
+char	*ft_split_expand(char *s, int *j)
 {
 	char	*dest;
 	size_t	len;
@@ -41,89 +41,132 @@ static char	*ft_fill_cut_expand(char *s, int *j)
 	if (!dest)
 		return (NULL);
 	ft_strlcpy(dest, &s[*j], (len + 1));
-	*j = *j + len;
+	*j = *j + len - 1;
 	return (dest);
 }
 
 
-static char	*ft_remplace_exp(char *s, t_ms *ms, char quote, int *ex)
+t_list	*ft_remplace_by_expand(t_list *node, t_ms *ms, char quote)
 {
-	char	*str;
+	char	*s;
+	t_list	*new;
 
-	str = ft_strchr(s, '$');
-	if (*(str + 1) == '?')
-		return (exp_exit_code(s, ms));
-	else if (ft_strcmp((str + 1), "UID") == 0)
-		return (exp_uid(s));
-	else if (ft_isalpha(*(str + 1)))
-		return (exp_valid_variable(s, ms, quote));
-	else if (ft_isdigit(*(str + 1)))
-		return (exp_digit_variable(s));
-	else if (ft_isquote(*(str + 1)) && quote != '\"')
-		return (exp_quote_variable(s));
+	s = node->content + 1;
+	if (!s)
+		return (node);
+	if (*s == '?')
+		new = ft_lstnew(exp_exit_code(s, ms));
+	else if (ft_strcmp(s, "UID") == 0)
+		new = ft_lstnew(exp_uid(s));
+	else if (ft_isdigit(*s))
+		new = ft_lstnew(exp_digit_variable(s));
+	else if (ft_isquote(*s) && quote != '\"')
+		new = ft_lstnew(exp_quote_variable(s));
+	else if (ft_isalpha(*s))			///////
+		new = ft_lstnew(exp_valid_variable(s, ms));
 	else
-		*ex = 0;
-	return (s);
+		new = ft_lstnew(ft_strdup(node->content));
+	ft_lstclear(&node, &del_content);
+	return (new);
 }
 
-
-static char	**ft_cut_n_expand(char *s, t_ms *ms, char quote, t_cmd *cmd)
+t_list	*expand2(char *s, t_ms *ms, char quote)
 {
-	char	**cut_expand;
-	size_t	i;
-	size_t	size;
-	int		j;
-	int		ex;
+	t_list	*res;
+	t_list	*new;
+	int		i;
+	int		exp;
 
-	size = ft_count_word_exp(s);
-	cut_expand = ft_calloc((size + 1), sizeof(char *));
-	if (!cut_expand)
-		return (NULL);
+	res = NULL;
 	i = 0;
-	j = 0;
-	ex = 1;
-	while (i < size)
+	while (s[i])
 	{
-		cut_expand[i] = ft_fill_cut_expand(s, &j);
-		if (cut_expand[i] && cut_expand[i][0] == '$')
+		exp = 0;
+		new = ft_lstnew(ft_split_expand(s, &i));
+		// printf(blue"before expanser -> %s\n"RESET, (char *)new->content);
+		if (new->content && ((char *)new->content)[0] == '$')
 		{
-			cut_expand[i] = ft_remplace_exp(cut_expand[i], ms, quote, &ex);
-			if (!cut_expand[i])
-			{
-				free_split(cut_expand);
-				return (NULL);
-			}
+			new = ft_remplace_by_expand(new, ms, quote);
+			exp = 1;
 		}
+		// printf(blue"	after expanser -> %s\n"RESET, (char *)new->content);
+		if (((char *)new->content)[0] == 0 && exp == 1)
+			ft_lstclear(&new, &del_content);
+		else
+			ft_lstadd_back(&res, new);
 		i++;
 	}
-	if (ex == 1)
-		cmd->nb_expand += 1;
-	return (cut_expand);
+	// t_list *current = res;
+	// while (current)
+	// {
+	// 	printf(blue"list -> %s\n"RESET, (char *)current->content);
+	// 	current = current->next;
+	// }
+	return (res);
+}
+
+t_list	*ft_expanded_node(t_list *node, t_ms *ms, t_list **list, char quote)
+{
+	t_list	*expanded_node;
+
+	if (ft_count_exp(node->content) == 0)
+		return (ft_lstnew(ft_strdup(node->content)));
+	if (!node->content)
+	{
+		ft_lstclear(list, &del_content);
+		exit_handler(ms, 12);
+	}
+
+	expanded_node = expand2(node->content, ms, quote);
+	// expanded_node = ft_lstnew(ft_strdup(node->content));
+	return(expanded_node);
+}
+
+t_list	*ft_clean_quote_node(char *s)
+{
+	t_list	*clean_node;
+	size_t	len;
+	char	*content;
+
+	len = ft_strlen(s) - 2;
+	content = ft_calloc((len + 1), sizeof(char));
+	if (!content)
+		return (NULL);
+	ft_strlcpy(content, &s[1], ft_strlen(&s[1]));
+	clean_node = ft_lstnew(content);
+	if (!clean_node)
+		return (NULL);
+	return (clean_node);
 }
 
 
-
-char	*expand(char *s, t_ms *ms, char quote, t_cmd *cmd)
+t_list	*ft_expanded_list(t_list *list, t_ms *ms)
 {
-	char	**cut_expand;
-	char	*dest;
+	t_list	*current;
+	t_list	*expanded_list;
+	t_list	*clean_node;
+	char	*s;
 
-	cut_expand = ft_cut_n_expand(s, ms, quote, cmd);
-	if (!cut_expand)
-		return (NULL);
-	// size_t i = 0;
-	// while (cut_expand[i])
-	// {
-	// 	printf(yellow"%zu [%s]\n"RESET, i, cut_expand[i]);
-	// 	i++;
-	// }
-	dest = ft_strjoin_multi(cut_expand);
-	if (!dest)
+	current = list;
+	expanded_list = NULL;
+	while (current)
 	{
-		free_split(cut_expand);
-		return (NULL);
+		s = current->content;
+		clean_node = ft_clean_quote_node(current->content);
+		if (s && *s && ft_isquote(s[0]))
+		{
+			if (s[0] == '\"')
+				ft_lstadd_back(&expanded_list, ft_expanded_node(clean_node, ms, &current, s[0]));
+			else
+				ft_lstadd_back(&expanded_list, clean_node);
+		}
+		else
+			ft_lstadd_back(&expanded_list, ft_expanded_node(current, ms, &current, 0));
+
+		ft_lstclear(&clean_node, &del_content);
+		current = current->next;
 	}
-	free_split(cut_expand);
-	ft_free(&s);
-	return (dest);
+	(void)ms;
+	ft_lstclear(&list, &del_content);
+	return (expanded_list);
 }

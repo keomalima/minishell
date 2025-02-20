@@ -136,17 +136,21 @@ size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
 char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
+t_list	*ft_expanded_list(t_list *list, t_ms *ms);
 char	*expand(char *s, t_ms *ms, char quote, t_cmd *cmd);
 char	*exp_exit_code(char *s, t_ms *ms);
 char	*exp_digit_variable(char *s);
 char	*exp_quote_variable(char *s);
 char	*exp_uid(char *s);
-char	*exp_valid_variable(char *s, t_ms *ms, char quote);
+char	*exp_valid_variable(char *s, t_ms *ms);
 // EXPANSER UTILS
 size_t	ft_count_word_exp(char *s);
 size_t	ft_count_exp(char *s);
 
 /******************    TRANSLATOR    ******************/
+char	*ft_joined_list(t_list *list, t_ms *ms);
+void	del_content(void *content);
+
 char	**ft_cut_string(char *s, t_ms *ms);
 char	*ft_translate(char *s, t_ms *ms, t_cmd *cmd);
 void	ft_skip_quote(char *s, int *i);

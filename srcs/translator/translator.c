@@ -1,113 +1,106 @@
 #include "minishell.h"
 
-static char	*clean_quote(char *s)
+void	ft_skip_quote(char *s, int *i)
 {
-	char	*dest;
+	char	quote;
 
-	dest = ft_calloc((ft_strlen(s) - 1), sizeof(char));
-	if (!dest)
-		return (NULL);
-	ft_strlcpy(dest, &s[1], (ft_strlen(s) - 1));
-	ft_free(&s);
-	return (dest);
+	quote = s[*i];
+	(*i)++;
+	while (s[*i] && s[*i] != quote)
+		(*i)++;
+	if (s[*i])
+		(*i)++;
 }
 
-static char	**ft_clear_n_expand(char **cut, t_ms *ms, t_cmd *cmd)
+static size_t	ft_strlen_trans(char *s, int k)
 {
 	int	i;
 
-	i = 0;
-	while (cut[i])
-	{
-		if (cut[i][0] && ft_isquote(cut[i][0]))
-		{
-			if (cut[i][0] == '\"' && ft_count_exp(cut[i]) > 0)
-				cut[i] = expand(clean_quote(cut[i]), ms, '\"', cmd);
-			else
-				cut[i] = clean_quote(cut[i]);
-		}
-		else if (ft_count_exp(cut[i]) > 0)
-			cut[i] = expand(cut[i], ms, 0, cmd);
-		if (!cut[i])
-		{
-			free_split(cut);
-			exit_handler(ms, 12);
-		}
-		i++;
-	}
-	return (cut);
-}
-
-size_t	ft_count_cut(char **cut)
-{
-	size_t	i;
-
-	i = 0;
-	while (cut[i])
+	i = k;
+	if (s[i] == '$')
 	{
 		i++;
+		if (ft_isquote(s[i]))
+			ft_skip_quote(s, &i);
+		else if (s[i] == '?')
+			i++;
+		else
+		{
+			while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
+				i++;
+		}
 	}
-	return (i);
+	else if (ft_isquote(s[i]))
+		ft_skip_quote(s, &i);
+	else
+		while (s[i] && (s[i] != '$' && !ft_isquote(s[i])))
+			i++;
+	return (i - k);
 }
 
-char	*ft_strjoin_multi_space(char **cut)
+static char	*ft_strdup_trans(char *s, size_t *i)
 {
-	size_t	len;
-	size_t		i;
 	char	*dest;
+	size_t	len;
 
-	len = 0;
-	i = 0;
-	while (cut[i])
-	{
-		len = len + ft_strlen(cut[i]);
-		i++;
-	}
-	if (cut[0] && cut[0][0] == ' ')
-		len--;
-	if (cut[i - 1] && cut[i - 1][ft_strlen(cut[i - 1]) - 1] == ' ')
-		len--;
+	len = ft_strlen_trans(s, *i);
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
 		return (NULL);
-	i = 0;
-	while (cut[i])
-	{
-		len = 0;
-		if (cut[0] && cut[0][0] == ' ')
-			len++;
-		if ((i == ft_count_cut(cut) - 1) && cut[i][ft_strlen(cut[i]) - 1] == ' ')
-			ft_strlcpy(&dest[ft_strlen(dest)], &cut[i][len], (ft_strlen(&cut[i][len])));
-		else
-			ft_strlcpy(&dest[ft_strlen(dest)], &cut[i][len], (ft_strlen(&cut[i][len]) + 1));
-		i++;
-	}
+	ft_strlcpy(dest, &s[*i], (len + 1));
+	*i = *i + len;
 	return (dest);
+}
+
+t_list	*ft_transform_into_list(char *s, t_ms *ms)
+{
+	size_t	i;
+	t_list	*list;
+	t_list	*new;
+
+	list = NULL;
+	i = 0;
+	while (s[i])
+	{
+		new = ft_lstnew(ft_strdup_trans(s, &i));
+		if (!new)
+			exit_handler(ms, 12);
+		ft_lstadd_back(&list, new);
+	}
+	
+	return (list);
 }
 
 
 char	*ft_translate(char *s, t_ms *ms, t_cmd *cmd)
 {
 	char	*ret;
-	char	**cut;
+	t_list	*list;
+	// t_list	*current;
 
-	cut = ft_cut_string(s, ms);
-	// size_t i = 0;
-	// while (cut[i])
+	list = ft_transform_into_list(s, ms);
+	if (!list)
+		exit_handler(ms, 1);
+
+	// current = list;
+	// while (current)
 	// {
-	// 	printf(green"%zu [%s]\n"RESET, i, cut[i]);
-	// 	i++;
+	// 	printf(yellow"list -> %s\n"RESET, (char *)current->content);
+	// 	current = current->next;
 	// }
-	cut = ft_clear_n_expand(cut, ms, cmd);
-	// i = 0;
-	// while (cut[i])
+
+	list = ft_expanded_list(list, ms);
+	// current = list;
+	// while (current)
 	// {
-	// 	printf(blue"%zu [%s]\n"RESET, i, cut[i]);
-	// 	i++;
+	// 	printf(green"list -> %s\n"RESET, (char *)current->content);
+	// 	current = current->next;
 	// }
-	ret = ft_strjoin_multi_space(cut);
-	// printf(red"join : [%s]\n"RESET, ret);
-	free_split(cut);
+	ret = ft_joined_list(list, ms);
+	ft_lstclear(&list, &del_content);
+	// printf(red"rest = [%s]\n"RESET, ret);
+
 	ft_free(&s);
+	(void)cmd;
 	return (ret);
 }
