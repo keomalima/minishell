@@ -65,4 +65,5 @@ void	initialize_variables(t_ms *ms)
 	ms->exec->pipe_fd[0][1] = -1;
 	ms->exec->pipe_fd[1][0] = -1;
 	ms->exec->pipe_fd[1][1] = -1;
+	ms->exec->current_cmd = NULL;
 }

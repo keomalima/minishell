@@ -101,6 +101,7 @@ typedef struct s_exec
 	char	**cmd;
 	int		pipe_fd[2][2];
 	pid_t	*child_pids;
+	char	*current_cmd;
 }				t_exec;
 
 
@@ -111,7 +112,6 @@ typedef struct s_ms
 	struct s_cmd	*cmd;
 	struct s_exec	*exec;
 	int				exit_status;
-	size_t			cmd_count;
 	char			**env;
 	char			*lex_err;
 }				t_ms;
@@ -123,7 +123,9 @@ char	*ft_getenv(t_ms *ms, char *str);
 int		ft_is_special_cmd(char *big, char *little);
 int		ft_isquote(char c);
 char	*ft_strjoin_multi(char **cut);
-int		ft_isspace(char c);
+void	initialize_var(t_ms *ms);
+int		handle_key(char *rl);
+void	sigint_handler(int sig);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
@@ -179,17 +181,19 @@ void		close_fd(t_ms *ms, int *fd);
 void		close_all_fds(t_ms *ms);
 void		exec_here_doc(t_ms *ms, char *limiter, int i);
 void		file_handler(t_cmd *cmd, t_ms *ms, int i);
+void		switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i);
 
 /******************    BUILTIN    ******************/
-int		solo_builtin(t_ms *ms);
 void	exec_builtin(t_ms *ms, t_cmd *cmd);
 int		is_builtin_cmd(char *cmd);
+int		is_builtin_env_cmd(t_ms *ms, char *cmd);
 // ENVIRONNEMENT MANAGEMENT
 size_t	ft_env_count(char **env);
 int		ft_find_var(char *name, t_ms *ms);
 char	**ft_duplicate_env(t_ms *ms, char **env);
 // UTILS
-void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
+void	ft_builtins_exit(t_ms *ms, int exit_code);
+void	ft_builtins_env_exit(t_ms *ms, t_var **env_var, int exit_code);
 // CD
 void	cd_command(t_ms *ms, t_cmd *cmd);
 // PWD
@@ -200,15 +204,18 @@ void	env_command(t_ms *ms);
 // EXPORT
 void	export_command(t_ms *ms, t_cmd *cmd);
 t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd);
-int	ft_modify_env(t_var **env_var, t_ms *ms, t_cmd *cmd);
+int		ft_modify_env(t_var **env_var, t_ms *ms, t_cmd *cmd);
 size_t	ft_find_var_count(t_cmd *cmd);
 int		ft_is_all_alnum(char *str);
 t_var	*ft_create_new_var(t_ms *ms, t_var **env_var);
+int		ft_all_arg_null(char **cmd);
 size_t	ft_count_arg(char **cmd);
 // UNSET
 void	unset_command(t_ms *ms, t_cmd *cmd);
 // ECHO
 void	echo_command(t_ms *ms, t_cmd *cmd);
+// EXIT
+void	exit_command(t_ms *ms, t_cmd *cmd);
 
 
 /******************    TESTER    ******************/

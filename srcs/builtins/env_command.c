@@ -10,5 +10,5 @@ void	env_command(t_ms *ms)
 		printf("%s\n", ms->env[i]);
 		i++;
 	}
-	ft_builtins_exit(ms, NULL, 0);
+	ft_builtins_exit(ms, 0);
 }

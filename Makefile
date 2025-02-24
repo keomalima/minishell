@@ -20,7 +20,7 @@ EXECDIR := $(SRCSDIR)/exec
 BUILTINDIR := $(SRCSDIR)/builtins
 LEXICALDIR := $(SRCSDIR)/lexical
 
-SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
+SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_utils2.c $(SRCSDIR)/ms_clean.c \
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
 		$(TRANSLATOR)/translator.c $(TRANSLATOR)/list_management.c\
@@ -36,6 +36,7 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_clean.c \
 		$(BUILTINDIR)/pwd_command.c \
 		$(BUILTINDIR)/env_command.c \
 		$(BUILTINDIR)/echo_command.c \
+		$(BUILTINDIR)/exit_command.c \
 		$(BUILTINDIR)/export_command.c $(BUILTINDIR)/export_utils.c $(BUILTINDIR)/export_get_variable.c $(BUILTINDIR)/export_modify_env.c \
 		$(BUILTINDIR)/unset_command.c \
 		$(LEXICALDIR)/lex_analysis.c $(LEXICALDIR)/lex_heredoc.c

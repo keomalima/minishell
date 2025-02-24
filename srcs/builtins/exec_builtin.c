@@ -1,52 +1,34 @@
 #include "minishell.h"
-
 int	is_builtin_cmd(char *cmd)
 {
-	if (ft_strcmp(cmd, "cd") == 0
-		|| ft_strcmp(cmd, "pwd") == 0
-		|| ft_strcmp(cmd, "export") == 0
-		|| ft_strcmp(cmd, "unset") == 0
-		|| ft_strcmp(cmd, "env") == 0
-		|| ft_strcmp(cmd, "echo") == 0)
-		return (1);
-	return (0);
+	return (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "unset")
+		|| !ft_strcmp(cmd, "exit") || !ft_strcmp(cmd, "export")
+		|| !ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "pwd")
+		|| !ft_strcmp(cmd, "env"));
 }
 
-int	solo_builtin(t_ms *ms)
+int	is_builtin_env_cmd(t_ms *ms, char *cmd)
 {
-	if (!ms->cmd)
-		return (0);
-	else if (is_builtin_cmd(ms->cmd->cmd[0]) && ms->cmd_count == 1)
-	{
-		if (ft_strcmp(ms->cmd->cmd[0], "cd") == 0)
-			cd_command(ms, ms->cmd);
-		else if (ft_strcmp(ms->cmd->cmd[0], "pwd") == 0)
-			pwd_command(ms);
-		else if (ft_strcmp(ms->cmd->cmd[0], "export") == 0)
-			export_command(ms, ms->cmd);
-		else if (ft_strcmp(ms->cmd->cmd[0], "unset") == 0)
-			unset_command(ms, ms->cmd);
-		else if (ft_strcmp(ms->cmd->cmd[0], "env") == 0)
-			env_command(ms);
-		else if (ft_strcmp(ms->cmd->cmd[0], "echo") == 0)
-			echo_command(ms, ms->cmd);
-		return (1);
-	}
+	if (ms->cmd->cmd_size == 1)
+		return (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "unset")
+		|| !ft_strcmp(cmd, "exit"));
 	return (0);
 }
 
 void	exec_builtin(t_ms *ms, t_cmd *cmd)
 {
-	if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "cd") == 0)
-		cd_command(ms, cmd);
-	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "pwd") == 0)
-		pwd_command(ms);
-	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "export") == 0)
+	if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "echo"))
+		echo_command(ms, ms->cmd);
+	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "pwd"))
+		pwd_command(ms, cmd);
+	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "export"))
 		export_command(ms, cmd);
-	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "unset") == 0)
+	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "cd"))
+		cd_command(ms, cmd);
+	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "unset"))
 		unset_command(ms, cmd);
-	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "env") == 0)
+	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "env"))
 		env_command(ms);
-	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "echo") == 0)
-		echo_command(ms, cmd);
+	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "exit"))
+		exit_command(ms, cmd);
 }

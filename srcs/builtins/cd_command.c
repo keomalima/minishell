@@ -32,7 +32,7 @@ static char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
 	tmp = ft_calloc((ft_strlen(ms->env[i_new]) + 4), sizeof(char));
 	if (!tmp)
 	{
-		ft_builtins_exit(ms, NULL, 12);
+		ft_builtins_env_exit(ms, NULL, 12);
 		return (NULL);
 	}
 	ft_strlcpy(tmp, "OLD", 4);
@@ -48,7 +48,7 @@ static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
 	tmp = ft_calloc((ft_strlen(new_pwd) + 5), sizeof(char));
 	if (!tmp)
 	{
-		ft_builtins_exit(ms, NULL, 12);
+		ft_builtins_env_exit(ms, NULL, 12);
 		return (NULL);
 	}
 	ft_strlcpy(tmp, "PWD=", 5);
@@ -91,7 +91,7 @@ void	cd_command(t_ms *ms, t_cmd *cmd)
 	if (cmd->cmd_size > 2)
 	{
 		printf("cd : too many arguments\n");
-		return (ft_builtins_exit(ms, NULL, 1));
+		return (ft_builtins_env_exit(ms, NULL, 1));
 	}
 	if (!cmd->cmd[1] || !*cmd->cmd[1])
 	{
@@ -109,5 +109,5 @@ void	cd_command(t_ms *ms, t_cmd *cmd)
 			return (ft_builtins_exit(ms, NULL, 1));
 		ft_update_pwd(ms);
 	}
-	ft_builtins_exit(ms, NULL, 0);
+	ft_builtins_env_exit(ms, NULL, 0);
 }

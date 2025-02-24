@@ -65,3 +65,25 @@ char	*exp_uid(char *s)
 	// ft_free(&s);
 	return (dest);
 }
+
+char	*exp_uid(char *s)
+{
+	struct stat	info;
+	char		*tty;
+	char		*dest;
+
+	tty = ttyname(STDIN_FILENO);
+	if (tty && stat(tty, &info) == 0)
+	{
+		dest = ft_itoa(info.st_uid);
+		if (!dest)
+			return (NULL);
+	}
+	else
+	{
+		perror("Failed to retrieve UID");
+		return (NULL);
+	}
+	ft_free(&s);
+	return (dest);
+}

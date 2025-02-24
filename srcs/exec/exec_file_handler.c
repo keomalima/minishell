@@ -12,7 +12,7 @@ static void	open_outfile(t_ms *ms, int i, char *name, t_redir type)
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (ms->exec->pipe_fd[i % 2][1] < 0)
 	{
-		ft_printf("%s: %s \n", strerror(errno), name);
+		ft_printf("minishell: %s: %s \n", name, strerror(errno));
 		exit_handler(ms, -1);
 	}
 }
@@ -28,9 +28,9 @@ static void	open_infile(t_ms *ms, int i, char *name, int is_lim)
 	if (ms->exec->pipe_fd[(i + 1) % 2][0] < 0)
 	{
 		if (access(name, R_OK) < 0 && access(name, F_OK) == 0)
-			ft_printf("%s: %s \n", strerror(errno), name);
+			ft_printf("minishell: %s: %s \n", name, strerror(errno));
 		else
-			ft_printf("%s: %s \n", strerror(errno), name);
+			ft_printf("minishell: %s: %s \n", name, strerror(errno));
 		exit_handler(ms, -1);
 	}
 }

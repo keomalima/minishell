@@ -1,20 +1,19 @@
 #include "minishell.h"
 
-static void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
+void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 {
-	if (cmd->files_size)
-		file_handler(cmd, ms, i);
+	file_handler(cmd, ms, i);
 	if (cmd->cmd[0])
 		ms->exec->cmd = parse_arg(cmd, ms);
-	if (dup2(ms->exec->pipe_fd[(i + 1) % 2][0], STDIN_FILENO) < 0
-		&& ms->exec->pipe_fd[(i + 1) % 2][0] > 0)
+	if (ms->exec->pipe_fd[(i + 1) % 2][0] > 0
+		&& dup2(ms->exec->pipe_fd[(i + 1) % 2][0], STDIN_FILENO) < 0)
 		exit_handler(ms, 1);
 	if (cmd->redir != UNDEFINED
 		&& dup2(ms->exec->pipe_fd[i % 2][1], STDOUT_FILENO) < 0)
 		exit_handler(ms, 1);
 	close_all_fds(ms);
 	exec_builtin(ms, cmd);
-	if (execve(ms->exec->cmd[0], ms->exec->cmd, NULL) == -1)
+	if (execve(ms->exec->cmd[0], ms->exec->cmd, ms->env) == -1)
 	{
 		if (dup2(2, STDOUT_FILENO) < 0)
 			exit_handler(ms, 1);
@@ -23,13 +22,11 @@ static void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 	}
 }
 
-static void	exec_cmd(t_ms *ms)
+static void	exec_cmd(t_ms *ms, t_cmd *current)
 {
 	int		i;
 	int		status;
-	t_cmd	*current;
 
-	current = ms->cmd;
 	i = 0;
 	while (current)
 	{
@@ -48,11 +45,15 @@ static void	exec_cmd(t_ms *ms)
 		ms->exit_status = WEXITSTATUS(status);
 		i++;
 		current = current->next;
+		if (current)
+			ms->exec->current_cmd = current->cmd[0];
 	}
 }
 
 void	exec_init(t_ms *ms)
 {
+	t_cmd	*current;
+
 	ms->exec = malloc(sizeof(t_exec));
 	if (!ms->exec)
 		exit_handler(ms, 12);
@@ -61,5 +62,14 @@ void	exec_init(t_ms *ms)
 	ms->exec->child_pids = malloc (ms->exec->cmd_count * sizeof(pid_t));
 	if (!ms->exec->child_pids)
 		exit_handler(ms, 12);
-	exec_cmd(ms);
+	current = ms->cmd;
+	ms->exec->current_cmd = current->cmd[0];
+	if (is_builtin_env_cmd(ms, current->cmd[0]))
+	{
+		file_handler(ms->cmd, ms, 0);
+		exec_builtin(ms, current);
+		close_all_fds(ms);
+		return ;
+	}
+	exec_cmd(ms, current);
 }

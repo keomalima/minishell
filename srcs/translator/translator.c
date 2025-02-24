@@ -67,7 +67,7 @@ t_list	*ft_transform_into_list(char *s, t_ms *ms)
 			exit_handler(ms, 12);
 		ft_lstadd_back(&list, new);
 	}
-	
+
 	return (list);
 }
 

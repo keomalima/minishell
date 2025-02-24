@@ -1,5 +1,4 @@
 #include "minishell.h"
-
 size_t	ft_count_exp(char *s)
 {
 	char	*tmp;
