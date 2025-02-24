@@ -58,7 +58,7 @@ int	ft_isquote(char c)
 char	*ft_strjoin_multi(char **cut)
 {
 	size_t	len;
-	int		i;
+	size_t		i;
 	char	*dest;
 
 	len = 0;
@@ -79,4 +79,8 @@ char	*ft_strjoin_multi(char **cut)
 		i++;
 	}
 	return (dest);
+}
+int	ft_isspace(char c)
+{
+	return (c == ' ' || (c >= 9 && c <= 13));
 }

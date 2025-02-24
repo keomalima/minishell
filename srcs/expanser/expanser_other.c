@@ -12,7 +12,8 @@ char	*exp_exit_code(char *s, t_ms *ms)
 	if (!dest)
 		return (NULL);
 	ft_strlcpy(dest, exit_code, (ft_strlen(exit_code) + 1));
-	ft_free(&s);
+	// ft_free(&s);
+	(void)s;
 	return (dest);
 }
 
@@ -26,7 +27,7 @@ char	*exp_digit_variable(char *s)
 	if (!dest)
 		return (NULL);
 	ft_strlcpy(dest, &s[2], (ft_strlen(&s[2]) + 1));
-	ft_free(&s);
+	// ft_free(&s);
 	return (dest);
 }
 
@@ -38,6 +39,29 @@ char	*exp_quote_variable(char *s)
 	if (!dest)
 		return (NULL);
 	ft_strlcpy(dest, &s[2], (ft_strlen(s) - 2));
-	ft_free(&s);
+	// ft_free(&s);
+	return (dest);
+}
+
+char	*exp_uid(char *s)
+{
+	struct stat	info;
+	char		*tty;
+	char		*dest;
+
+	tty = ttyname(STDIN_FILENO);
+	if (tty && stat(tty, &info) == 0)
+	{
+		dest = ft_itoa(info.st_uid);
+		if (!dest)
+			return (NULL);
+	}
+	else
+	{
+		perror("Failed to retrieve UID");
+		return (NULL);
+	}
+	(void)s;
+	// ft_free(&s);
 	return (dest);
 }

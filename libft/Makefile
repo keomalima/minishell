@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+         #
+#    By: lthan <lthan@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/15 14:26:45 by keomalima         #+#    #+#              #
-#    Updated: 2025/02/17 07:47:08 by kricci-d         ###   ########.fr        #
+#    Updated: 2025/02/20 11:46:30 by lthan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,8 +33,7 @@ LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c 
 			$(LIBSRCS)/ft_strmapi.c $(LIBSRCS)/ft_printf.c $(LIBSRCS)/ft_print_char.c \
 			$(LIBSRCS)/ft_print_hex.c $(LIBSRCS)/ft_print_int.c $(LIBSRCS)/ft_print_ptr.c \
 			$(LIBSRCS)/get_next_line.c $(LIBSRCS)/get_next_line_utils.c $(LIBSRCS)/ft_strndup.c \
-
-BONUS_SRCS := $(LIBSRCS)/ft_lstadd_back.c $(LIBSRCS)/ft_lstadd_front.c \
+			$(LIBSRCS)/ft_lstadd_back.c $(LIBSRCS)/ft_lstadd_front.c \
 			$(LIBSRCS)/ft_lstclear.c $(LIBSRCS)/ft_lstdelone.c \
 			$(LIBSRCS)/ft_lstiter.c $(LIBSRCS)/ft_lstlast.c \
 			$(LIBSRCS)/ft_lstnew.c $(LIBSRCS)/ft_lstsize.c $(LIBSRCS)/ft_lstmap.c
@@ -43,40 +42,24 @@ BONUS_SRCS := $(LIBSRCS)/ft_lstadd_back.c $(LIBSRCS)/ft_lstadd_front.c \
 HEADER := includes/libft.h
 
 OBJS = $(LIBFT_SRCS:$(LIBSRCS)/%.c=$(OBJDIR)/libft/%.o)
-BONUS_OBJS = $(BONUS_SRCS:$(LIBSRCS)/%.c=$(OBJDIR)/bonus/%.o)
-
-OBJS = $(LIBFT_SRCS:$(LIBSRCS)/%.c=$(OBJDIR)/libft/%.o)
-BONUS_OBJS = $(BONUS_SRCS:$(LIBSRCS)/%.c=$(OBJDIR)/bonus/%.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	ar rcs $(NAME) $(OBJS)
 
-bonus : $(NAME) $(BONUS_OBJS) .bonus
-
-.bonus : $(BONUS_OBJS)
-	ar rcs $(NAME) $(BONUS_OBJS)
-	@touch .bonus
-
 $(OBJDIR)/libft/%.o: $(LIBSRCS)/%.c $(HEADER) Makefile | $(OBJDIR)/libft
-	$(CC) $(CFLAGS) -Iincludes -c $< -o $@
-
-$(OBJDIR)/bonus/%.o: $(LIBSRCS)/%.c $(HEADER) Makefile | $(OBJDIR)/bonus
 	$(CC) $(CFLAGS) -Iincludes -c $< -o $@
 
 $(OBJDIR)/libft:
 	mkdir -p $(OBJDIR)/libft
 
-$(OBJDIR)/bonus:
-	mkdir -p $(OBJDIR)/bonus
-
 clean:
 	$(RM) -r $(OBJDIR)
 
 fclean: clean
-	$(RM) $(NAME) .bonus
+	$(RM) $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re

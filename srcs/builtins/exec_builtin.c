@@ -21,7 +21,7 @@ int	solo_builtin(t_ms *ms)
 		if (ft_strcmp(ms->cmd->cmd[0], "cd") == 0)
 			cd_command(ms, ms->cmd);
 		else if (ft_strcmp(ms->cmd->cmd[0], "pwd") == 0)
-			pwd_command(ms, ms->cmd);
+			pwd_command(ms);
 		else if (ft_strcmp(ms->cmd->cmd[0], "export") == 0)
 			export_command(ms, ms->cmd);
 		else if (ft_strcmp(ms->cmd->cmd[0], "unset") == 0)
@@ -40,7 +40,7 @@ void	exec_builtin(t_ms *ms, t_cmd *cmd)
 	if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "cd") == 0)
 		cd_command(ms, cmd);
 	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "pwd") == 0)
-		pwd_command(ms, cmd);
+		pwd_command(ms);
 	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "export") == 0)
 		export_command(ms, cmd);
 	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "unset") == 0)
@@ -48,5 +48,5 @@ void	exec_builtin(t_ms *ms, t_cmd *cmd)
 	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "env") == 0)
 		env_command(ms);
 	else if (cmd->cmd[0] && ft_strcmp(cmd->cmd[0], "echo") == 0)
-		echo_command(ms, ms->cmd);
+		echo_command(ms, cmd);
 }

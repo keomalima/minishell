@@ -32,6 +32,7 @@ t_cmd	*ft_lst_new_cmd(t_ms *ms)
 	new->files_size = 0;
 	new->redir = UNDEFINED;
 	new->next = NULL;
+	new->nb_expand = 0;
 	return (new);
 }
 
