@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	ft_strchr_space(char *s)
+int	ft_contains_space(char *s)
 {
 	int	i;
 
@@ -32,6 +32,8 @@ t_list	*ft_clear_space(char *s)
 	char	*str;
 	int		i;
 
+	if (!s)
+		return (ft_lstnew(NULL));
 	clean = NULL;
 	i = 0;
 	while (s[i])
@@ -44,7 +46,7 @@ t_list	*ft_clear_space(char *s)
 			if (!str)
 				return (NULL);		//////////
 			ft_strlcpy(str, &s[i], (ft_strlen_between_space(&s[i]) + 1));
-			printf("str clear space [%s]\n", str);
+			// printf("str clear space [%s]\n", str);
 			ft_lstadd_back(&clean, ft_lstnew(str));
 			i += ft_strlen_between_space(&s[i]);
 		}
@@ -63,39 +65,11 @@ char	*exp_valid_variable(char *s, t_ms *ms)
 	// printf("extract = %s	|	variable = %s\n", s, variable);
 
 	if (variable == NULL)
-		dest = ft_strdup("");
+		dest = NULL;
 	else
 		dest = ft_strdup(variable);
-	// printf("exp valid [%s]\n", dest);
 
-	// ft_free(&s);
-	// (void)quote;
-	// ft_free(&variable);
+	// printf("exp valid [%s]\n", dest);
 	return (dest);
 }
 
-
-/* char	*exp_valid_variable(char *s, t_ms *ms)
-{
-	char	*variable;
-	// char	*dest;
-	t_list	*expand;
-
-	if (!s)
-		return (NULL);
-	variable = ft_getenv(ms, s);
-	printf("extract = %s	|	variable = %s\n", s, variable);
-
-	if (variable == NULL)
-		expand = ft_lstnew(ft_strdup(""));
-	// else if (quote == '\"')
-	// 	expand = ft_lstnew(ft_strdup(variable));
-	else
-		expand = ft_lstnew(ft_strdup(variable));
-	printf("exp valid [%s]\n", (char *)expand->content);
-
-	// ft_free(&s);
-	// (void)quote;
-	// ft_free(&variable);
-	return (expand);
-} */

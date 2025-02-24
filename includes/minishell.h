@@ -94,6 +94,8 @@ typedef struct s_var
 	char	*value;
 }			t_var;
 
+
+
 typedef struct s_exec
 {
 	int		cmd_count;
@@ -139,19 +141,22 @@ char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
 t_list	*ft_expanded_list(t_list *list, t_ms *ms);
-char	*expand(char *s, t_ms *ms, char quote, t_cmd *cmd);
 char	*exp_exit_code(char *s, t_ms *ms);
 char	*exp_digit_variable(char *s);
 char	*exp_quote_variable(char *s);
 char	*exp_uid(char *s);
 char	*exp_valid_variable(char *s, t_ms *ms);
+t_list	*ft_clear_space(char *s);
 // EXPANSER UTILS
 size_t	ft_count_word_exp(char *s);
 size_t	ft_count_exp(char *s);
 
 /******************    TRANSLATOR    ******************/
-char	*ft_joined_list(t_list *list, t_ms *ms);
+//List management
 void	del_content(void *content);
+char	*ft_joined_list(t_list *list, t_ms *ms);
+char	*ft_joined_space_list(t_list *list, t_ms *ms);
+
 
 char	**ft_cut_string(char *s, t_ms *ms);
 char	*ft_translate(char *s, t_ms *ms, t_cmd *cmd);

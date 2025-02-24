@@ -98,7 +98,14 @@ char	*ft_translate(char *s, t_ms *ms, t_cmd *cmd)
 	// }
 	ret = ft_joined_list(list, ms);
 	ft_lstclear(&list, &del_content);
-	// printf(red"rest = [%s]\n"RESET, ret);
+	if (ret && s && *s && *s != '\"')
+	{
+		list = ft_clear_space(ret);
+		ft_free(&ret);
+		ret = ft_joined_space_list(list, ms);
+		ft_lstclear(&list, &del_content);
+	}
+	// printf(red"ret = [%s]\n"RESET, ret);
 
 	ft_free(&s);
 	(void)cmd;

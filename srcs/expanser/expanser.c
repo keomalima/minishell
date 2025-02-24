@@ -36,7 +36,6 @@ char	*ft_split_expand(char *s, int *j)
 	size_t	len;
 
 	len = ft_strlen_expand(&s[*j]);
-	// printf("len = %zu\n", len);
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
 		return (NULL);
@@ -70,29 +69,22 @@ t_list	*ft_remplace_by_expand(t_list *node, t_ms *ms, char quote)
 	return (new);
 }
 
-t_list	*expand2(char *s, t_ms *ms, char quote)
+t_list	*expand(char *s, t_ms *ms, char quote)
 {
 	t_list	*res;
 	t_list	*new;
 	int		i;
-	int		exp;
 
 	res = NULL;
 	i = 0;
 	while (s[i])
 	{
-		exp = 0;
 		new = ft_lstnew(ft_split_expand(s, &i));
 		// printf(blue"before expanser -> %s\n"RESET, (char *)new->content);
 		if (new->content && ((char *)new->content)[0] == '$')
-		{
 			new = ft_remplace_by_expand(new, ms, quote);
-			exp = 1;
-		}
 		// printf(blue"	after expanser -> %s\n"RESET, (char *)new->content);
-		if (((char *)new->content)[0] == 0 && exp == 1)
-			ft_lstclear(&new, &del_content);
-		else
+		if (new->content)
 			ft_lstadd_back(&res, new);
 		i++;
 	}
@@ -117,8 +109,7 @@ t_list	*ft_expanded_node(t_list *node, t_ms *ms, t_list **list, char quote)
 		exit_handler(ms, 12);
 	}
 
-	expanded_node = expand2(node->content, ms, quote);
-	// expanded_node = ft_lstnew(ft_strdup(node->content));
+	expanded_node = expand(node->content, ms, quote);
 	return(expanded_node);
 }
 
@@ -145,7 +136,7 @@ t_list	*ft_expanded_list(t_list *list, t_ms *ms)
 	t_list	*current;
 	t_list	*expanded_list;
 	t_list	*clean_node;
-	char	*s;
+	char		*s;
 
 	current = list;
 	expanded_list = NULL;
@@ -153,20 +144,19 @@ t_list	*ft_expanded_list(t_list *list, t_ms *ms)
 	{
 		s = current->content;
 		clean_node = ft_clean_quote_node(current->content);
+		// printf("clean : {%s}\n", (char *)clean_node->content);
 		if (s && *s && ft_isquote(s[0]))
 		{
 			if (s[0] == '\"')
 				ft_lstadd_back(&expanded_list, ft_expanded_node(clean_node, ms, &current, s[0]));
 			else
-				ft_lstadd_back(&expanded_list, clean_node);
+				ft_lstadd_back(&expanded_list, ft_lstnew(ft_strdup(clean_node->content)));
 		}
 		else
 			ft_lstadd_back(&expanded_list, ft_expanded_node(current, ms, &current, 0));
-
 		ft_lstclear(&clean_node, &del_content);
 		current = current->next;
 	}
-	(void)ms;
 	ft_lstclear(&list, &del_content);
 	return (expanded_list);
 }
