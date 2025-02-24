@@ -6,7 +6,7 @@
 #    By: keomalima <keomalima@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/15 14:26:45 by keomalima         #+#    #+#              #
-#    Updated: 2025/02/24 11:31:09 by keomalima        ###   ########.fr        #
+#    Updated: 2025/02/24 12:10:27 by keomalima        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,9 +33,7 @@ LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c 
 			$(LIBSRCS)/ft_strmapi.c $(LIBSRCS)/ft_printf.c $(LIBSRCS)/ft_print_char.c \
 			$(LIBSRCS)/ft_print_hex.c $(LIBSRCS)/ft_print_int.c $(LIBSRCS)/ft_print_ptr.c \
 			$(LIBSRCS)/get_next_line.c $(LIBSRCS)/get_next_line_utils.c $(LIBSRCS)/ft_strndup.c \
-			$(LIBSRCS)/ft_isspace.c
-
-BONUS_SRCS := $(LIBSRCS)/ft_lstadd_back.c $(LIBSRCS)/ft_lstadd_front.c \
+			$(LIBSRCS)/ft_isspace.c $(LIBSRCS)/ft_lstadd_back.c $(LIBSRCS)/ft_lstadd_front.c \
 			$(LIBSRCS)/ft_lstclear.c $(LIBSRCS)/ft_lstdelone.c \
 			$(LIBSRCS)/ft_lstiter.c $(LIBSRCS)/ft_lstlast.c \
 			$(LIBSRCS)/ft_lstnew.c $(LIBSRCS)/ft_lstsize.c $(LIBSRCS)/ft_lstmap.c

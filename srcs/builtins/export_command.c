@@ -36,11 +36,7 @@ size_t	ft_count_arg(char **cmd)
 	return (count);
 }
 
-<<<<<<< HEAD
-static int	ft_all_arg_null(char **cmd)
-=======
 int	ft_all_arg_null(char **cmd)
->>>>>>> a49c48c (logic for export and clean of main)
 {
 	int	i;
 

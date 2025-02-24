@@ -7,15 +7,10 @@ void	ft_print_cwd_error(void)
 	printf("No such file or directory\n");
 }
 
-void	pwd_command(t_ms *ms)
+void    pwd_command(t_ms *ms)
 {
-	char	*pwd;
+	char    *pwd;
 
-	if (cmd->cmd_size > 2)
-	{
-		printf("cd : too many arguments\n");
-		return (ft_builtins_exit(ms, 0));
-	}
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 	{

@@ -31,22 +31,20 @@ void print_token(t_token *list)
 void print_cmd(t_cmd *list)
 {
 	int cmd_i;
-	int	in_i;
-	int	out_i;
+	int    in_i;
 
 	while (list)
 	{
 		cmd_i = 0;
 		in_i = 0;
-		out_i = 0;
-		printf("cmd[%zu] : %s	|	redir : %s\n", list->cmd_size, list->cmd[cmd_i], cmd_redir[list->redir]);
+		printf("cmd[%zu] : %s    |    redir : %s\n", list->cmd_size, list->cmd[cmd_i], cmd_redir[list->redir]);
 		while (list->cmd[cmd_i])
 		{
 			printf(blue"[%s] "RESET, list->cmd[cmd_i]);
 			cmd_i++;
 		}
 		printf("\n");
-		printf(green"file_size : %zu	"RESET, list->files_size);
+		printf(green"file_size : %zu    "RESET, list->files_size);
 		while (list->files[in_i])
 		{
 			printf(green"[%s]%d - Type [%d] "RESET, list->files[in_i]->name, list->files[in_i]->is_lim, list->files[in_i]->type);

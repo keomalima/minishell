@@ -20,7 +20,7 @@ void	exec_builtin(t_ms *ms, t_cmd *cmd)
 	if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "echo"))
 		echo_command(ms, ms->cmd);
 	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "pwd"))
-		pwd_command(ms, cmd);
+		pwd_command(ms);
 	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "export"))
 		export_command(ms, cmd);
 	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "cd"))

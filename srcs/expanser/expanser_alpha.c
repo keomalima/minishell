@@ -52,7 +52,7 @@ t_list	*ft_clear_space(char *s)
 	return (clean);
 }
 
-char	*exp_valid_variable(char *s, t_ms *ms, char quote)
+char	*exp_valid_variable(char *s, t_ms *ms)
 {
 	char	*variable;
 	char	*dest;
