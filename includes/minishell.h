@@ -118,6 +118,13 @@ typedef struct s_ms
 	char			*lex_err;
 }				t_ms;
 
+typedef struct	s_expans
+{
+	t_list	*initial_list;
+	t_list	*exp_list;
+	t_ms	*ms;
+}				t_expand;
+
 /******************    UTILS    ******************/
 int		ft_strcmp(const char *s1, const char *s2);
 void	clean_ms(t_ms *ms, int exit_code);
@@ -140,7 +147,7 @@ size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
 char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
-t_list	*ft_expanded_list(t_list *list, t_ms *ms);
+t_list	*ft_expanded_list(t_expand *expand);
 char	*exp_exit_code(char *s, t_ms *ms);
 char	*exp_digit_variable(char *s);
 char	*exp_quote_variable(char *s);
@@ -148,14 +155,16 @@ char	*exp_uid(char *s);
 char	*exp_valid_variable(char *s, t_ms *ms);
 t_list	*ft_clear_space(char *s);
 // EXPANSER UTILS
-size_t	ft_count_word_exp(char *s);
 size_t	ft_count_exp(char *s);
+void	ft_clear_expand(t_expand *expand, int exit_code);
 
 /******************    TRANSLATOR    ******************/
 //List management
 void	del_content(void *content);
-char	*ft_joined_list(t_list *list, t_ms *ms);
+char	*ft_joined_list(t_list *list, t_list **initial_list, t_ms *ms);
 char	*ft_joined_space_list(t_list *list, t_ms *ms);
+char	*ft_joined_list_without_quote(t_list *list, t_ms *ms);
+char	*clear_string_space(char *s);
 
 
 char	**ft_cut_string(char *s, t_ms *ms);

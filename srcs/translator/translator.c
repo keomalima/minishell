@@ -64,10 +64,12 @@ t_list	*ft_transform_into_list(char *s, t_ms *ms)
 	{
 		new = ft_lstnew(ft_strdup_trans(s, &i));
 		if (!new)
+		{
+			ft_lstclear(&list, &del_content);
 			exit_handler(ms, 12);
+		}
 		ft_lstadd_back(&list, new);
 	}
-
 	return (list);
 }
 
@@ -75,37 +77,33 @@ t_list	*ft_transform_into_list(char *s, t_ms *ms)
 char	*ft_translate(char *s, t_ms *ms, t_cmd *cmd)
 {
 	char	*ret;
-	t_list	*list;
-	// t_list	*current;
+	// t_list	*list;
+	t_expand	expand;
 
-	list = ft_transform_into_list(s, ms);
-	if (!list)
+	expand.ms = ms;
+	expand.exp_list = NULL;
+	expand.initial_list = ft_transform_into_list(s, ms);
+	// list = ft_transform_into_list(s, ms);
+	if (!expand.initial_list)
 		exit_handler(ms, 1);
-
-	// current = list;
-	// while (current)
-	// {
-	// 	printf(yellow"list -> %s\n"RESET, (char *)current->content);
-	// 	current = current->next;
-	// }
-
-	list = ft_expanded_list(list, ms);
-	// current = list;
-	// while (current)
-	// {
-	// 	printf(green"list -> %s\n"RESET, (char *)current->content);
-	// 	current = current->next;
-	// }
-	ret = ft_joined_list(list, ms);
-	ft_lstclear(&list, &del_content);
-	if (ret && s && *s && *s != '\"')
+	t_list *current = expand.initial_list;
+	while (current)
 	{
-		list = ft_clear_space(ret);
-		ft_free(&ret);
-		ret = ft_joined_space_list(list, ms);
-		ft_lstclear(&list, &del_content);
+		printf(yellow"list -> %s\n"RESET, (char *)current->content);
+		current = current->next;
 	}
-	// printf(red"ret = [%s]\n"RESET, ret);
+	expand.exp_list = ft_expanded_list(&expand);
+	current = expand.exp_list;
+	while (current)
+	{
+		printf(green"list -> %s\n"RESET, (char *)current->content);
+		current = current->next;
+	}
+	ret = ft_joined_list_without_quote(expand.exp_list, ms);
+	// ret = ft_joined_list(list, ms);
+	printf(red"ret = [%s]\n"RESET, ret);
+	ft_lstclear(&expand.initial_list, &del_content);
+	ft_lstclear(&expand.exp_list, &del_content);
 
 	ft_free(&s);
 	(void)cmd;

@@ -24,7 +24,7 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_utils2.c $(SRCSDIR
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
 		$(TRANSLATOR)/translator.c $(TRANSLATOR)/list_management.c\
-		$(EXPANSER)/expanser.c $(EXPANSER)/expanser_utils.c $(EXPANSER)/expanser_other.c $(EXPANSER)/expanser_alpha.c \
+		$(EXPANSER)/expanser.c $(EXPANSER)/expanser_utils.c $(EXPANSER)/expanser_other.c $(EXPANSER)/expanser_alpha.c $(EXPANSER)/clear_multi_space.c\
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c \
 		$(TOKENDIR)/token_cleaner.c \
 		$(TOKENDIR)/token_utils.c \

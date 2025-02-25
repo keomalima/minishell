@@ -35,10 +35,11 @@ char	*exp_quote_variable(char *s)
 {
 	char	*dest;
 
-	dest = ft_calloc((ft_strlen(s) - 2), sizeof(char));
+	printf("expand quote [%s]\n", s);
+	dest = ft_strdup(s);
 	if (!dest)
 		return (NULL);
-	ft_strlcpy(dest, &s[2], (ft_strlen(s) - 2));
+	ft_strlcpy(dest, &s[1], (ft_strlen(s) - 1));
 	// ft_free(&s);
 	return (dest);
 }
