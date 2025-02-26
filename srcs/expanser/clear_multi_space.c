@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-size_t	ft_strlen_between_space(char *s)
+static size_t	ft_strlen_between_space(char *s)
 {
 	size_t	i;
 
@@ -12,15 +12,15 @@ size_t	ft_strlen_between_space(char *s)
 	return (i);
 }
 
-t_list	*ft_clear_space(char *s)
+static t_list	*ft_split_into_list_space(char *s, t_expand *expand)
 {
-	t_list	*clean;
+	t_list	*list;
 	char	*str;
 	int		i;
 
 	if (!s)
 		return (ft_lstnew(NULL));
-	clean = NULL;
+	list = NULL;
 	i = 0;
 	while (s[i])
 	{
@@ -30,24 +30,70 @@ t_list	*ft_clear_space(char *s)
 		{
 			str = ft_calloc((ft_strlen_between_space(&s[i]) + 1), sizeof(char));
 			if (!str)
-				return (NULL);		//////////
+				ft_clear_expand(expand, 12);
 			ft_strlcpy(str, &s[i], (ft_strlen_between_space(&s[i]) + 1));
-			// printf("str clear space [%s]\n", str);
-			ft_lstadd_back(&clean, ft_lstnew(str));
+			ft_lstadd_back(&list, ft_lstnew(str));
 			i += ft_strlen_between_space(&s[i]);
 		}
 	}
-	return (clean);
+	return (list);
 }
 
-char	*clear_string_space(char *s)
+static size_t	ft_strlen_joined_space(t_list *list, int *check_empty)
+{
+	size_t		len;
+	t_list		*current;
+
+	current = list;
+	len = 0;
+	while (current)
+	{
+		if (current->content)
+			*check_empty += 1;
+		len += ft_strlen(current->content);
+		current = current->next;
+	}
+	return (len);
+}
+
+char	*ft_joined_space_list(t_list *list, t_expand *expand)
+{
+	size_t		len;
+	t_list		*current;
+	char		*dest;
+	int			check_empty;
+
+	check_empty = 0;
+	len = ft_strlen_joined_space(list, &check_empty);
+	if (check_empty == 0)
+		return (NULL);
+	dest = ft_calloc((len + 1 + (ft_lstsize(list) - 1)), sizeof(char));
+	if (!dest)
+	{
+		ft_lstclear(&list, &del_content);
+		ft_clear_expand(expand, 12);
+	}
+	current = list;
+	while (current)
+	{
+		ft_strlcpy(&dest[ft_strlen(dest)], current->content,
+			(ft_strlen(current->content) + 1));
+		if (current->next)
+			dest[ft_strlen(dest)] = ' ';
+		current = current->next;
+	}
+	return (dest);
+}
+
+char	*clear_string_space(char *s, t_expand *expand)
 {
 	t_list	*list;
 	char	*dest;
 
-	list = ft_clear_space(s);
-	dest = ft_joined_space_list(list, NULL);
+	list = ft_split_into_list_space(s, expand);
+	if (!list)
+		ft_clear_expand(expand, 1);
+	dest = ft_joined_space_list(list, expand);
 	ft_lstclear(&list, &del_content);
-	// ft_free(&s);
 	return (dest);
 }

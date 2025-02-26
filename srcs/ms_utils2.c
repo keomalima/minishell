@@ -26,3 +26,8 @@ void	sigint_handler(int sig)
 	//rl_replace_line("", 0);
 	rl_redisplay();
 }
+void	del_content(void *content)
+{
+	if(content)
+		free(content);
+}

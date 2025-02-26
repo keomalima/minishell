@@ -1,17 +1,5 @@
 #include "minishell.h"
 
-void	ft_skip_quote(char *s, int *i)
-{
-	char	quote;
-
-	quote = s[*i];
-	(*i)++;
-	while (s[*i] && s[*i] != quote)
-		(*i)++;
-	if (s[*i])
-		(*i)++;
-}
-
 static size_t	ft_strlen_trans(char *s, int k)
 {
 	int	i;
@@ -52,7 +40,7 @@ static char	*ft_strdup_trans(char *s, size_t *i)
 	return (dest);
 }
 
-t_list	*ft_transform_into_list(char *s, t_ms *ms)
+static t_list	*ft_transform_into_list(char *s, t_ms *ms)
 {
 	size_t	i;
 	t_list	*list;
@@ -73,39 +61,33 @@ t_list	*ft_transform_into_list(char *s, t_ms *ms)
 	return (list);
 }
 
-
-char	*ft_translate(char *s, t_ms *ms, t_cmd *cmd)
+char	*ft_translate(char *s, t_ms *ms)
 {
-	char	*ret;
-	// t_list	*list;
+	char		*ret;
 	t_expand	expand;
 
 	expand.ms = ms;
 	expand.exp_list = NULL;
 	expand.initial_list = ft_transform_into_list(s, ms);
-	// list = ft_transform_into_list(s, ms);
 	if (!expand.initial_list)
 		exit_handler(ms, 1);
-	t_list *current = expand.initial_list;
-	while (current)
-	{
-		printf(yellow"list -> %s\n"RESET, (char *)current->content);
-		current = current->next;
-	}
-	expand.exp_list = ft_expanded_list(&expand);
-	current = expand.exp_list;
-	while (current)
-	{
-		printf(green"list -> %s\n"RESET, (char *)current->content);
-		current = current->next;
-	}
-	ret = ft_joined_list_without_quote(expand.exp_list, ms);
-	// ret = ft_joined_list(list, ms);
-	printf(red"ret = [%s]\n"RESET, ret);
+	// t_list *current = expand.initial_list;
+	// while (current)
+	// {
+	// 	printf(yellow"initial list -> %s\n"RESET, (char *)current->content);
+	// 	current = current->next;
+	// }
+	ft_set_expanded_list(&expand);
+	// current = expand.exp_list;
+	// while (current)
+	// {
+	// 	printf(green"expanded list -> %s\n"RESET, (char *)current->content);
+	// 	current = current->next;
+	// }
+	ret = ft_final_joined_list(&expand);
+	// printf(red"ret = [%s]\n"RESET, ret);
 	ft_lstclear(&expand.initial_list, &del_content);
 	ft_lstclear(&expand.exp_list, &del_content);
-
 	ft_free(&s);
-	(void)cmd;
 	return (ret);
 }
