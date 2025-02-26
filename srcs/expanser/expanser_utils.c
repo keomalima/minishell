@@ -1,4 +1,5 @@
 #include "minishell.h"
+
 size_t	ft_count_exp(char *s)
 {
 	char	*tmp;
@@ -14,4 +15,25 @@ size_t	ft_count_exp(char *s)
 		tmp = ft_strchr((tmp + 1), '$');
 	}
 	return (count_exp);
+}
+
+void	ft_clear_expand(t_expand *expand, int exit_code)
+{
+	if (expand->initial_list)
+		ft_lstclear(&expand->initial_list, &del_content);
+	if (expand->exp_list)
+		ft_lstclear(&expand->exp_list, &del_content);
+	exit_handler(expand->ms, exit_code);
+}
+
+void	ft_skip_quote(char *s, int *i)
+{
+	char	quote;
+
+	quote = s[*i];
+	(*i)++;
+	while (s[*i] && s[*i] != quote)
+		(*i)++;
+	if (s[*i])
+		(*i)++;
 }

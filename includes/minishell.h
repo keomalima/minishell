@@ -94,6 +94,8 @@ typedef struct s_var
 	char	*value;
 }			t_var;
 
+
+
 typedef struct s_exec
 {
 	int		cmd_count;
@@ -116,6 +118,13 @@ typedef struct s_ms
 	char			*lex_err;
 }				t_ms;
 
+typedef struct	s_expans
+{
+	t_list	*initial_list;
+	t_list	*exp_list;
+	t_ms	*ms;
+}				t_expand;
+
 /******************    UTILS    ******************/
 int		ft_strcmp(const char *s1, const char *s2);
 void	clean_ms(t_ms *ms, int exit_code);
@@ -126,6 +135,7 @@ char	*ft_strjoin_multi(char **cut);
 void	initialize_var(t_ms *ms);
 int		handle_key(char *rl);
 void	sigint_handler(int sig);
+void	del_content(void *content);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
@@ -138,24 +148,24 @@ size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
 char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
-t_list	*ft_expanded_list(t_list *list, t_ms *ms);
-char	*expand(char *s, t_ms *ms, char quote, t_cmd *cmd);
-char	*exp_exit_code(char *s, t_ms *ms);
-char	*exp_digit_variable(char *s);
-char	*exp_quote_variable(char *s);
-char	*exp_uid(char *s);
-char	*exp_valid_variable(char *s, t_ms *ms);
-// EXPANSER UTILS
-size_t	ft_count_word_exp(char *s);
+void	ft_set_expanded_list(t_expand *expand);
+t_list	*ft_remplace_by_expand(char *str, t_expand *expand, char quote);
+char	*exp_exit_code(t_expand *expand);
+char	*exp_uid(t_expand *expand);
+char	*exp_digit_variable(char *s, t_expand *expand);
+char	*exp_quote_variable(char *s, t_expand *expand);
+char	*exp_valid_variable(char *s, t_expand *expand);
+
+char	*clear_string_space(char *s, t_expand *expand);
+void	ft_clear_expand(t_expand *expand, int exit_code);
+void	ft_skip_quote(char *s, int *i);
+char	*ft_split_expand(char *s, int *j, t_expand *expand);
 size_t	ft_count_exp(char *s);
 
 /******************    TRANSLATOR    ******************/
-char	*ft_joined_list(t_list *list, t_ms *ms);
-void	del_content(void *content);
-
-char	**ft_cut_string(char *s, t_ms *ms);
-char	*ft_translate(char *s, t_ms *ms, t_cmd *cmd);
-void	ft_skip_quote(char *s, int *i);
+char	*ft_translate(char *s, t_ms *ms);
+char	*ft_joined_list(t_list *list, t_expand *expand);
+char	*ft_final_joined_list(t_expand *expand);
 
 /******************    PARSER    ******************/
 void		parse_cmd(t_ms *ms);
