@@ -11,7 +11,7 @@ static char	*ft_remplace_value(t_var *cur_var, t_var **env_var, t_ms *ms, int i)
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
 	{
-		ft_builtins_env_exit(ms, env_var, 12);
+		ft_builtins_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	ft_strlcpy(dest, cur_var->name, (ft_strlen(cur_var->name) + 1));
@@ -34,7 +34,7 @@ static char	*ft_set_new_variable(t_var *cur_var, t_var **env_var, t_ms *ms)
 	new_var = ft_calloc((len + 1), sizeof(char));
 	if (!new_var)
 	{
-		ft_builtins_env_exit(ms, env_var, 12);
+		ft_builtins_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	ft_strlcpy(new_var, cur_var->name, (ft_strlen(cur_var->name) + 1));
@@ -53,7 +53,7 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	new_env = ft_calloc((ft_env_count(ms->env) + 2), sizeof(char *));
 	if (!new_env)
 	{
-		ft_builtins_env_exit(ms, env_var, 12);
+		ft_builtins_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	i = 0;
@@ -66,7 +66,7 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	if (!new_env[i])
 	{
 		free_split(new_env);
-		ft_builtins_env_exit(ms, env_var, 12);
+		ft_builtins_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	free(ms->env);
@@ -74,18 +74,21 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	return (new_env);
 }
 
-static int	ft_valid_variable(t_var *env_var, char *arg, t_cmd *cmd)
+static int	ft_valid_variable(t_ms *ms, t_var *env_var, char *arg, t_cmd *cmd)
 {
 	if (!*env_var->name && (ft_count_arg(cmd->cmd) - cmd->nb_expand > 0))
 	{
 		printf("export: '%s': not a valid identifier\n", arg);
 		cmd->nb_expand += 1;
+		ms->exit_status = 1;
 		// printf("nb of expand : %zu\n", cmd->nb_expand);
 		return (0);
 	}
-	else if ((*env_var->name && !ft_is_all_alnum(env_var->name)) || (*env_var->name && !ft_isalpha(env_var->name[0]) && env_var->name[0] != '_'))
+	else if ((*env_var->name && !ft_is_all_alnum(env_var->name))
+		|| (*env_var->name && !ft_isalpha(env_var->name[0]) && env_var->name[0] != '_'))
 	{
 		printf("export: '%s': not a valid identifier\n", arg);
+		ms->exit_status = 1;
 		return (0);
 	}
 	return (1);
@@ -101,7 +104,7 @@ int	ft_modify_env(t_var **env_var, t_ms *ms, t_cmd *cmd)
 	i = -1;
 	while (env_var[++i])
 	{
-		if (!ft_valid_variable(env_var[i], cmd->cmd[i + 1], cmd))
+		if (!ft_valid_variable(ms, env_var[i], cmd->cmd[i + 1], cmd))
 			continue;
 		index = ft_find_var(env_var[i]->name, ms);
 		if (index >= 0 && env_var[i]->value)

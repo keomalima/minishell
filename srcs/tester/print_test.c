@@ -28,11 +28,13 @@ void print_token(t_token *list)
 	printf("\n------------------\n\n");
 }
 
-void print_cmd(t_cmd *list)
+void print_cmd(t_cmd *current)
 {
-	int cmd_i;
-	int    in_i;
+	int	cmd_i;
+	int	in_i;
+	t_cmd	*list;
 
+	list = current;
 	while (list)
 	{
 		cmd_i = 0;

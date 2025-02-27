@@ -26,14 +26,14 @@ static int	ft_export_fill(t_var *var, t_var **env_var, t_ms *ms, char *str)
 	var->name = ft_calloc((len + 1), sizeof(char));
 	if (!var->name)
 	{
-		ft_builtins_env_exit(ms, env_var, 12);
+		ft_builtins_exit(ms, env_var, 12);
 		return (0);
 	}
 	var->value = ft_calloc((ft_strlen(ft_strchr(str, '='))), sizeof(char));
 	if (!var->value)
 	{
 		ft_free(&var->name);
-		ft_builtins_env_exit(ms, env_var, 12);
+		ft_builtins_exit(ms, env_var, 12);
 		return (0);
 	}
 	ft_strlcpy(var->name, str,
@@ -58,7 +58,7 @@ static int	ft_initialize_var(t_var **env_var, t_ms *ms, t_cmd *cmd)
 			env_var[i]->name = ft_strdup(cmd->cmd[i + 1]);
 			if (!env_var[i])
 			{
-				ft_builtins_env_exit(ms, env_var, 12);
+				ft_builtins_exit(ms, env_var, 12);
 				return (0);
 			}
 		}
@@ -80,12 +80,12 @@ t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd)
 		env_var = ft_calloc((ft_find_var_count(cmd) + 1), sizeof(t_var *));
 		if (!env_var)
 		{
-			ft_builtins_env_exit(ms, env_var, 12);
+			ft_builtins_exit(ms, env_var, 12);
 			return (NULL);
 		}
 		if (!ft_initialize_var(env_var, ms, cmd))
 		{
-			ft_builtins_env_exit(ms, env_var, 12);
+			ft_builtins_exit(ms, env_var, 12);
 			return (NULL);
 		}
 	// }

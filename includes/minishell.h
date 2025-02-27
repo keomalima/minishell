@@ -196,14 +196,13 @@ void		switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i);
 /******************    BUILTIN    ******************/
 void	exec_builtin(t_ms *ms, t_cmd *cmd);
 int		is_builtin_cmd(char *cmd);
-int		is_builtin_env_cmd(t_ms *ms, char *cmd);
+int		is_builtin_solo_cmd(t_ms *ms, char *cmd);
 // ENVIRONNEMENT MANAGEMENT
 size_t	ft_env_count(char **env);
 int		ft_find_var(char *name, t_ms *ms);
 char	**ft_duplicate_env(t_ms *ms, char **env);
 // UTILS
-void	ft_builtins_exit(t_ms *ms, int exit_code);
-void	ft_builtins_env_exit(t_ms *ms, t_var **env_var, int exit_code);
+void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
 // CD
 void	cd_command(t_ms *ms, t_cmd *cmd);
 // PWD
