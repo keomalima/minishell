@@ -54,22 +54,25 @@ void	exec_init(t_ms *ms)
 {
 	t_cmd	*current;
 
-	ms->exec = malloc(sizeof(t_exec));
-	if (!ms->exec)
-		exit_handler(ms, 12);
-	initialize_variables(ms);
-	ms->exec->cmd_count = ft_cmd_count(ms);
-	ms->exec->child_pids = malloc (ms->exec->cmd_count * sizeof(pid_t));
-	if (!ms->exec->child_pids)
-		exit_handler(ms, 12);
-	current = ms->cmd;
-	ms->exec->current_cmd = current->cmd[0];
-	if (is_builtin_env_cmd(ms, current->cmd[0]))
+	if (ms->cmd)
 	{
-		file_handler(ms->cmd, ms, 0);
-		exec_builtin(ms, current);
-		close_all_fds(ms);
-		return ;
+		ms->exec = malloc(sizeof(t_exec));
+		if (!ms->exec)
+			exit_handler(ms, 12);
+		initialize_variables(ms);
+		ms->exec->cmd_count = ft_cmd_count(ms);
+		ms->exec->child_pids = malloc (ms->exec->cmd_count * sizeof(pid_t));
+		if (!ms->exec->child_pids)
+			exit_handler(ms, 12);
+		current = ms->cmd;
+		ms->exec->current_cmd = current->cmd[0];
+		if (is_builtin_solo_cmd(ms, current->cmd[0]))
+		{
+			file_handler(ms->cmd, ms, 0);
+			exec_builtin(ms, current);
+			close_all_fds(ms);
+			return ;
+		}
+		exec_cmd(ms, current);
 	}
-	exec_cmd(ms, current);
 }

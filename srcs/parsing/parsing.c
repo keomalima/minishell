@@ -13,7 +13,10 @@ void	ft_complete_cmd(t_cmd *new, t_token *token, t_index *index, t_ms *ms)
 			&& !is_opp_file(token->prev->content))
 		new->files[index->file_i++] = ft_new_file(token, ms);
 	else if (token->type != OPP)
-		new->cmd[index->cmd_i++] = token->content;
+	{
+		if (token->content)
+			new->cmd[index->cmd_i++] = token->content;
+	}
 }
 
 void	ft_parsing_allocation(t_cmd *new, t_ms *ms)

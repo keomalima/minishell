@@ -7,19 +7,19 @@ int	ft_check_valid_dir(t_ms *ms, t_cmd *cmd)
 	if (stat(cmd->cmd[1], &sb) == -1)
 	{
 		printf("cd: %s: No such file or directory\n", cmd->cmd[1]);
-		ft_builtins_exit(ms, 1);
+		ft_builtins_exit(ms, NULL, 1);
 		return (0);
 	}
 	if (!S_ISDIR(sb.st_mode))
 	{
 		printf("cd: %s: Not a directory\n", cmd->cmd[1]);
-		ft_builtins_exit(ms, 1);
+		ft_builtins_exit(ms, NULL, 1);
 		return (0);
 	}
 	if (access(cmd->cmd[1], X_OK) == -1)
 	{
 		printf("cd: %s: Permission denied\n", cmd->cmd[1]);
-		ft_builtins_exit(ms, 1);
+		ft_builtins_exit(ms, NULL, 1);
 		return (0);
 	}
 	return (1);
@@ -32,7 +32,7 @@ static char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
 	tmp = ft_calloc((ft_strlen(ms->env[i_new]) + 4), sizeof(char));
 	if (!tmp)
 	{
-		ft_builtins_env_exit(ms, NULL, 12);
+		ft_builtins_exit(ms, NULL, 12);
 		return (NULL);
 	}
 	ft_strlcpy(tmp, "OLD", 4);
@@ -48,7 +48,7 @@ static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
 	tmp = ft_calloc((ft_strlen(new_pwd) + 5), sizeof(char));
 	if (!tmp)
 	{
-		ft_builtins_env_exit(ms, NULL, 12);
+		ft_builtins_exit(ms, NULL, 12);
 		return (NULL);
 	}
 	ft_strlcpy(tmp, "PWD=", 5);
@@ -91,23 +91,23 @@ void	cd_command(t_ms *ms, t_cmd *cmd)
 	if (cmd->cmd_size > 2)
 	{
 		printf("cd : too many arguments\n");
-		return (ft_builtins_env_exit(ms, NULL, 1));
+		return (ft_builtins_exit(ms, NULL, 1));
 	}
 	if (!cmd->cmd[1] || !*cmd->cmd[1])
 	{
 		if (!ft_getenv(ms, "HOME"))
 		{
 			printf("cd: HOME not set\n");
-			return (ft_builtins_exit(ms, 1));
+			return (ft_builtins_exit(ms, NULL, 1));
 		}
 		if (chdir(ft_getenv(ms, "HOME")) == -1)
-			return (ft_builtins_exit(ms, 1));
+			return (ft_builtins_exit(ms, NULL, 1));
 	}
 	else if (ft_check_valid_dir(ms, cmd))
 	{
 		if (chdir(cmd->cmd[1]) == -1)
-			return (ft_builtins_exit(ms, 1));
+			return (ft_builtins_exit(ms, NULL, 1));
 		ft_update_pwd(ms);
 	}
-	ft_builtins_env_exit(ms, NULL, 0);
+	ft_builtins_exit(ms, NULL, 0);
 }

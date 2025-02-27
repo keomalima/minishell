@@ -15,9 +15,9 @@ void    pwd_command(t_ms *ms)
 	if (!pwd)
 	{
 		ft_print_cwd_error();
-		return (ft_builtins_exit(ms, 1));
+		return (ft_builtins_exit(ms, NULL, 1));
 	}
 	printf("%s\n", pwd);
 	ft_free(&pwd);
-	return (ft_builtins_exit(ms, 0));
+	return (ft_builtins_exit(ms, NULL, 0));
 }

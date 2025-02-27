@@ -33,7 +33,7 @@ t_var	*ft_create_new_var(t_ms *ms, t_var **env_var)
 	new = malloc(sizeof(t_var));
 	if (!new)
 	{
-		ft_builtins_env_exit(ms, env_var, 12);
+		ft_builtins_exit(ms, env_var, 12);
 		return (NULL);
 	}
 	new->name = NULL;

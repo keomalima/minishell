@@ -7,12 +7,9 @@ int	is_builtin_cmd(char *cmd)
 		|| !ft_strcmp(cmd, "env"));
 }
 
-int	is_builtin_env_cmd(t_ms *ms, char *cmd)
+int	is_builtin_solo_cmd(t_ms *ms, char *cmd)
 {
-	if (ms->cmd->cmd_size == 1)
-		return (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "unset")
-		|| !ft_strcmp(cmd, "exit"));
-	return (0);
+	return (is_builtin_cmd(cmd) && ms->exec->cmd_count == 1);
 }
 
 void	exec_builtin(t_ms *ms, t_cmd *cmd)

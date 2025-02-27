@@ -11,7 +11,7 @@ static int	ft_fill_unset(int index, char **new_env, t_ms *ms)
 		if (!new_env[i])
 		{
 			free_split(new_env);
-			ft_builtins_env_exit(ms, NULL, 12);
+			ft_builtins_exit(ms, NULL, 12);
 			return (0);
 		}
 	}
@@ -22,7 +22,7 @@ static int	ft_fill_unset(int index, char **new_env, t_ms *ms)
 		if (!new_env[i - 1])
 		{
 			free_split(new_env);
-			ft_builtins_env_exit(ms, NULL, 12);
+			ft_builtins_exit(ms, NULL, 12);
 			return (0);
 		}
 	}
@@ -36,7 +36,7 @@ static char	**ft_delete_env(int index, t_ms *ms)
 	new_env = ft_calloc((ft_env_count(ms->env)), sizeof(char *));
 	if (!new_env)
 	{
-		ft_builtins_env_exit(ms, NULL, 12);
+		ft_builtins_exit(ms, NULL, 12);
 		return (NULL);
 	}
 	ft_fill_unset(index, new_env, ms);
@@ -69,9 +69,9 @@ void	unset_command(t_ms *ms, t_cmd *cmd)
 		while (cmd->cmd[i])
 		{
 			if (!ft_unset_env(ms, cmd->cmd[i]))
-				return (ft_builtins_env_exit(ms, NULL, 1));
+				return (ft_builtins_exit(ms, NULL, 1));
 			i++;
 		}
 	}
-	ft_builtins_env_exit(ms, NULL, 0);
+	ft_builtins_exit(ms, NULL, 0);
 }
