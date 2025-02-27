@@ -26,7 +26,8 @@
 # include <readline/readline.h>
 # include <sys/stat.h>
 # include <signal.h>
-# include <sys/stat.h>
+
+extern int	g_signal;
 
 typedef enum	e_type
 {
