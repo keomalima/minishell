@@ -25,7 +25,7 @@ void	exec_builtin(t_ms *ms, t_cmd *cmd)
 	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "unset"))
 		unset_command(ms, cmd);
 	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "env"))
-		env_command(ms);
+		env_command(ms, cmd);
 	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "exit"))
 		exit_command(ms, cmd);
 }

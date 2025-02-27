@@ -28,6 +28,31 @@ size_t	ft_env_count(char **env)
 	return (i);
 }
 
+static void	ft_sort_env(char ***env)
+{
+	char	*tmp;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while ((*env)[i])
+	{
+		j = 0;
+		while ((*env)[j])
+		{
+			if (ft_strcmp((*env)[i], (*env)[j]) < 0)
+			{
+				tmp = (*env)[i];
+				(*env)[i] = (*env)[j];
+				(*env)[j] = tmp;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
 char	**ft_duplicate_env(t_ms *ms, char **env)
 {
 	char	**new_env;
@@ -47,5 +72,6 @@ char	**ft_duplicate_env(t_ms *ms, char **env)
 		}
 		i++;
 	}
+	ft_sort_env(&new_env);
 	return (new_env);
 }

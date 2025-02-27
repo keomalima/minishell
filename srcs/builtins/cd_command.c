@@ -6,19 +6,22 @@ int	ft_check_valid_dir(t_ms *ms, t_cmd *cmd)
 
 	if (stat(cmd->cmd[1], &sb) == -1)
 	{
-		printf("cd: %s: No such file or directory\n", cmd->cmd[1]);
+		ft_print_error("cd: ", cmd->cmd[1], ": No such file or directory\n");
+		ms->exit_status = 1;
 		ft_builtins_exit(ms, NULL, 1);
 		return (0);
 	}
 	if (!S_ISDIR(sb.st_mode))
 	{
-		printf("cd: %s: Not a directory\n", cmd->cmd[1]);
+		ft_print_error("cd: ", cmd->cmd[1], ": Not a directory\n");
+		ms->exit_status = 1;
 		ft_builtins_exit(ms, NULL, 1);
 		return (0);
 	}
 	if (access(cmd->cmd[1], X_OK) == -1)
 	{
-		printf("cd: %s: Permission denied\n", cmd->cmd[1]);
+		ft_print_error("cd: ", cmd->cmd[1], ": Permission denied\n");
+		ms->exit_status = 1;
 		ft_builtins_exit(ms, NULL, 1);
 		return (0);
 	}
@@ -90,18 +93,31 @@ void	cd_command(t_ms *ms, t_cmd *cmd)
 {
 	if (cmd->cmd_size > 2)
 	{
-		printf("cd : too many arguments\n");
+		ft_print_error("cd : too many arguments\n", NULL, NULL);
+		ms->exit_status = 1;
 		return (ft_builtins_exit(ms, NULL, 1));
 	}
-	if (!cmd->cmd[1] || !*cmd->cmd[1])
+	if (!cmd->cmd[1] || !*cmd->cmd[1] || (cmd->cmd[1] && ft_strcmp(cmd->cmd[1], "~") == 0) || (cmd->cmd[1] && ft_strcmp(cmd->cmd[1], "--") == 0))
 	{
 		if (!ft_getenv(ms, "HOME"))
 		{
-			printf("cd: HOME not set\n");
+			ft_print_error("cd: HOME not set\n", NULL, NULL);
 			return (ft_builtins_exit(ms, NULL, 1));
 		}
 		if (chdir(ft_getenv(ms, "HOME")) == -1)
 			return (ft_builtins_exit(ms, NULL, 1));
+	}
+	else if (cmd->cmd[1] && ft_strcmp(cmd->cmd[1], "-") == 0)
+	{
+		if (!ft_getenv(ms, "OLDPWD"))
+		{
+			ft_print_error("cd: OLDPWD not set\n", NULL, NULL);
+			return (ft_builtins_exit(ms, NULL, 1));
+		}
+		if (chdir(ft_getenv(ms, "OLDPWD")) == -1)
+			return (ft_builtins_exit(ms, NULL, 1));
+		printf("%s\n", ft_getenv(ms, "OLDPWD"));
+		ft_update_pwd(ms);
 	}
 	else if (ft_check_valid_dir(ms, cmd))
 	{

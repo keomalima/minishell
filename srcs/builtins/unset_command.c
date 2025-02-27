@@ -46,15 +46,18 @@ static char	**ft_delete_env(int index, t_ms *ms)
 static int	ft_unset_env(t_ms *ms, char	*var)
 {
 	int		index;
+	char	**new_env;
 
 	index = ft_find_var(var, ms);
 	if (index < 0)
 		return (1);
 	else
 	{
-		ms->env = ft_delete_env(index, ms);
-		if (!ms->env)
+		new_env = ft_delete_env(index, ms);
+		if (!new_env)
 			return (0);
+		free_split(ms->env);
+		ms->env = new_env;
 	}
 	return (1);
 }

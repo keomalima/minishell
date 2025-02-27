@@ -36,7 +36,7 @@ size_t	ft_count_arg(char **cmd)
 	return (count);
 }
 
-int	ft_all_arg_null(char **cmd)
+static int	ft_all_arg_null(char **cmd)
 {
 	int	i;
 

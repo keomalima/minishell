@@ -1,5 +1,15 @@
 #include "minishell.h"
 
+void	ft_print_error(char *s1, char *s2, char *s3)
+{
+	if (s1)
+		ft_putstr_fd(s1, 2);
+	if (s2)
+		ft_putstr_fd(s2, 2);
+	if (s3)
+		ft_putstr_fd(s3, 2);
+}
+
 int	handle_key(char *rl)
 {
 	if (ft_is_special_cmd(rl, "clear"))

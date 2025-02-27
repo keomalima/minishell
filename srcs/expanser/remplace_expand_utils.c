@@ -74,7 +74,7 @@ char	*exp_valid_variable(char *s, t_expand *expand)
 	if (!s)
 		return (NULL);
 	variable = ft_getenv(expand->ms, s);
-	if (variable == NULL)
+	if (variable == NULL || !*variable)
 		dest = NULL;
 	else
 	{
