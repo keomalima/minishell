@@ -58,7 +58,7 @@ void	export_command(t_ms *ms, t_cmd *cmd)
 
 	env_var = NULL;
 	if (!cmd->cmd[1] || (ft_all_arg_null(cmd->cmd)
-		&& (ft_count_arg(cmd->cmd) == cmd->nb_expand)))
+			&& (ft_count_arg(cmd->cmd) == cmd->nb_expand)))
 		ft_print_export(ms->env);
 	else
 	{

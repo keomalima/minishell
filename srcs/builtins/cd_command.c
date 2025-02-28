@@ -1,127 +1,54 @@
 #include "minishell.h"
 
-int	ft_check_valid_dir(t_ms *ms, t_cmd *cmd)
+void	cd_too_many_arg(t_ms *ms)
 {
-	struct stat	sb;
-
-	if (stat(cmd->cmd[1], &sb) == -1)
-	{
-		ft_print_error("cd: ", cmd->cmd[1], ": No such file or directory\n");
-		ms->exit_status = 1;
-		ft_builtins_exit(ms, NULL, 1);
-		return (0);
-	}
-	if (!S_ISDIR(sb.st_mode))
-	{
-		ft_print_error("cd: ", cmd->cmd[1], ": Not a directory\n");
-		ms->exit_status = 1;
-		ft_builtins_exit(ms, NULL, 1);
-		return (0);
-	}
-	if (access(cmd->cmd[1], X_OK) == -1)
-	{
-		ft_print_error("cd: ", cmd->cmd[1], ": Permission denied\n");
-		ms->exit_status = 1;
-		ft_builtins_exit(ms, NULL, 1);
-		return (0);
-	}
-	return (1);
+	ft_print_error("cd : too many arguments\n", NULL, NULL);
+	ms->exit_status = 1;
+	return (ft_builtins_exit(ms, NULL, 1));
 }
 
-static char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
+void	cd_home(t_ms *ms)
 {
-	char	*tmp;
-
-	tmp = ft_calloc((ft_strlen(ms->env[i_new]) + 4), sizeof(char));
-	if (!tmp)
+	if (!ft_getenv(ms, "HOME"))
 	{
-		ft_builtins_exit(ms, NULL, 12);
-		return (NULL);
+		ft_print_error("cd: HOME not set\n", NULL, NULL);
+		return (ft_builtins_exit(ms, NULL, 1));
 	}
-	ft_strlcpy(tmp, "OLD", 4);
-	ft_strlcpy(&tmp[3], ms->env[i_new], (ft_strlen(ms->env[i_new]) + 1));
-	ft_free(&ms->env[i_old]);
-	return (tmp);
+	if (chdir(ft_getenv(ms, "HOME")) == -1)
+		return (ft_builtins_exit(ms, NULL, 1));
 }
 
-static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
+void	cd_back_to_oldpwd(t_ms *ms)
 {
-	char	*tmp;
-
-	tmp = ft_calloc((ft_strlen(new_pwd) + 5), sizeof(char));
-	if (!tmp)
+	if (!ft_getenv(ms, "OLDPWD"))
 	{
-		ft_builtins_exit(ms, NULL, 12);
-		return (NULL);
+		ft_print_error("cd: OLDPWD not set\n", NULL, NULL);
+		return (ft_builtins_exit(ms, NULL, 1));
 	}
-	ft_strlcpy(tmp, "PWD=", 5);
-	ft_strlcpy(&tmp[4], new_pwd, (ft_strlen(new_pwd) + 1));
-	ft_free(&ms->env[i_new]);
-	return (tmp);
-}
-
-static void	ft_update_pwd(t_ms *ms)
-{
-	char	*new_pwd;
-	int		i_old;
-	int		i_new;
-
-	new_pwd = getcwd(NULL, 0);
-	if (!new_pwd)
-	{
-		ft_print_cwd_error();
-		return ;
-	}
-	i_old = ft_find_var("OLDPWD", ms);
-	if (i_old >= 0)
-	{
-		i_new = ft_find_var("PWD", ms);
-		if (i_new >= 0)
-		{
-			ms->env[i_old] = ft_uptaded_old_pwd(ms, i_new, i_old);
-			if (!ms->env[i_old])
-				return ;
-			ms->env[i_new] = ft_updated_new_pwd(ms, i_new, new_pwd);
-			if (!ms->env[i_new])
-				return ;
-			ft_free(&new_pwd);
-		}
-	}
+	if (chdir(ft_getenv(ms, "OLDPWD")) == -1)
+		return (ft_builtins_exit(ms, NULL, 1));
 }
 
 void	cd_command(t_ms *ms, t_cmd *cmd)
 {
+	char	*path;
+
+	path = NULL;
 	if (cmd->cmd_size > 2)
-	{
-		ft_print_error("cd : too many arguments\n", NULL, NULL);
-		ms->exit_status = 1;
-		return (ft_builtins_exit(ms, NULL, 1));
-	}
-	if (!cmd->cmd[1] || !*cmd->cmd[1] || (cmd->cmd[1] && ft_strcmp(cmd->cmd[1], "~") == 0) || (cmd->cmd[1] && ft_strcmp(cmd->cmd[1], "--") == 0))
-	{
-		if (!ft_getenv(ms, "HOME"))
-		{
-			ft_print_error("cd: HOME not set\n", NULL, NULL);
-			return (ft_builtins_exit(ms, NULL, 1));
-		}
-		if (chdir(ft_getenv(ms, "HOME")) == -1)
-			return (ft_builtins_exit(ms, NULL, 1));
-	}
+		return (cd_too_many_arg(ms));
+	if (!cmd->cmd[1] || !*cmd->cmd[1]
+		|| (cmd->cmd[1] && ft_strcmp(cmd->cmd[1], "~") == 0)
+		|| (cmd->cmd[1] && ft_strcmp(cmd->cmd[1], "--") == 0))
+		return (cd_home(ms));
 	else if (cmd->cmd[1] && ft_strcmp(cmd->cmd[1], "-") == 0)
 	{
-		if (!ft_getenv(ms, "OLDPWD"))
-		{
-			ft_print_error("cd: OLDPWD not set\n", NULL, NULL);
-			return (ft_builtins_exit(ms, NULL, 1));
-		}
-		if (chdir(ft_getenv(ms, "OLDPWD")) == -1)
-			return (ft_builtins_exit(ms, NULL, 1));
+		cd_back_to_oldpwd(ms);
 		printf("%s\n", ft_getenv(ms, "OLDPWD"));
 		ft_update_pwd(ms);
 	}
-	else if (ft_check_valid_dir(ms, cmd))
+	else if (ft_check_valid_dir(ms, cmd, &path))
 	{
-		if (chdir(cmd->cmd[1]) == -1)
+		if (chdir(path) == -1)
 			return (ft_builtins_exit(ms, NULL, 1));
 		ft_update_pwd(ms);
 	}

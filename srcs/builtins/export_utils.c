@@ -40,4 +40,3 @@ t_var	*ft_create_new_var(t_ms *ms, t_var **env_var)
 	new->value = NULL;
 	return (new);
 }
-

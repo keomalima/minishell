@@ -205,6 +205,8 @@ char	**ft_duplicate_env(t_ms *ms, char **env);
 // UTILS
 void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
 // CD
+void	ft_update_pwd(t_ms *ms);
+int		ft_check_valid_dir(t_ms *ms, t_cmd *cmd, char **path);
 void	cd_command(t_ms *ms, t_cmd *cmd);
 // PWD
 void	pwd_command(t_ms *ms);

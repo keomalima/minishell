@@ -33,7 +33,7 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_utils2.c $(SRCSDIR
 		$(EXECDIR)/exec_heredoc.c $(EXECDIR)/exec_file_handler.c\
 		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/builtins_clean.c \
 		$(BUILTINDIR)/env_management.c \
-		$(BUILTINDIR)/cd_command.c \
+		$(BUILTINDIR)/cd_command.c $(BUILTINDIR)/cd_update_pwd.c $(BUILTINDIR)/cd_check_valid.c \
 		$(BUILTINDIR)/pwd_command.c \
 		$(BUILTINDIR)/env_command.c \
 		$(BUILTINDIR)/echo_command.c \
