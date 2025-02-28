@@ -28,23 +28,9 @@ void	initialize_var(t_ms *ms)
 	ms->lex_err = NULL;
 }
 
-void	new_line(int sig)
-{
-	(void)sig;
-	printf("\n");
-}
-
 void	sigint_handler(int sig)
 {
 	g_signal = sig;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
-void	new_prompt(void)
-{
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
