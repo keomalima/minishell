@@ -136,6 +136,7 @@ void	initialize_var(t_ms *ms);
 int		handle_key(char *rl);
 void	sigint_handler(int sig);
 void	del_content(void *content);
+void	ft_print_error(char *s1, char *s2, char *s3);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
@@ -204,12 +205,14 @@ char	**ft_duplicate_env(t_ms *ms, char **env);
 // UTILS
 void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
 // CD
+void	ft_update_pwd(t_ms *ms);
+int		ft_check_valid_dir(t_ms *ms, t_cmd *cmd, char **path);
 void	cd_command(t_ms *ms, t_cmd *cmd);
 // PWD
 void	pwd_command(t_ms *ms);
 void	ft_print_cwd_error(void);
 // ENV
-void	env_command(t_ms *ms);
+void	env_command(t_ms *ms, t_cmd *cmd);
 // EXPORT
 void	export_command(t_ms *ms, t_cmd *cmd);
 t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd);
@@ -217,7 +220,6 @@ int		ft_modify_env(t_var **env_var, t_ms *ms, t_cmd *cmd);
 size_t	ft_find_var_count(t_cmd *cmd);
 int		ft_is_all_alnum(char *str);
 t_var	*ft_create_new_var(t_ms *ms, t_var **env_var);
-int		ft_all_arg_null(char **cmd);
 size_t	ft_count_arg(char **cmd);
 // UNSET
 void	unset_command(t_ms *ms, t_cmd *cmd);
