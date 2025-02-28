@@ -32,10 +32,7 @@ int	main(int arc, char **arv, char **env)
 		signal(SIGINT, sigint_handler);
 		input = readline("minishell$ ");
 		if (g_signal)
-		{
 			ms.exit_status = 130;
-			g_signal = 0;
-		}
 		if (!input)
 		{
 			printf("exit\n");
