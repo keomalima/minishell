@@ -4,6 +4,7 @@ void	exec_here_doc(t_ms *ms, char *limiter, int i)
 {
 	char	*str;
 
+	signal(SIGQUIT, SIG_IGN);
 	if (pipe(ms->exec->pipe_fd[(i + 1) % 2]) < 0)
 		exit_handler(ms, 1);
 	while (1)

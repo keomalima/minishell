@@ -1,7 +1,38 @@
 #include "minishell.h"
 
+void	wait_children(t_ms *ms)
+{
+	int		i;
+	int		status;
+
+	i = 0;
+	while (ms->exec->cmd_count > i)
+	{
+		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
+			exit_handler(ms, 1);
+		if (WIFSIGNALED(status))
+		{
+			if (WTERMSIG(status) == SIGINT)
+			{
+				printf("\n");
+				ms->exit_status = 130;
+			}
+			else if (WTERMSIG(status) == SIGQUIT)
+			{
+				printf("Quit (core dumped)\n");
+				ms->exit_status = 131;
+			}
+		}
+		else
+			ms->exit_status = WEXITSTATUS(status);
+		i++;
+	}
+}
+
 void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 {
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	file_handler(cmd, ms, i);
 	if (cmd->cmd[0])
 		ms->exec->cmd = parse_arg(cmd, ms);
@@ -25,11 +56,11 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 static void	exec_cmd(t_ms *ms, t_cmd *current)
 {
 	int		i;
-	int		status;
 
 	i = 0;
 	while (current)
 	{
+		signal(SIGINT, SIG_IGN);
 		if (ms->exec->cmd_count - 1 > i)
 			if (pipe(ms->exec->pipe_fd[i % 2]) < 0)
 				exit_handler(ms, 1);
@@ -40,14 +71,12 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 			switch_io_n_execve(current, ms, i);
 		close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
 		close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][0]);
-		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
-			exit_handler(ms, 1);
-		ms->exit_status = WEXITSTATUS(status);
 		i++;
 		current = current->next;
 		if (current)
 			ms->exec->current_cmd = current->cmd[0];
 	}
+	wait_children(ms);
 }
 
 void	exec_init(t_ms *ms)
@@ -66,7 +95,7 @@ void	exec_init(t_ms *ms)
 			exit_handler(ms, 12);
 		current = ms->cmd;
 		ms->exec->current_cmd = current->cmd[0];
-		if (is_builtin_solo_cmd(ms, current->cmd[0]))
+		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0]))
 		{
 			file_handler(ms->cmd, ms, 0);
 			exec_builtin(ms, current);

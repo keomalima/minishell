@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+int	g_signal;
+
 void	minishell(t_ms *ms, char *rl)
 {
 	initialize_var(ms);
@@ -19,19 +21,23 @@ int	main(int arc, char **arv, char **env)
 {
 	(void)arc;
 	(void)arv;
-
 	t_ms	ms;
 	char *input;
 
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
 	ms.exit_status = 0;
 	ms.env = ft_duplicate_env(&ms, env);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
+		signal(SIGINT, sigint_handler);
 		input = readline("minishell$ ");
+		if (g_signal)
+			ms.exit_status = 130;
 		if (!input)
+		{
+			printf("exit\n");
 			break ;
+		}
 		if (*input)
 		{
 			add_history(input);
