@@ -85,11 +85,38 @@ char	*ft_joined_space_list(t_list *list, t_expand *expand)
 	return (dest);
 }
 
+int	ft_check_for_space(char *s)
+{
+	int i;
+	int	space;
+
+	if (!s)
+		return (0);
+	i = 0;
+	space = 0;
+	while (s[i])
+	{
+		if (ft_isspace(s[i]))
+			space++;
+		i++;
+	}
+	if (space == i)
+		return (2);
+	else if (space > 0)
+		return (1);
+	else
+		return (0);
+}
+
 char	*clear_string_space(char *s, t_expand *expand)
 {
 	t_list	*list;
 	char	*dest;
+	int		space_status;
 
+	space_status = ft_check_for_space(s);
+	if (space_status == 2)
+		return (NULL);
 	list = ft_split_into_list_space(s, expand);
 	if (!list)
 		ft_clear_expand(expand, 1);

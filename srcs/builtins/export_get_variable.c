@@ -1,22 +1,23 @@
 #include "minishell.h"
 
-// static int	ft_valid_syntax(t_ms *ms, t_cmd *cmd)
-// {
-// 	int	i;
+static int	ft_valid_syntax(t_ms *ms, t_cmd *cmd)
+{
+	int	i;
 
-// 	i = 1;
-// 	while (cmd->cmd[i])
-// 	{
-// 		if (ft_strchr(cmd->cmd[i], '!'))
-// 		{
-// 			printf("%s: event not found\n", ft_strchr(cmd->cmd[i], '!'));
-// 			ft_builtins_exit(ms, NULL, 1);
-// 			return (0);
-// 		}
-// 		i++;
-// 	}
-// 	return (1);
-// }
+	i = 1;
+	while (cmd->cmd[i])
+	{
+		if (ft_strchr(cmd->cmd[i], '!'))
+		{
+			ft_print_error(ft_strchr(cmd->cmd[i], '!'), ": event not found\n", NULL);
+			ft_builtins_exit(ms, NULL, 2);
+			ms->exit_status = 2;
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
 
 static int	ft_export_fill(t_var *var, t_var **env_var, t_ms *ms, char *str)
 {
@@ -75,8 +76,8 @@ t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd)
 	t_var	**env_var;
 
 	env_var = NULL;
-	// if (ft_valid_syntax(ms, cmd))
-	// {
+	if (ft_valid_syntax(ms, cmd))
+	{
 		env_var = ft_calloc((ft_find_var_count(cmd) + 1), sizeof(t_var *));
 		if (!env_var)
 		{
@@ -88,6 +89,6 @@ t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd)
 			ft_builtins_exit(ms, env_var, 12);
 			return (NULL);
 		}
-	// }
+	}
 	return (env_var);
 }
