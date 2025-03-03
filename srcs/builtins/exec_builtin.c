@@ -15,7 +15,7 @@ int	is_builtin_solo_cmd(t_ms *ms, char *cmd)
 void	exec_builtin(t_ms *ms, t_cmd *cmd)
 {
 	if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "echo"))
-		echo_command(ms, ms->cmd);
+		echo_command(ms, cmd);
 	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "pwd"))
 		pwd_command(ms);
 	else if (cmd->cmd[0] && !ft_strcmp(cmd->cmd[0], "export"))

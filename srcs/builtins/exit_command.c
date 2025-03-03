@@ -13,11 +13,11 @@ static int	is_str_num(char *s)
 		s++;
 	while (*s)
 	{
-		if (!ft_isdigit(*s))
-			return (0);
+		if (ft_isdigit(*s))
+			return (1);
 		s++;
 	}
-	return (1);
+	return (0);
 }
 
 static int	parse_and_validate_args(t_ms *ms, t_cmd *cmd, int *num_arg)
@@ -35,7 +35,7 @@ static int	parse_and_validate_args(t_ms *ms, t_cmd *cmd, int *num_arg)
 			if (ms->exec->cmd_count == 1)
 				ms->exit_status = 1;
 			else
-				exit_program(ms, 0);
+				exit_program(ms, 1);
 			return (0);
 		}
 		else if (!is_str_num(cmd->cmd[i]))
