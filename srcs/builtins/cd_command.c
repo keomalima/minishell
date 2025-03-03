@@ -52,5 +52,7 @@ void	cd_command(t_ms *ms, t_cmd *cmd)
 			return (ft_builtins_exit(ms, NULL, 1));
 		ft_update_pwd(ms);
 	}
+	else
+		ms->exit_status = 0;
 	ft_builtins_exit(ms, NULL, 0);
 }

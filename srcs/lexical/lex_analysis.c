@@ -21,7 +21,7 @@ int	lexical_error(t_ms *ms)
 
 	token = ms->token;
 	if (ft_strcmp(ms->lex_err, "newline"))
-		printf("ms: syntax error near unexpected token `%s'\n", ms->lex_err);
+		ft_print_error("ms: syntax error near unexpected token '", ms->lex_err, "'\n");
 	while (token)
 	{
 		if (!ft_strcmp(token->content, "<<") && token->next
@@ -40,7 +40,7 @@ int	lexical_error(t_ms *ms)
 		}
 		token = token->next;
 	}
-	printf("ms: syntax error near unexpected token `%s'\n", ms->lex_err);
+	ft_print_error("ms: syntax error near unexpected token '", ms->lex_err, "'\n");
 	return (1);
 }
 

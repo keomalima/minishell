@@ -19,7 +19,7 @@ void	wait_children(t_ms *ms)
 			}
 			else if (WTERMSIG(status) == SIGQUIT)
 			{
-				printf("Quit (core dumped)\n");
+				ft_print_error("Quit (core dumped)\n", NULL, NULL);
 				ms->exit_status = 131;
 			}
 		}
@@ -48,7 +48,8 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 	{
 		if (dup2(2, STDOUT_FILENO) < 0)
 			exit_handler(ms, 1);
-		ft_printf("%s: %s\n", strerror(errno), ms->exec->cmd[0]);
+		ft_print_error(strerror(errno), ms->exec->cmd[0], NULL);
+		// ft_printf("%s: %s\n", strerror(errno), ms->exec->cmd[0]);
 		exit_handler(ms, 126);
 	}
 }

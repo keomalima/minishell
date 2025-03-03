@@ -135,6 +135,7 @@ int		handle_key(char *rl);
 void	sigint_handler(int sig);
 void	del_content(void *content);
 void	ft_print_error(char *s1, char *s2, char *s3);
+int		ft_is_only_space(char *s);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);

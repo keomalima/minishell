@@ -36,29 +36,13 @@ size_t	ft_count_arg(char **cmd)
 	return (count);
 }
 
-static int	ft_all_arg_null(char **cmd)
-{
-	int	i;
-
-	if (!cmd || !*cmd || !cmd[1])
-		return (1);
-	i = 1;
-	while (cmd[i])
-	{
-		if (*cmd[i])
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 void	export_command(t_ms *ms, t_cmd *cmd)
 {
 	t_var	**env_var;
 
 	env_var = NULL;
-	if (!cmd->cmd[1] || (ft_all_arg_null(cmd->cmd)
-			&& (ft_count_arg(cmd->cmd) == cmd->nb_expand)))
+	if (!cmd->cmd[1])
 		ft_print_export(ms->env);
 	else
 	{
@@ -66,7 +50,7 @@ void	export_command(t_ms *ms, t_cmd *cmd)
 		if (!env_var)
 			return ;
 		if (!ft_modify_env(env_var, ms, cmd))
-			return (ft_builtins_exit(ms, NULL, 0));
+			return (ft_builtins_exit(ms, NULL, 1));
 	}
 	ft_builtins_exit(ms, env_var, 0);
 }
