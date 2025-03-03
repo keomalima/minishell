@@ -88,7 +88,5 @@ void	create_tokens(char *input, t_ms *ms)
 			ms->lexer.str_ptr++;
 	}
 	if (ms->lexer.s_quo_open || ms->lexer.d_quo_open)
-	{
-		printf("Unclosed quote\n");
-	}
+		printf("minishell: unclosed quote\n");
 }

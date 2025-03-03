@@ -44,11 +44,8 @@ int	lexical_error(t_ms *ms)
 	return (1);
 }
 
-int	lexical_analysis(t_ms *ms)
+static int	check_token(t_ms *ms, t_token *token)
 {
-	t_token	*token;
-
-	token = ms->token;
 	while (token)
 	{
 		if (token->type == OPP && !is_redir(token->content))
@@ -70,5 +67,17 @@ int	lexical_analysis(t_ms *ms)
 			return (lexical_error(ms));
 		token = token->next;
 	}
+	return (0);
+}
+
+int	lexical_analysis(t_ms *ms)
+{
+	t_token	*token;
+
+	token = ms->token;
+	if (ms->lexer.s_quo_open || ms->lexer.d_quo_open)
+		return (1);
+	if (check_token(ms, token))
+		return (1);
 	return (0);
 }

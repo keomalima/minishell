@@ -95,7 +95,8 @@ void	exec_init(t_ms *ms)
 			exit_handler(ms, 12);
 		current = ms->cmd;
 		ms->exec->current_cmd = current->cmd[0];
-		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0]))
+		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0])
+			&& !current->files_size)
 		{
 			file_handler(ms->cmd, ms, 0);
 			exec_builtin(ms, current);

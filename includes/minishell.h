@@ -95,8 +95,6 @@ typedef struct s_var
 	char	*value;
 }			t_var;
 
-
-
 typedef struct s_exec
 {
 	int		cmd_count;
@@ -106,7 +104,6 @@ typedef struct s_exec
 	pid_t	*child_pids;
 	char	*current_cmd;
 }				t_exec;
-
 
 typedef struct s_ms
 {
