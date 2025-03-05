@@ -71,12 +71,12 @@ char	*ft_translate_file(char *s, t_ms *ms)
 	expand.initial_list = ft_transform_into_list(s, ms);
 	if (!expand.initial_list)
 		exit_handler(ms, 1);
-	t_list *current = expand.initial_list;
-	while (current)
-	{
-		printf(yellow"initial list -> %s\n"RESET, (char *)current->content);
-		current = current->next;
-	}
+	// t_list *current = expand.initial_list;
+	// while (current)
+	// {
+	// 	printf(yellow"initial list -> %s\n"RESET, (char *)current->content);
+	// 	current = current->next;
+	// }
 	ft_set_expanded_list(&expand);
 	// current = expand.exp_list;
 	// while (current)

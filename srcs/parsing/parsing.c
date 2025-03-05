@@ -2,8 +2,8 @@
 
 void	ft_complete_cmd(t_cmd *new, t_token *token, t_index *index, t_ms *ms)
 {
-	token->content = ft_translate_cmd(token->content, ms);
-	printf("Content [%s]\n", token->content);
+	char	**tab;
+
 	if (!new->cmd || !new->files)
 		exit_handler(ms, 12);
 	if (token->type == OPP && !ft_strcmp(token->content, ">"))
@@ -15,7 +15,16 @@ void	ft_complete_cmd(t_cmd *new, t_token *token, t_index *index, t_ms *ms)
 		new->files[index->file_i++] = ft_new_file(token, ms);
 	else if (token->type != OPP)
 	{
-		if (token->content)
+		if (token->content && token->type == EXP)
+		{
+			tab = ft_split(token->content, ' ');
+			if (!tab)
+				exit_handler(ms, 12);
+			int	i = 0;
+			while (tab[i])
+				new->cmd[index->cmd_i++] = tab[i++];
+		}
+		else if (token->content)
 			new->cmd[index->cmd_i++] = token->content;
 	}
 }

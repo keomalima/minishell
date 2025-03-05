@@ -33,6 +33,7 @@ typedef enum	e_type
 {
 	START,
 	CMD,
+	EXP,
 	OPP,
 	SQ,
 	DQ,

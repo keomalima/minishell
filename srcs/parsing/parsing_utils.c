@@ -16,6 +16,25 @@ size_t	is_opp_file(const char *s1)
 	return (1);
 }
 
+static int	tab_len(char const *s, char c)
+{
+	int	count;
+
+	count = 0;
+	while (*s)
+	{
+		while (*s == c)
+			s++;
+		if (*s)
+		{
+			count++;
+			while (*s && *s != c)
+				s++;
+		}
+	}
+	return (count);
+}
+
 void	ft_find_cmd_size(t_token *token, t_cmd *new)
 {
 	size_t	redir;
@@ -28,7 +47,10 @@ void	ft_find_cmd_size(t_token *token, t_cmd *new)
 			new->files_size++;
 			redir += 2;
 		}
-		new->cmd_size++;
+		if (token->content && token->type == EXP)
+			new->cmd_size += tab_len(token->content, ' ');
+		else
+			new->cmd_size++;
 		token = token->next;
 	}
 	if ((new->cmd_size - redir) > 0)
