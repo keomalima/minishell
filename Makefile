@@ -23,7 +23,7 @@ LEXICALDIR := $(SRCSDIR)/lexical
 SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_utils2.c $(SRCSDIR)/ms_clean.c \
 		$(TESTER)/print_test.c \
 		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
-		$(TRANSLATOR)/translator.c $(TRANSLATOR)/joined_list.c $(TRANSLATOR)/file_joined_list.c $(TRANSLATOR)/cmd_joined_list.c\
+		$(TRANSLATOR)/translator.c $(TRANSLATOR)/joined_list.c $(TRANSLATOR)/final_joined_list.c\
 		$(EXPANSER)/expanser.c $(EXPANSER)/expanser_utils.c $(EXPANSER)/split_expand.c \
 		$(EXPANSER)/remplace_expand.c $(EXPANSER)/remplace_expand_utils.c $(EXPANSER)/clear_multi_space.c\
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c \
