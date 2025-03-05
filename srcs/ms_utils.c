@@ -55,31 +55,6 @@ int	ft_isquote(char c)
 	return (0);
 }
 
-char	*ft_strjoin_multi(char **cut)
-{
-	size_t	len;
-	size_t		i;
-	char	*dest;
-
-	len = 0;
-	i = 0;
-	while (cut[i])
-	{
-		len = len + ft_strlen(cut[i]);
-		i++;
-	}
-	dest = ft_calloc((len + 1), sizeof(char));
-	if (!dest)
-		return (NULL);
-	len = 0;
-	i = 0;
-	while (cut[i])
-	{
-		ft_strlcpy(&dest[ft_strlen(dest)], cut[i], (ft_strlen(cut[i]) + 1));
-		i++;
-	}
-	return (dest);
-}
 int	ft_isspace(char c)
 {
 	return (c == ' ' || (c >= 9 && c <= 13));

@@ -62,21 +62,21 @@ void	error_handler(t_ms *ms, char **cmd, char *path)
 		ft_print_error("minishell: ", cmd[0], ": No such file or directory\n");
 		exit_handler(ms, 127);
 	}
-	if (cmd[0] && ft_strncmp(cmd[0], "/", 1) == 0)
+	else if (cmd[0] && ft_strncmp(cmd[0], "/", 1) == 0)
 	{
 		ft_print_error(cmd[0], ": ", strerror(errno));
 		ft_print_error("\n", NULL, NULL);
 		exit_handler(ms, 127);
 	}
+	else if (cmd[0] && access(cmd[0], X_OK) != 0 && cmd[0] + 2 && access(cmd[0] + 2, F_OK) == 0)
+	{
+		ft_print_error("minishell: ", cmd[0], ": Permission denied\n");
+		exit_handler(ms, 126);
+	}
 	else if (cmd[0])
 	{
 		ft_print_error("minishell: ", cmd[0], ": command not found\n");
 		exit_handler(ms, 127);
-	}
-	else
-	{
-		ft_print_error("permission denied: \n", NULL, NULL);
-		exit_handler(ms, 126);
 	}
 }
 

@@ -16,6 +16,7 @@ void	cd_home(t_ms *ms)
 	}
 	if (chdir(ft_getenv(ms, "HOME")) == -1)
 		return (ft_builtins_exit(ms, NULL, 1));
+	ft_update_pwd(ms);
 }
 
 void	cd_back_to_oldpwd(t_ms *ms)

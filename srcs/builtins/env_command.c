@@ -9,7 +9,7 @@ void	env_command(t_ms *ms, t_cmd *cmd)
 		ft_print_error("Too many arguments\n", NULL, NULL);
 		ms->exit_status = 1;
 		ft_builtins_exit(ms, NULL, 1);
-		return;
+		return ;
 	}
 	i = 0;
 	while (ms->env[i])
