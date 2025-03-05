@@ -8,22 +8,22 @@ void	minishell(t_ms *ms, char *rl)
 	if (handle_key(rl))
 		return (clean_ms(ms, 0));
 	create_tokens(rl, ms);
-	//print_token(ms->token);
+	// print_token(ms->token);
 	if (lexical_analysis(ms))
 		return (clean_ms(ms, 2));
 	parse_cmd(ms);
-	//print_cmd(ms->cmd);
+	// print_cmd(ms->cmd);
 	exec_init(ms);
 	clean_ms(ms, -1);
 }
 
 int	main(int arc, char **arv, char **env)
 {
+	t_ms	ms;
+	char	*input;
+
 	(void)arc;
 	(void)arv;
-	t_ms	ms;
-	char *input;
-
 	ms.exit_status = 0;
 	ms.env = ft_duplicate_env(&ms, env);
 	signal(SIGQUIT, SIG_IGN);

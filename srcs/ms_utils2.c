@@ -37,12 +37,6 @@ void	sigint_handler(int sig)
 	rl_redisplay();
 }
 
-void	del_content(void *content)
-{
-	if(content)
-		free(content);
-}
-
 int	ft_is_only_space(char *s)
 {
 	int	i;

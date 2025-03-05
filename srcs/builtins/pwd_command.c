@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-void	ft_print_cwd_error(void)
+static void	ft_print_pwd_error(void)
 {
-	ft_print_error("chdir: error retrieving current directory: ",
+	ft_print_error("pwd: error retrieving current directory: ",
 		"getcwd: cannot access parent directories: ",
 		"No such file or directory\n");
 }
@@ -14,7 +14,8 @@ void    pwd_command(t_ms *ms)
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 	{
-		ft_print_cwd_error();
+		ft_print_pwd_error();
+		ms->exit_status = 1;
 		return (ft_builtins_exit(ms, NULL, 1));
 	}
 	else

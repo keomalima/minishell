@@ -53,7 +53,7 @@ static t_list	*ft_transform_into_list(char *s, t_ms *ms)
 		new = ft_lstnew(ft_strdup_trans(s, &i));
 		if (!new)
 		{
-			ft_lstclear(&list, &del_content);
+			ft_lstclear(&list);
 			exit_handler(ms, 12);
 		}
 		ft_lstadd_back(&list, new);
@@ -84,10 +84,10 @@ char	*ft_translate(char *s, t_ms *ms)
 	// 	printf(green"expanded list -> %s\n"RESET, (char *)current->content);
 	// 	current = current->next;
 	// }
-	ret = ft_final_joined_list(&expand);
-	// printf(red"ret = [%s]\n"RESET, ret);
-	ft_lstclear(&expand.initial_list, &del_content);
-	ft_lstclear(&expand.exp_list, &del_content);
+	ret = ft_joined_final_list(&expand);
+	// printf(red"ret file = [%s]\n"RESET, ret);
+	ft_lstclear(&expand.initial_list);
+	ft_lstclear(&expand.exp_list);
 	ft_free(&s);
 	return (ret);
 }

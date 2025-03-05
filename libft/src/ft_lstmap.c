@@ -6,7 +6,7 @@
 /*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 14:19:36 by kricci-d          #+#    #+#             */
-/*   Updated: 2025/01/22 16:49:25 by lthan            ###   ########.fr       */
+/*   Updated: 2025/03/05 09:58:58 by lthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 		node = malloc(sizeof(t_list));
 		if (!node)
 		{
-			ft_lstclear(&new_list, del);
+			ft_lstclear(&new_list);
 			return (NULL);
 		}
 		node->content = f(lst->content);

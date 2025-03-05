@@ -40,7 +40,8 @@ static int	parse_and_validate_args(t_ms *ms, t_cmd *cmd, int *num_arg)
 		}
 		else if (!is_str_num(cmd->cmd[i]))
 		{
-			ft_print_error("minishell: exit: ", cmd->cmd[i], ": numeric argument required\n");
+			ft_print_error("minishell: exit: ",
+				cmd->cmd[i], ": numeric argument required\n");
 			exit_program(ms, 2);
 		}
 		i++;
@@ -62,4 +63,3 @@ void	exit_command(t_ms *ms, t_cmd *cmd)
 		exit_program(ms, 0);
 	}
 }
-

@@ -161,11 +161,12 @@ void	ft_clear_expand(t_expand *expand, int exit_code);
 void	ft_skip_quote(char *s, int *i);
 char	*ft_split_expand(char *s, int *j, t_expand *expand);
 size_t	ft_count_exp(char *s);
+int		ft_check_for_space(char *s);
 
 /******************    TRANSLATOR    ******************/
 char	*ft_translate(char *s, t_ms *ms);
 char	*ft_joined_list(t_list *list, t_expand *expand);
-char	*ft_final_joined_list(t_expand *expand);
+char	*ft_joined_final_list(t_expand *expand);
 
 /******************    PARSER    ******************/
 void		parse_cmd(t_ms *ms);
@@ -209,7 +210,6 @@ int		ft_check_valid_dir(t_ms *ms, t_cmd *cmd, char **path);
 void	cd_command(t_ms *ms, t_cmd *cmd);
 // PWD
 void	pwd_command(t_ms *ms);
-void	ft_print_cwd_error(void);
 // ENV
 void	env_command(t_ms *ms, t_cmd *cmd);
 // EXPORT

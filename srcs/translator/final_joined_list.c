@@ -29,7 +29,7 @@ static size_t	ft_strlen_final_joined(t_expand *expand, int *check_empty)
 	return (len);
 }
 
-void	ft_fill_final_joined(t_expand *expand, char *dest)
+static void	ft_fill_final_joined(t_expand *expand, char *dest)
 {
 	t_list	*current;
 	char	*clear_space;
@@ -54,7 +54,7 @@ void	ft_fill_final_joined(t_expand *expand, char *dest)
 	}
 }
 
-char	*ft_final_joined_list(t_expand *expand)
+char	*ft_joined_final_list(t_expand *expand)
 {
 	char	*dest;
 	int		check_empty;

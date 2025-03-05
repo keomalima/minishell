@@ -24,13 +24,13 @@ static void	ft_reset_quote(char *s, t_list **list, t_expand *expand)
 		str = ft_calloc((ft_strlen(joined) + 3), sizeof(char));
 		if (!str)
 		{
-			ft_lstclear(list, &del_content);
+			ft_lstclear(list);
 			ft_clear_expand(expand, 12);
 		}
 		str[0] = '\"';
 		ft_strlcpy(&str[1], joined, (ft_strlen(joined) + 1));
 		str[ft_strlen(str)] = '\"';
-		ft_lstclear(list, &del_content);
+		ft_lstclear(list);
 		*list = ft_lstnew(str);
 		ft_free(&joined);
 	}
@@ -66,7 +66,7 @@ static t_list	*ft_expanded_node(char *s, t_expand *expand, char quote)
 		if (node->content)
 			ft_lstadd_back(&new_list, node);
 		else
-			ft_lstclear(&node, &del_content);
+			ft_lstclear(&node);
 		i++;
 	}
 	ft_free(&tmp);

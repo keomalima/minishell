@@ -1,5 +1,12 @@
 #include "minishell.h"
 
+static void	ft_print_cwd_error(void)
+{
+	ft_print_error("chdir: error retrieving current directory: ",
+		"getcwd: cannot access parent directories: ",
+		"No such file or directory\n");
+}
+
 static char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
 {
 	char	*tmp;

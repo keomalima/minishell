@@ -56,7 +56,7 @@ static size_t	ft_strlen_joined_space(t_list *list, int *check_empty)
 	return (len);
 }
 
-char	*ft_joined_space_list(t_list *list, t_expand *expand)
+static char	*ft_joined_space_list(t_list *list, t_expand *expand)
 {
 	size_t		len;
 	t_list		*current;
@@ -70,7 +70,7 @@ char	*ft_joined_space_list(t_list *list, t_expand *expand)
 	dest = ft_calloc((len + 1 + (ft_lstsize(list) - 1)), sizeof(char));
 	if (!dest)
 	{
-		ft_lstclear(&list, &del_content);
+		ft_lstclear(&list);
 		ft_clear_expand(expand, 12);
 	}
 	current = list;
@@ -83,29 +83,6 @@ char	*ft_joined_space_list(t_list *list, t_expand *expand)
 		current = current->next;
 	}
 	return (dest);
-}
-
-int	ft_check_for_space(char *s)
-{
-	int i;
-	int	space;
-
-	if (!s)
-		return (0);
-	i = 0;
-	space = 0;
-	while (s[i])
-	{
-		if (ft_isspace(s[i]))
-			space++;
-		i++;
-	}
-	if (space == i)
-		return (2);
-	else if (space > 0)
-		return (1);
-	else
-		return (0);
 }
 
 char	*clear_string_space(char *s, t_expand *expand)
@@ -121,6 +98,6 @@ char	*clear_string_space(char *s, t_expand *expand)
 	if (!list)
 		ft_clear_expand(expand, 1);
 	dest = ft_joined_space_list(list, expand);
-	ft_lstclear(&list, &del_content);
+	ft_lstclear(&list);
 	return (dest);
 }
