@@ -16,19 +16,19 @@ size_t	is_opp_file(const char *s1)
 	return (1);
 }
 
-static int	tab_len(char const *s, char c)
+static int	count_words(const char *s, const char *set)
 {
 	int	count;
 
 	count = 0;
 	while (*s)
 	{
-		while (*s == c)
+		while (*s && ft_strchr(set, *s))
 			s++;
 		if (*s)
 		{
 			count++;
-			while (*s && *s != c)
+			while (*s && !ft_strchr(set, *s))
 				s++;
 		}
 	}
@@ -48,7 +48,7 @@ void	ft_find_cmd_size(t_token *token, t_cmd *new)
 			redir += 2;
 		}
 		if (token->content && token->type == EXP)
-			new->cmd_size += tab_len(token->content, ' ');
+			new->cmd_size += count_words(token->content, " \t\n\v\f\r");
 		else
 			new->cmd_size++;
 		token = token->next;
