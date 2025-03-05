@@ -12,7 +12,7 @@ static int	ft_fill_unset(int index, char **new_env, t_ms *ms)
 		{
 			free_split(new_env);
 			ft_builtins_exit(ms, NULL, 12);
-			return (0);
+			exit (12);
 		}
 	}
 	index++;
@@ -23,7 +23,7 @@ static int	ft_fill_unset(int index, char **new_env, t_ms *ms)
 		{
 			free_split(new_env);
 			ft_builtins_exit(ms, NULL, 12);
-			return (0);
+			exit (12);
 		}
 	}
 	return (1);
@@ -37,7 +37,7 @@ static char	**ft_delete_env(int index, t_ms *ms)
 	if (!new_env)
 	{
 		ft_builtins_exit(ms, NULL, 12);
-		return (NULL);
+		exit (12);
 	}
 	ft_fill_unset(index, new_env, ms);
 	return (new_env);

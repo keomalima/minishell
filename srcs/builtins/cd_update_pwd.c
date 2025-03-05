@@ -15,7 +15,7 @@ static char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
 	if (!tmp)
 	{
 		ft_builtins_exit(ms, NULL, 12);
-		return (NULL);
+		exit (12);
 	}
 	ft_strlcpy(tmp, "OLD", 4);
 	ft_strlcpy(&tmp[3], ms->env[i_new], (ft_strlen(ms->env[i_new]) + 1));
@@ -31,7 +31,7 @@ static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
 	if (!tmp)
 	{
 		ft_builtins_exit(ms, NULL, 12);
-		return (NULL);
+		exit (12);
 	}
 	ft_strlcpy(tmp, "PWD=", 5);
 	ft_strlcpy(&tmp[4], new_pwd, (ft_strlen(new_pwd) + 1));

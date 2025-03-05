@@ -18,7 +18,7 @@ static char	*ft_retrieve_home_path(t_ms *ms, t_cmd *cmd)
 	if (!dest)
 	{
 		ft_builtins_exit(ms, NULL, 12);
-		return (NULL);
+		exit (12);
 	}
 	return (dest);
 }

@@ -12,7 +12,7 @@ static char	*ft_remplace_value(t_var *cur_var, t_var **env_var, t_ms *ms, int i)
 	if (!dest)
 	{
 		ft_builtins_exit(ms, env_var, 12);
-		return (NULL);
+		exit (12);
 	}
 	ft_strlcpy(dest, cur_var->name, (ft_strlen(cur_var->name) + 1));
 	if (cur_var->value)
@@ -35,13 +35,11 @@ static char	*ft_set_new_variable(t_var *cur_var, t_var **env_var, t_ms *ms)
 	if (!new_var)
 	{
 		ft_builtins_exit(ms, env_var, 12);
-		return (NULL);
+		exit (12);
 	}
 	ft_strlcpy(new_var, cur_var->name, (ft_strlen(cur_var->name) + 1));
 	if (cur_var->value)
-	{
 		ft_strlcpy(&new_var[ft_strlen(new_var)], "=", 2);
-	}
 	ft_strlcpy(&new_var[ft_strlen(new_var)],
 		cur_var->value, (ft_strlen(cur_var->value) + 1));
 	return (new_var);
@@ -57,7 +55,7 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	if (!new_env)
 	{
 		ft_builtins_exit(ms, env_var, 12);
-		return (NULL);
+		exit (12);
 	}
 	i = 0;
 	j = 0;
@@ -68,7 +66,7 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	{
 		free_split(new_env);
 		ft_builtins_exit(ms, env_var, 12);
-		return (NULL);
+		exit (12);
 	}
 	while (ms->env[i])
 		new_env[j++] = ms->env[i++];
@@ -79,7 +77,6 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 
 static int	ft_valid_variable(t_ms *ms, t_var *env_var, char *arg, t_cmd *cmd)
 {
-	(void)arg;
 	if (!*env_var->name && (ft_count_arg(cmd->cmd) - cmd->nb_expand > 0))
 	{
 		ft_print_error("export: \'", arg, "\': not a valid identifier\n");

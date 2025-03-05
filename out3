@@ -1,0 +1,19 @@
+total 256
+drwxr-xr-x  4 lthan 2024_lyon    143 Feb 28 10:34 42_minishell_tester
+drwxr-xr-x  2 lthan 2024_lyon     57 Mar  5 10:01 archive
+-rw-r--r--  1 lthan 2024_lyon  68089 Feb 27 11:29 bible.txt
+-rw-r--r--  1 lthan 2024_lyon      0 Mar  5 14:28 echo
+-rw-r--r--  1 lthan 2024_lyon    135 Feb 27 11:29 ignore_readline.supp
+drwxr-xr-x  2 lthan 2024_lyon     25 Mar  5 11:21 includes
+-rw-r--r--  1 lthan 2024_lyon    577 Feb 27 11:29 infile
+drwxr-xr-x  5 lthan 2024_lyon     79 Mar  5 11:37 libft
+-rw-r--r--  1 lthan 2024_lyon      0 Mar  5 11:21 ls -la
+-rw-r--r--  1 lthan 2024_lyon   4389 Mar  5 11:25 Makefile
+-rwxr-xr-x  1 lthan 2024_lyon 161040 Mar  5 14:10 minishell
+drwxr-xr-x  6 lthan 2024_lyon   4096 Mar  5 14:10 minishell_tester
+drwxr-xr-x 10 lthan 2024_lyon   4096 Mar  5 12:39 objects
+-rw-r--r--  1 lthan 2024_lyon      0 Mar  5 14:41 out
+-rw-r--r--  1 lthan 2024_lyon      0 Mar  5 14:41 out2
+-rw-r--r--  1 lthan 2024_lyon      0 Mar  5 14:42 out3
+drwxr-xr-x 10 lthan 2024_lyon   4096 Mar  5 11:21 srcs
+-rw-r--r--  1 lthan 2024_lyon      0 Mar  5 14:42 test

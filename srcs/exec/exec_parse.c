@@ -68,7 +68,11 @@ void	error_handler(t_ms *ms, char **cmd, char *path)
 		ft_print_error("\n", NULL, NULL);
 		exit_handler(ms, 127);
 	}
+<<<<<<< HEAD
 	else if (cmd[0] && access(cmd[0], X_OK) != 0 && ft_strlen(cmd[0]) > 2 && access(cmd[0] + 2, F_OK) == 0)
+=======
+	else if (ft_strcmp(cmd[0], "0") != 0 && cmd[0] && access(cmd[0], X_OK) != 0 && cmd[0] + 2 && access(cmd[0] + 2, F_OK) == 0)
+>>>>>>> 6da70c6 (lysha // correction for some issue (exit and 0))
 	{
 		ft_print_error("minishell: ", cmd[0], ": Permission denied\n");
 		exit_handler(ms, 126);
@@ -111,9 +115,10 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 		dir_check(ms, cmd->cmd[0]) ;
 	exec_path = NULL;
 	path = ft_getenv(ms, "PATH");
+	// printf("		--> command {%s}\n", cmd->cmd[0]);
 	if (cmd->cmd[0])
 	{
-		if (access(cmd->cmd[0], X_OK) == 0)
+		if (ft_strcmp(cmd->cmd[0], "0") != 0 && access(cmd->cmd[0], X_OK) == 0)				/// weird behavior here!
 			exec_path = ft_strdup(cmd->cmd[0]);
 		else
 			exec_path = get_exec_path(path, cmd->cmd[0]);

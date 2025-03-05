@@ -28,14 +28,14 @@ static int	ft_export_fill(t_var *var, t_var **env_var, t_ms *ms, char *str)
 	if (!var->name)
 	{
 		ft_builtins_exit(ms, env_var, 12);
-		return (0);
+		exit (12);
 	}
 	var->value = ft_calloc((ft_strlen(ft_strchr(str, '='))), sizeof(char));
 	if (!var->value)
 	{
 		ft_free(&var->name);
 		ft_builtins_exit(ms, env_var, 12);
-		return (0);
+		exit (12);
 	}
 	ft_strlcpy(var->name, str,
 		(ft_strlen(str) - ft_strlen(ft_strchr(str, '=')) + 1));
@@ -60,7 +60,7 @@ static int	ft_initialize_var(t_var **env_var, t_ms *ms, t_cmd *cmd)
 			if (!env_var[i])
 			{
 				ft_builtins_exit(ms, env_var, 12);
-				return (0);
+				exit (12);
 			}
 		}
 		else
@@ -82,12 +82,12 @@ t_var	**ft_get_variable(t_ms *ms, t_cmd *cmd)
 		if (!env_var)
 		{
 			ft_builtins_exit(ms, env_var, 12);
-			return (NULL);
+			exit (12);
 		}
 		if (!ft_initialize_var(env_var, ms, cmd))
 		{
 			ft_builtins_exit(ms, env_var, 12);
-			return (NULL);
+			exit (12);
 		}
 	}
 	return (env_var);
