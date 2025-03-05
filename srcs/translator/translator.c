@@ -61,7 +61,7 @@ static t_list	*ft_transform_into_list(char *s, t_ms *ms)
 	return (list);
 }
 
-char	*ft_translate(char *s, t_ms *ms)
+char	*ft_translate_file(char *s, t_ms *ms)
 {
 	char		*ret;
 	t_expand	expand;

@@ -1,9 +1,36 @@
 #include "minishell.h"
 
+static void	ft_allocate_cmd(t_cmd *new, t_token *token, t_index *index, t_ms *ms)
+{
+	char	**tab;
+	int		i;
+
+	if (token->type == EXP)
+	{
+		tab = ft_split_set(token->content, " \t\n\v\f\r");
+		if (!tab)
+			exit_handler(ms, 12);
+		i = 0;
+		while (tab[i])
+		{
+			new->cmd[index->cmd_i] = ft_strdup(tab[i++]);
+			if (!new->cmd[index->cmd_i])
+			{
+				free_split(tab);
+				exit_handler(ms, 12);
+			}
+			index->cmd_i++;
+		}
+		free_split(tab);
+		return ;
+	}
+	new->cmd[index->cmd_i++] = ft_strdup(token->content);
+	if (!new->cmd[index->cmd_i - 1])
+		exit_handler(ms, 12);
+}
+
 void	ft_complete_cmd(t_cmd *new, t_token *token, t_index *index, t_ms *ms)
 {
-	token->content = ft_translate(token->content, ms);
-
 	if (!new->cmd || !new->files)
 		exit_handler(ms, 12);
 	if (token->type == OPP && !ft_strcmp(token->content, ">"))
@@ -13,11 +40,8 @@ void	ft_complete_cmd(t_cmd *new, t_token *token, t_index *index, t_ms *ms)
 	else if (token->prev && token->prev->type == OPP
 			&& !is_opp_file(token->prev->content))
 		new->files[index->file_i++] = ft_new_file(token, ms);
-	else if (token->type != OPP)
-	{
-		if (token->content)
-			new->cmd[index->cmd_i++] = token->content;
-	}
+	else if (token->type != OPP && token->content)
+		ft_allocate_cmd(new, token, index, ms);
 }
 
 void	ft_parsing_allocation(t_cmd *new, t_ms *ms)

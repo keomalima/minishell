@@ -3,13 +3,22 @@
 static void	ft_add_to_list(t_ms *ms)
 {
 	t_token		*new_token;
+	char		*content;
 	const char	*start_ptr;
 	const char	*end_ptr;
 
 	start_ptr = ms->lexer.str_start;
 	end_ptr = ms->lexer.str_ptr;
-	new_token = ft_lstnew_tk(ms, ft_strndup(start_ptr, end_ptr - start_ptr));
-	ft_lstadd_back_tk(&ms->token, new_token);
+	new_token = NULL;
+	content = ft_strndup(start_ptr, end_ptr - start_ptr);
+	if (ms->lexer.state == CMD && ft_count_exp(content))
+		ms->lexer.state = EXP;
+	content = ft_translate_file(content, ms);
+	if (content)
+	{
+		new_token = ft_lstnew_tk(ms, content);
+		ft_lstadd_back_tk(&ms->token, new_token);
+	}
 	ms->lexer.state = START;
 }
 

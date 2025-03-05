@@ -48,9 +48,9 @@ static void	clean_t_cmd(t_ms *ms)
 				free(tmp->files[i++]);
 			free(tmp->files);
 			tmp->files = NULL;
-			if (ms->cmd->cmd)
-				free(ms->cmd->cmd);
-			ms->cmd->cmd = NULL;
+			if (tmp->cmd)
+				free_split(tmp->cmd);
+			tmp->cmd = NULL;
 			ms->cmd = ms->cmd->next;
 			free(tmp);
 			tmp = NULL;

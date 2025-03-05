@@ -44,10 +44,9 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 		exit_handler(ms, 1);
 	close_all_fds(ms);
 	exec_builtin(ms, cmd);
+	//if type == CMD ft_split()
 	if (execve(ms->exec->cmd[0], ms->exec->cmd, ms->env) == -1)
 	{
-		if (dup2(2, STDOUT_FILENO) < 0)
-			exit_handler(ms, 1);
 		ft_print_error(strerror(errno), ms->exec->cmd[0], NULL);
 		// ft_printf("%s: %s\n", strerror(errno), ms->exec->cmd[0]);
 		exit_handler(ms, 126);

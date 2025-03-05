@@ -33,6 +33,7 @@ typedef enum	e_type
 {
 	START,
 	CMD,
+	EXP,
 	OPP,
 	SQ,
 	DQ,
@@ -164,7 +165,8 @@ size_t	ft_count_exp(char *s);
 int		ft_check_for_space(char *s);
 
 /******************    TRANSLATOR    ******************/
-char	*ft_translate(char *s, t_ms *ms);
+char	*ft_translate_file(char *s, t_ms *ms);
+char	*ft_translate_cmd(char *s, t_ms *ms);
 char	*ft_joined_list(t_list *list, t_expand *expand);
 char	*ft_joined_final_list(t_expand *expand);
 
