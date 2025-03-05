@@ -13,7 +13,8 @@ void	exec_here_doc(t_ms *ms, char *limiter, int i)
 		str = get_next_line(STDIN_FILENO);
 		if (!str)
 			exit_handler(ms, 1);
-		if (ft_strncmp(str, limiter, ft_strlen(limiter)) == 0)
+		if (ft_strncmp(str, limiter, ft_strlen(limiter)) == 0
+			&& str[ft_strlen(limiter)] && str[ft_strlen(limiter)] == '\n')
 		{
 			free(str);
 			return ;

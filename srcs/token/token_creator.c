@@ -1,5 +1,12 @@
 #include "minishell.h"
 
+static t_token	*ft_tknlast(t_token *lst)
+{
+	while (lst && lst->next)
+		lst = lst->next;
+	return (lst);
+}
+
 static void	ft_add_to_list(t_ms *ms)
 {
 	t_token		*new_token;
@@ -13,7 +20,11 @@ static void	ft_add_to_list(t_ms *ms)
 	content = ft_strndup(start_ptr, end_ptr - start_ptr);
 	if (ms->lexer.state == CMD && ft_count_exp(content))
 		ms->lexer.state = EXP;
-	content = ft_translate_file(content, ms);
+	if (ms->lexer.state == OPP && !ft_strcmp(content, "<<"))
+		ms->lexer.state = HD;
+	t_token *list = ft_tknlast(ms->token);
+	if (list && list->type == HD)
+		content = ft_translate_file(content, ms);
 	if (content)
 	{
 		new_token = ft_lstnew_tk(ms, content);
@@ -54,7 +65,8 @@ static void	ft_def_delimiter(t_ms *ms, char str_char)
 	{
 		if (ms->lexer.state != DQ)
 			ms->lexer.state = SQ;
-		ms->lexer.s_quo_open = !ms->lexer.s_quo_open;
+		if (!ms->lexer.d_quo_open)
+			ms->lexer.s_quo_open = !ms->lexer.s_quo_open;
 	}
 	else if (str_char == '"')
 	{
@@ -64,7 +76,8 @@ static void	ft_def_delimiter(t_ms *ms, char str_char)
 		{
 			if (ms->lexer.state != SQ)
 				ms->lexer.state = DQ;
-			ms->lexer.d_quo_open = !ms->lexer.d_quo_open;
+			if (!ms->lexer.s_quo_open)
+				ms->lexer.d_quo_open = !ms->lexer.d_quo_open;
 		}
 	}
 	else if (!ms->lexer.d_quo_open && !ms->lexer.s_quo_open)

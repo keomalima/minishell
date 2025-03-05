@@ -110,7 +110,7 @@ $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)
 
 val:
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
 clean:
 	$(RM) -rf $(OBJDIR)
 	$(MAKE) -C $(LIBFTDIR) clean

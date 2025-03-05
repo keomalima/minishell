@@ -5,6 +5,7 @@ const char *token_type_str[] = {
 	"CMD",
 	"EXP",
 	"OPP",
+	"HD",
 	"SQ",
 	"DQ",
 	"END"
