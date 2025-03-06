@@ -10,6 +10,7 @@ static t_token	*ft_tknlast(t_token *lst)
 static void	ft_add_to_list(t_ms *ms)
 {
 	t_token		*new_token;
+	t_token		*last_list;
 	char		*content;
 	const char	*start_ptr;
 	const char	*end_ptr;
@@ -20,10 +21,11 @@ static void	ft_add_to_list(t_ms *ms)
 	content = ft_strndup(start_ptr, end_ptr - start_ptr);
 	if (ms->lexer.state == CMD && ft_count_exp(content))
 		ms->lexer.state = EXP;
-	if (ms->lexer.state == OPP && !ft_strcmp(content, "<<"))
-		ms->lexer.state = HD;
-	t_token *list = ft_tknlast(ms->token);
-	if (list && list->type == HD)
+	last_list = ft_tknlast(ms->token);
+	if (!last_list)
+		content = ft_translate_file(content, ms);
+	else if (last_list->type != OPP
+		&& ft_strcmp(last_list->content, "<<"))
 		content = ft_translate_file(content, ms);
 	if (content)
 	{

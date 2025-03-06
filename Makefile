@@ -27,7 +27,6 @@ SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_utils2.c $(SRCSDIR
 		$(EXPANSER)/expanser.c $(EXPANSER)/expanser_utils.c $(EXPANSER)/split_expand.c \
 		$(EXPANSER)/remplace_expand.c $(EXPANSER)/remplace_expand_utils.c $(EXPANSER)/clear_multi_space.c\
 		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c \
-		$(TOKENDIR)/token_cleaner.c \
 		$(TOKENDIR)/token_utils.c \
 		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c \
 		$(EXECDIR)/exec_heredoc.c $(EXECDIR)/exec_file_handler.c\

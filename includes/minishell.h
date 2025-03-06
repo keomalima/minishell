@@ -35,7 +35,6 @@ typedef enum	e_type
 	CMD,
 	EXP,
 	OPP,
-	HD,
 	SQ,
 	DQ,
 	END
