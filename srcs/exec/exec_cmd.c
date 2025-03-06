@@ -44,10 +44,11 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 		exit_handler(ms, 1);
 	close_all_fds(ms);
 	exec_builtin(ms, cmd);
+	if (!cmd->cmd[0])
+		exit_handler(ms, 0);
 	if (execve(ms->exec->cmd[0], ms->exec->cmd, ms->env) == -1)
 	{
 		ft_print_error(strerror(errno), ms->exec->cmd[0], NULL);
-		// ft_printf("%s: %s\n", strerror(errno), ms->exec->cmd[0]);
 		exit_handler(ms, 126);
 	}
 }
@@ -94,12 +95,12 @@ void	exec_init(t_ms *ms)
 			exit_handler(ms, 12);
 		current = ms->cmd;
 		ms->exec->current_cmd = current->cmd[0];
-		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0])
-			&& !current->files_size)
+		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0]))
 		{
-			file_handler(ms->cmd, ms, 0);
+			solo_file_handler(ms->cmd, ms);
 			exec_builtin(ms, current);
-			close_all_fds(ms);
+			dup2(ms->saved_in, STDIN_FILENO);
+			dup2(ms->saved_out, STDOUT_FILENO);
 			return ;
 		}
 		exec_cmd(ms, current);
