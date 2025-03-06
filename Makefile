@@ -24,11 +24,11 @@ OBJ_SUBDIR = \
 
 MAIN = main ms_utils ms_utils2 ms_clean
 TESTER = print_test
-TOKENISER = token_creator list_handler token_cleaner token_utils
+TOKENISER = token_creator list_handler token_utils
 LEXICAL = lex_analysis lex_heredoc
 PARSER = parsing parsing_utils ft_list_cmd
 TRANSLATOR = translator joined_list final_joined_list
-EXPANSER = expanser expanser_utils split_expand remplace_expand remplace_expand_utils clear_multi_space 
+EXPANSER = expanser expanser_utils split_expand remplace_expand remplace_expand_utils clear_multi_space
 EXECUTOR = exec_cmd exec_utils exec_parse exec_heredoc exec_file_handler exec_file_handler_solo
 BUILTINS = exec_builtin builtins_clean env_management\
 			cd_command cd_update_pwd cd_check_valid\

@@ -62,14 +62,21 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 	{
 		signal(SIGINT, SIG_IGN);
 		if (ms->exec->cmd_count - 1 > i)
+		{
+			close_fd(ms, &ms->exec->pipe_fd[i % 2][0]);
+			close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
 			if (pipe(ms->exec->pipe_fd[i % 2]) < 0)
 				exit_handler(ms, 1);
+		}
+		if (current->files[0] && current->files[0]->is_lim)
+			exec_here_doc(ms, current->files[0]->name, i);
 		ms->exec->child_pids[i] = fork();
 		if (ms->exec->child_pids[i] < 0)
 			exit_handler(ms, -1);
 		if (ms->exec->child_pids[i] == 0)
 			switch_io_n_execve(current, ms, i);
 		close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
+		close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][1]);
 		close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][0]);
 		i++;
 		current = current->next;
