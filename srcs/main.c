@@ -8,11 +8,11 @@ void	minishell(t_ms *ms, char *rl)
 	if (handle_key(rl))
 		return (clean_ms(ms, 0));
 	create_tokens(rl, ms);
-	// print_token(ms->token);
+	//print_token(ms->token);
 	if (lexical_analysis(ms))
 		return (clean_ms(ms, 2));
 	parse_cmd(ms);
-	// print_cmd(ms->cmd);
+	//print_cmd(ms->cmd);
 	exec_init(ms);
 	clean_ms(ms, -1);
 }

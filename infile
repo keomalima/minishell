@@ -7,6 +7,5 @@
 2024-12-23 10:04:00 INFO User logged in
 2024-12-23 10:05:00 ERROR Failed to connect to database
 2024-12-23 10:06:00 ERROR Network timeout
-2024-12-23 08:06:00 ERROR Network timeout
 2024-12-23 10:07:00 INFO User logged out
 2024-12-23 10:09:00 WARN High CPU usage

@@ -10,23 +10,23 @@ void	wait_children(t_ms *ms)
 	{
 		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
 			exit_handler(ms, 1);
-		if (WIFSIGNALED(status))
-		{
-			if (WTERMSIG(status) == SIGINT)
-			{
-				printf("\n");
-				ms->exit_status = 130;
-			}
-			else if (WTERMSIG(status) == SIGQUIT)
-			{
-				ft_print_error("Quit (core dumped)\n", NULL, NULL);
-				ms->exit_status = 131;
-			}
-		}
-		else
-			ms->exit_status = WEXITSTATUS(status);
 		i++;
 	}
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+		{
+			ft_printf("\n");
+			ms->exit_status = 130;
+		}
+		else if (WTERMSIG(status) == SIGQUIT)
+		{
+			ft_print_error("Quit (core dumped)\n", NULL, NULL);
+			ms->exit_status = 131;
+		}
+	}
+	else
+		ms->exit_status = WEXITSTATUS(status);
 }
 
 void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
@@ -44,11 +44,11 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 		exit_handler(ms, 1);
 	close_all_fds(ms);
 	exec_builtin(ms, cmd);
-	//if type == CMD ft_split()
+	if (!cmd->cmd[0])
+		exit_handler(ms, 0);
 	if (execve(ms->exec->cmd[0], ms->exec->cmd, ms->env) == -1)
 	{
 		ft_print_error(strerror(errno), ms->exec->cmd[0], NULL);
-		// ft_printf("%s: %s\n", strerror(errno), ms->exec->cmd[0]);
 		exit_handler(ms, 126);
 	}
 }
@@ -64,12 +64,15 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 		if (ms->exec->cmd_count - 1 > i)
 			if (pipe(ms->exec->pipe_fd[i % 2]) < 0)
 				exit_handler(ms, 1);
+		if (current->files_size > 0)
+			init_here_doc(ms, current, i);
 		ms->exec->child_pids[i] = fork();
 		if (ms->exec->child_pids[i] < 0)
 			exit_handler(ms, -1);
 		if (ms->exec->child_pids[i] == 0)
 			switch_io_n_execve(current, ms, i);
 		close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
+		close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][1]);
 		close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][0]);
 		i++;
 		current = current->next;
@@ -95,12 +98,12 @@ void	exec_init(t_ms *ms)
 			exit_handler(ms, 12);
 		current = ms->cmd;
 		ms->exec->current_cmd = current->cmd[0];
-		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0])
-			&& !current->files_size)
+		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0]))
 		{
-			file_handler(ms->cmd, ms, 0);
+			solo_file_handler(ms->cmd, ms);
 			exec_builtin(ms, current);
-			close_all_fds(ms);
+			dup2(ms->saved_in, STDIN_FILENO);
+			dup2(ms->saved_out, STDOUT_FILENO);
 			return ;
 		}
 		exec_cmd(ms, current);

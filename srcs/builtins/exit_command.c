@@ -11,13 +11,15 @@ static int	is_str_num(char *s)
 {
 	if (*s == '-' || *s == '+')
 		s++;
+	if (ft_atoi(s) == -1)
+		return (0);
 	while (*s)
 	{
-		if (ft_isdigit(*s))
-			return (1);
+		if (!ft_isdigit(*s))
+			return (0);
 		s++;
 	}
-	return (0);
+	return (1);
 }
 
 static int	parse_and_validate_args(t_ms *ms, t_cmd *cmd, int *num_arg)

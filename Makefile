@@ -4,45 +4,54 @@ LIBFTDIR := libft
 LIBSRCS := $(LIBFTDIR)/src
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -Iincludes -I$(LIBFTDIR)/includes -g3
+CFLAGS := -Wall -Wextra -Werror -Iincludes -I$(LIBFTDIR)/includes -MMD -MP -g3
 LDFLAGS := -lreadline
 RM := rm -f
 
 SRCSDIR := srcs
 OBJDIR := objects
 
-TOKENDIR := $(SRCSDIR)/token
-PARSERDIR := $(SRCSDIR)/parsing
-TRANSLATOR := $(SRCSDIR)/translator
-EXPANSER := $(SRCSDIR)/expanser
-TESTER := $(SRCSDIR)/tester
-EXECDIR := $(SRCSDIR)/exec
-BUILTINDIR := $(SRCSDIR)/builtins
-LEXICALDIR := $(SRCSDIR)/lexical
+OBJ_SUBDIR = \
+	$(OBJDIR) \
+	$(OBJDIR)/tester \
+	$(OBJDIR)/token \
+	$(OBJDIR)/lexical \
+	$(OBJDIR)/parsing \
+	$(OBJDIR)/translator \
+	$(OBJDIR)/expanser \
+	$(OBJDIR)/exec \
+	$(OBJDIR)/builtins
 
-SRCS := $(SRCSDIR)/main.c $(SRCSDIR)/ms_utils.c $(SRCSDIR)/ms_utils2.c $(SRCSDIR)/ms_clean.c \
-		$(TESTER)/print_test.c \
-		$(PARSERDIR)/parsing.c $(PARSERDIR)/parsing_utils.c $(PARSERDIR)/ft_list_cmd.c \
-		$(TRANSLATOR)/translator.c $(TRANSLATOR)/joined_list.c $(TRANSLATOR)/final_joined_list.c\
-		$(EXPANSER)/expanser.c $(EXPANSER)/expanser_utils.c $(EXPANSER)/split_expand.c \
-		$(EXPANSER)/remplace_expand.c $(EXPANSER)/remplace_expand_utils.c $(EXPANSER)/clear_multi_space.c\
-		$(TOKENDIR)/token_creator.c $(TOKENDIR)/list_handler.c \
-		$(TOKENDIR)/token_cleaner.c \
-		$(TOKENDIR)/token_utils.c \
-		$(EXECDIR)/exec_cmd.c $(EXECDIR)/exec_utils.c $(EXECDIR)/exec_parse.c \
-		$(EXECDIR)/exec_heredoc.c $(EXECDIR)/exec_file_handler.c\
-		$(BUILTINDIR)/exec_builtin.c $(BUILTINDIR)/builtins_clean.c \
-		$(BUILTINDIR)/env_management.c \
-		$(BUILTINDIR)/cd_command.c $(BUILTINDIR)/cd_update_pwd.c $(BUILTINDIR)/cd_check_valid.c \
-		$(BUILTINDIR)/pwd_command.c \
-		$(BUILTINDIR)/env_command.c \
-		$(BUILTINDIR)/echo_command.c \
-		$(BUILTINDIR)/exit_command.c \
-		$(BUILTINDIR)/export_command.c $(BUILTINDIR)/export_utils.c $(BUILTINDIR)/export_get_variable.c $(BUILTINDIR)/export_modify_env.c \
-		$(BUILTINDIR)/unset_command.c \
-		$(LEXICALDIR)/lex_analysis.c $(LEXICALDIR)/lex_heredoc.c
+MAIN = main ms_utils ms_utils2 ms_clean
+TESTER = print_test
+TOKENISER = token_creator list_handler token_utils
+LEXICAL = lex_analysis lex_heredoc
+PARSER = parsing parsing_utils ft_list_cmd
+TRANSLATOR = translator joined_list final_joined_list
+EXPANSER = expanser expanser_utils split_expand remplace_expand remplace_expand_utils clear_multi_space
+EXECUTOR = exec_cmd exec_utils exec_parse exec_heredoc exec_file_handler exec_file_handler_solo
+BUILTINS = exec_builtin builtins_clean env_management\
+			cd_command cd_update_pwd cd_check_valid\
+			pwd_command\
+			env_command\
+			echo_command\
+			export_command export_utils export_get_variable export_modify_env\
+			exit_command\
+			unset_command
+
+SRCS = $(addsuffix .c, $(addprefix $(SRCSDIR)/, $(MAIN))) \
+			$(addsuffix .c, $(addprefix $(SRCSDIR)/tester/, $(TESTER))) \
+			$(addsuffix .c, $(addprefix $(SRCSDIR)/token/, $(TOKENISER))) \
+			$(addsuffix .c, $(addprefix $(SRCSDIR)/lexical/, $(LEXICAL))) \
+			$(addsuffix .c, $(addprefix $(SRCSDIR)/parsing/, $(PARSER))) \
+			$(addsuffix .c, $(addprefix $(SRCSDIR)/translator/, $(TRANSLATOR))) \
+			$(addsuffix .c, $(addprefix $(SRCSDIR)/expanser/, $(EXPANSER))) \
+			$(addsuffix .c, $(addprefix $(SRCSDIR)/exec/, $(EXECUTOR))) \
+			$(addsuffix .c, $(addprefix $(SRCSDIR)/builtins/, $(BUILTINS)))
 
 OBJS := $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
+
+DEPS = $($(OBJDIR)/%.o=.d)
 
 LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c \
 			$(LIBSRCS)/ft_isalnum.c $(LIBSRCS)/ft_isalpha.c $(LIBSRCS)/ft_isascii.c \
@@ -71,6 +80,8 @@ LIBFT := $(LIBFTDIR)/libft.a
 
 HEADERS := includes/minishell.h  $(LIBFT_HEADERS)
 
+
+
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
@@ -79,40 +90,20 @@ $(NAME): $(LIBFT) $(OBJS)
 $(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) $(LIBFT_SRCS) Makefile | $(OBJDIR)/token $(OBJDIR)/parsing $(OBJDIR)/translator $(OBJDIR)/expanser $(OBJDIR)/exec $(OBJDIR)/tester $(OBJDIR)/builtins $(OBJDIR)/lexical
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
-
-$(OBJDIR)/token:
-	mkdir -p $(OBJDIR)/token
-
-$(OBJDIR)/parsing:
-	mkdir -p $(OBJDIR)/parsing
-
-$(OBJDIR)/translator:
-	mkdir -p $(OBJDIR)/translator
-
-$(OBJDIR)/expanser:
-	mkdir -p $(OBJDIR)/expanser
-
-$(OBJDIR)/tester:
-	mkdir -p $(OBJDIR)/tester
-
-$(OBJDIR)/exec:
-	mkdir -p $(OBJDIR)/exec
-
-$(OBJDIR)/builtins:
-	mkdir -p $(OBJDIR)/builtins
-
-$(OBJDIR)/lexical:
-	mkdir -p $(OBJDIR)/lexical
+$(OBJ_SUBDIR):
+	mkdir -p $@
 
 $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)
 
 val:
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
+
+valmax:
+	valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
+
 clean:
-	$(RM) -rf $(OBJDIR)
+	$(RM) -rf $(OBJDIR) $(SRCSDIR)/*.d $(SRCSDIR)/*.o
 	$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
@@ -122,3 +113,5 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+-include $(DEPS)

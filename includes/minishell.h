@@ -115,6 +115,8 @@ typedef struct s_ms
 	int				exit_status;
 	char			**env;
 	char			*lex_err;
+	int				saved_out;
+	int				saved_in;
 }				t_ms;
 
 typedef struct	s_expans
@@ -134,7 +136,7 @@ char	*ft_strjoin_multi(char **cut);
 void	initialize_var(t_ms *ms);
 int		handle_key(char *rl);
 void	sigint_handler(int sig);
-void	del_content(void *content);
+// void	del_content(void *content);
 void	ft_print_error(char *s1, char *s2, char *s3);
 int		ft_is_only_space(char *s);
 
@@ -146,7 +148,7 @@ void		ft_lstadd_back_tk(t_token **lst, t_token *new);
 char		*ft_strchr_set(char *set, int c);
 void		exit_handler(t_ms *ms, int exit_code);
 size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
-char		*token_cleaner(t_ms *ms, t_token *token);
+// char		*token_cleaner(t_ms *ms, t_token *token);
 
 /******************    EXPANSER    ******************/
 void	ft_set_expanded_list(t_expand *expand);
@@ -162,6 +164,7 @@ void	ft_clear_expand(t_expand *expand, int exit_code);
 void	ft_skip_quote(char *s, int *i);
 char	*ft_split_expand(char *s, int *j, t_expand *expand);
 size_t	ft_count_exp(char *s);
+size_t	ft_count_alpha_exp(char *s);
 int		ft_check_for_space(char *s);
 
 /******************    TRANSLATOR    ******************/
@@ -195,6 +198,9 @@ void		close_all_fds(t_ms *ms);
 void		exec_here_doc(t_ms *ms, char *limiter, int i);
 void		file_handler(t_cmd *cmd, t_ms *ms, int i);
 void		switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i);
+void		solo_file_handler(t_cmd *cmd, t_ms *ms);
+void		solo_exec_here_doc(t_ms *ms, char *limiter);
+void		init_here_doc(t_ms *ms, t_cmd *cmd, int i);
 
 /******************    BUILTIN    ******************/
 void	exec_builtin(t_ms *ms, t_cmd *cmd);
