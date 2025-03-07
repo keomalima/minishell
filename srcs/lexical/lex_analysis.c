@@ -1,5 +1,10 @@
 #include "minishell.h"
 
+static void	ft_print_syntax_error(char *s)
+{
+	ft_print_error("ms: syntax error near unexpected token '", s, "'\n");
+}
+
 static size_t	is_redir(const char *content)
 {
 	int			i;
@@ -21,7 +26,7 @@ int	lexical_error(t_ms *ms)
 
 	token = ms->token;
 	if (ft_strcmp(ms->lex_err, "newline"))
-		ft_print_error("ms: syntax error near unexpected token '", ms->lex_err, "'\n");
+		ft_print_syntax_error(ms->lex_err);
 	while (token)
 	{
 		if (!ft_strcmp(token->content, "<<") && token->next
@@ -40,7 +45,7 @@ int	lexical_error(t_ms *ms)
 		}
 		token = token->next;
 	}
-	ft_print_error("ms: syntax error near unexpected token '", ms->lex_err, "'\n");
+	ft_print_syntax_error(ms->lex_err);
 	return (1);
 }
 
@@ -67,7 +72,9 @@ static int	check_token(t_ms *ms, t_token *token)
 {
 	while (token)
 	{
-		if (token->type == OPP && !is_redir(token->content))
+		if (token->type == OPP && is_redir(token->content) && !token->next)
+			ms->lex_err = "newline";
+		else if (token->type == OPP && !is_redir(token->content))
 		{
 			if (token->next && token->next->type == OPP)
 				ms->lex_err = token->next->content;

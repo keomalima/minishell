@@ -111,9 +111,10 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 		dir_check(ms, cmd->cmd[0]) ;
 	exec_path = NULL;
 	path = ft_getenv(ms, "PATH");
+	// printf("		--> command {%s}\n", cmd->cmd[0]);
 	if (cmd->cmd[0])
 	{
-		if (access(cmd->cmd[0], X_OK) == 0)
+		if (ft_strcmp(cmd->cmd[0], "0") != 0 && access(cmd->cmd[0], X_OK) == 0)				/// weird behavior here!
 			exec_path = ft_strdup(cmd->cmd[0]);
 		else
 			exec_path = get_exec_path(path, cmd->cmd[0]);

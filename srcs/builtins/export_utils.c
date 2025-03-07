@@ -34,7 +34,7 @@ t_var	*ft_create_new_var(t_ms *ms, t_var **env_var)
 	if (!new)
 	{
 		ft_builtins_exit(ms, env_var, 12);
-		return (NULL);
+		exit (12);
 	}
 	new->name = NULL;
 	new->value = NULL;

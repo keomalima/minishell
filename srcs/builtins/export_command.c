@@ -36,7 +36,6 @@ size_t	ft_count_arg(char **cmd)
 	return (count);
 }
 
-
 void	export_command(t_ms *ms, t_cmd *cmd)
 {
 	t_var	**env_var;
@@ -49,11 +48,8 @@ void	export_command(t_ms *ms, t_cmd *cmd)
 		env_var = ft_get_variable(ms, cmd);
 		if (!env_var)
 			return (ft_builtins_exit(ms, NULL, 1));
-			// return ;
 		if (!ft_modify_env(env_var, ms, cmd))
 			return (ft_builtins_exit(ms, NULL, 1));
-		// ft_putstr_fd("--> here\n", 2);
 	}
-	// ft_putstr_fd("ICI\n", 2);
 	ft_builtins_exit(ms, env_var, 0);
 }

@@ -17,15 +17,27 @@ void	minishell(t_ms *ms, char *rl)
 	clean_ms(ms, -1);
 }
 
+static void	init_ms(t_ms *ms, int arc, char **arv, char **env)
+{
+	(void)arc;
+	(void)arv;
+	ms->exit_status = 0;
+	ms->saved_out = dup(STDOUT_FILENO);
+	ms->saved_in = dup(STDIN_FILENO);
+	if (ms->saved_in < 0 || ms->saved_out < 0)
+	{
+		perror("dup failed\n");
+		exit(1);
+	}
+	ms->env = ft_duplicate_env(ms, env);
+}
+
 int	main(int arc, char **arv, char **env)
 {
 	t_ms	ms;
 	char	*input;
 
-	(void)arc;
-	(void)arv;
-	ms.exit_status = 0;
-	ms.env = ft_duplicate_env(&ms, env);
+	init_ms(&ms, arc, arv, env);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{

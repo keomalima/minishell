@@ -2,17 +2,12 @@
 
 char	*exp_exit_code(t_expand *expand)
 {
-	char	*dest;
 	char	*exit_code;
 
 	exit_code = ft_itoa(expand->ms->exit_status);
 	if (!exit_code)
 		ft_clear_expand(expand, 12);
-	dest = ft_calloc((ft_strlen(exit_code) + 1), sizeof(char));
-	if (!dest)
-		ft_clear_expand(expand, 12);
-	ft_strlcpy(dest, exit_code, (ft_strlen(exit_code) + 1));
-	return (dest);
+	return (exit_code);
 }
 
 char	*exp_uid(t_expand *expand)

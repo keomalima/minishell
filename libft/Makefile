@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+         #
+#    By: lthan <lthan@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/15 14:26:45 by keomalima         #+#    #+#              #
-#    Updated: 2025/03/05 09:34:46 by kricci-d         ###   ########.fr        #
+#    Updated: 2025/03/06 16:02:44 by lthan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -MMD -MP
 RM = rm -f
 
 LIBSRCS := src
@@ -42,11 +42,14 @@ LIBFT_SRCS := $(LIBSRCS)/ft_atoi.c $(LIBSRCS)/ft_bzero.c $(LIBSRCS)/ft_calloc.c 
 HEADER := includes/libft.h
 
 OBJS = $(LIBFT_SRCS:$(LIBSRCS)/%.c=$(OBJDIR)/libft/%.o)
+DEPS = $($(OBJDIR)/%.o=.d)
+-include $(DEPS)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	ar rcs $(NAME) $(OBJS)
+	@echo "✅\\e[1;33mLibft compiled\\e[0m✅"
 
 $(OBJDIR)/libft/%.o: $(LIBSRCS)/%.c $(HEADER) Makefile | $(OBJDIR)/libft
 	$(CC) $(CFLAGS) -Iincludes -c $< -o $@
@@ -55,10 +58,13 @@ $(OBJDIR)/libft:
 	mkdir -p $(OBJDIR)/libft
 
 clean:
-	$(RM) -r $(OBJDIR)
+	@$(RM) -r $(OBJDIR)
+	@echo "\033[92mClean libft\033[0m"
 
-fclean: clean
-	$(RM) $(NAME)
+fclean: 
+	@$(RM) -r $(OBJDIR)
+	@$(RM) $(NAME)
+	@echo "\033[92mClean libft\033[0m"
 
 re: fclean all
 

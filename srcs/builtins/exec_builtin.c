@@ -1,4 +1,5 @@
 #include "minishell.h"
+
 int	is_builtin_cmd(char *cmd)
 {
 	return (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "unset")

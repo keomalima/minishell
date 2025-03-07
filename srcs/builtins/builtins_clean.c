@@ -22,6 +22,6 @@ void	ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code)
 	errno = 0;
 	if (env_var)
 		clean_var(env_var);
-	if (ms->exec->cmd_count > 1 || ms->cmd->files_size)
+	if (exit_code == 12 || ms->exec->cmd_count > 1)
 		exit_handler(ms, exit_code);
 }

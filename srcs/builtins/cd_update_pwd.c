@@ -15,7 +15,7 @@ static char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
 	if (!tmp)
 	{
 		ft_builtins_exit(ms, NULL, 12);
-		return (NULL);
+		exit (12);
 	}
 	ft_strlcpy(tmp, "OLD", 4);
 	ft_strlcpy(&tmp[3], ms->env[i_new], (ft_strlen(ms->env[i_new]) + 1));
@@ -31,7 +31,7 @@ static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
 	if (!tmp)
 	{
 		ft_builtins_exit(ms, NULL, 12);
-		return (NULL);
+		exit (12);
 	}
 	ft_strlcpy(tmp, "PWD=", 5);
 	ft_strlcpy(&tmp[4], new_pwd, (ft_strlen(new_pwd) + 1));
@@ -41,12 +41,11 @@ static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
 
 void	ft_update_pwd(t_ms *ms)
 {
-	char	*new_pwd;
+	char	new_pwd[4096];
 	int		i_old;
 	int		i_new;
 
-	new_pwd = getcwd(NULL, 0);
-	if (!new_pwd)
+	if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
 	{
 		ft_print_cwd_error();
 		return ;
@@ -63,7 +62,6 @@ void	ft_update_pwd(t_ms *ms)
 			ms->env[i_new] = ft_updated_new_pwd(ms, i_new, new_pwd);
 			if (!ms->env[i_new])
 				return ;
-			ft_free(&new_pwd);
 		}
 	}
 }

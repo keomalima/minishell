@@ -19,7 +19,7 @@ static void	ft_add_to_list(t_ms *ms)
 	end_ptr = ms->lexer.str_ptr;
 	new_token = NULL;
 	content = ft_strndup(start_ptr, end_ptr - start_ptr);
-	if (ms->lexer.state == CMD && ft_count_exp(content))
+	if (ms->lexer.state == CMD && ft_count_alpha_exp(content))
 		ms->lexer.state = EXP;
 	last_list = ft_tknlast(ms->token);
 	if (!last_list)
