@@ -97,7 +97,7 @@ $(LIBFT): $(LIBFT_SRCS) $(LIBFT_HEADERS)
 	$(MAKE) -C $(LIBFTDIR)
 
 val:
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
 
 valmax:
 	valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)

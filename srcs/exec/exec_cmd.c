@@ -10,23 +10,23 @@ void	wait_children(t_ms *ms)
 	{
 		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
 			exit_handler(ms, 1);
-		if (WIFSIGNALED(status))
-		{
-			if (WTERMSIG(status) == SIGINT)
-			{
-				printf("\n");
-				ms->exit_status = 130;
-			}
-			else if (WTERMSIG(status) == SIGQUIT)
-			{
-				ft_print_error("Quit (core dumped)\n", NULL, NULL);
-				ms->exit_status = 131;
-			}
-		}
-		else
-			ms->exit_status = WEXITSTATUS(status);
 		i++;
 	}
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+		{
+			ft_printf("\n");
+			ms->exit_status = 130;
+		}
+		else if (WTERMSIG(status) == SIGQUIT)
+		{
+			ft_print_error("Quit (core dumped)\n", NULL, NULL);
+			ms->exit_status = 131;
+		}
+	}
+	else
+		ms->exit_status = WEXITSTATUS(status);
 }
 
 void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
@@ -62,14 +62,10 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 	{
 		signal(SIGINT, SIG_IGN);
 		if (ms->exec->cmd_count - 1 > i)
-		{
-			close_fd(ms, &ms->exec->pipe_fd[i % 2][0]);
-			close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
 			if (pipe(ms->exec->pipe_fd[i % 2]) < 0)
 				exit_handler(ms, 1);
-		}
-		if (current->files[0] && current->files[0]->is_lim)
-			exec_here_doc(ms, current->files[0]->name, i);
+		if (current->files_size > 0)
+			init_here_doc(ms, current, i);
 		ms->exec->child_pids[i] = fork();
 		if (ms->exec->child_pids[i] < 0)
 			exit_handler(ms, -1);

@@ -14,7 +14,6 @@ static void	open_outfile(t_ms *ms, int i, char *name, t_redir type)
 	{
 		ft_print_error("minishell: ", name, ": ");
 		ft_print_error(strerror(errno), " \n", NULL);
-		// ft_printf("minishell: %s: %s \n", name, strerror(errno));
 		exit_handler(ms, -1);
 	}
 }
@@ -23,8 +22,6 @@ static void	open_infile(t_ms *ms, int i, char *name, int is_lim)
 {
 	if (ms->exec->pipe_fd[(i % 2) % 2][0] >= 0)
 		close_fd(ms, &ms->exec->pipe_fd[(i % 2) % 2][0]);
-	// if (is_lim)
-	// 	exec_here_doc(ms, name, i);
 	if (!is_lim)
 		ms->exec->pipe_fd[(i + 1) % 2][0] = open(name, O_RDONLY);
 	if (ms->exec->pipe_fd[(i + 1) % 2][0] < 0)
@@ -34,13 +31,11 @@ static void	open_infile(t_ms *ms, int i, char *name, int is_lim)
 			ft_print_error("minishell: ", name, ": ");
 			ft_print_error(strerror(errno), " \n", NULL);
 		}
-			// ft_printf("minishell: %s: %s \n", name, strerror(errno));
 		else
 		{
 			ft_print_error("minishell: ", name, ": ");
 			ft_print_error(strerror(errno), " \n", NULL);
 		}
-			// ft_printf("minishell: %s: %s \n", name, strerror(errno));
 		exit_handler(ms, -1);
 	}
 }

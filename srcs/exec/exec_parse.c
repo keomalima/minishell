@@ -68,7 +68,7 @@ void	error_handler(t_ms *ms, char **cmd, char *path)
 		ft_print_error("\n", NULL, NULL);
 		exit_handler(ms, 127);
 	}
-	else if (cmd[0] && access(cmd[0], X_OK) != 0 && cmd[0] + 2 && access(cmd[0] + 2, F_OK) == 0)
+	else if (cmd[0] && access(cmd[0], X_OK) != 0 && ft_strlen(cmd[0]) > 2 && access(cmd[0] + 2, F_OK) == 0)
 	{
 		ft_print_error("minishell: ", cmd[0], ": Permission denied\n");
 		exit_handler(ms, 126);
