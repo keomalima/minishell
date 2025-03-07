@@ -9,7 +9,8 @@ int	ft_find_var(char *name, t_ms *ms)
 	while (ms->env[i])
 	{
 		comp = ft_strncmp(ms->env[i], name, ft_strlen(name));
-		if (comp == 0 && ms->env[i][ft_strlen(name)] && ms->env[i][ft_strlen(name)] == '=')
+		if (comp == 0 && ms->env[i][ft_strlen(name)]
+			&& ms->env[i][ft_strlen(name)] == '=')
 			return (i);
 		i++;
 	}

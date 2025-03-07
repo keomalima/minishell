@@ -9,7 +9,8 @@ static int	ft_valid_syntax(t_ms *ms, t_cmd *cmd)
 	{
 		if (ft_strchr(cmd->cmd[i], '!'))
 		{
-			ft_print_error(ft_strchr(cmd->cmd[i], '!'), ": event not found\n", NULL);
+			ft_print_error(ft_strchr(cmd->cmd[i], '!'),
+				": event not found\n", NULL);
 			ft_builtins_exit(ms, NULL, 2);
 			ms->exit_status = 2;
 			return (0);

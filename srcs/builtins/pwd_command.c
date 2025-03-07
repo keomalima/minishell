@@ -9,10 +9,9 @@ static void	ft_print_pwd_error(void)
 
 void    pwd_command(t_ms *ms)
 {
-	char    *pwd;
-
-	pwd = getcwd(NULL, 0);
-	if (!pwd)
+	char    pwd[4096];
+	
+	if (getcwd(pwd, sizeof(pwd)) == NULL)
 	{
 		ft_print_pwd_error();
 		ms->exit_status = 1;
@@ -21,6 +20,5 @@ void    pwd_command(t_ms *ms)
 	else
 		ms->exit_status = 0;
 	printf("%s\n", pwd);
-	ft_free(&pwd);
 	return (ft_builtins_exit(ms, NULL, 0));
 }

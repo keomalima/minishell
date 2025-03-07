@@ -169,9 +169,10 @@ int		ft_check_for_space(char *s);
 
 /******************    TRANSLATOR    ******************/
 char	*ft_translate_file(char *s, t_ms *ms);
-char	*ft_translate_cmd(char *s, t_ms *ms);
+char	*ft_translate_heredoc(char *s, t_ms *ms);
 char	*ft_joined_list(t_list *list, t_expand *expand);
 char	*ft_joined_final_list(t_expand *expand);
+char	*ft_reset_outside_quote(char *ret, char *s, t_ms *ms);
 
 /******************    PARSER    ******************/
 void		parse_cmd(t_ms *ms);
@@ -198,9 +199,8 @@ void		close_all_fds(t_ms *ms);
 void		exec_here_doc(t_ms *ms, char *limiter, int i);
 void		file_handler(t_cmd *cmd, t_ms *ms, int i);
 void		switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i);
-void		solo_file_handler(t_cmd *cmd, t_ms *ms);
-void		solo_exec_here_doc(t_ms *ms, char *limiter);
-void		init_here_doc(t_ms *ms, t_cmd *cmd, int i);
+int			solo_file_handler(t_cmd *cmd, t_ms *ms);
+int		solo_exec_here_doc(t_ms *ms, char *limiter);
 
 /******************    BUILTIN    ******************/
 void	exec_builtin(t_ms *ms, t_cmd *cmd);

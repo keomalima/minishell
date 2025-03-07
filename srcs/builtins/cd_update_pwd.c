@@ -41,12 +41,11 @@ static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
 
 void	ft_update_pwd(t_ms *ms)
 {
-	char	*new_pwd;
+	char	new_pwd[4096];
 	int		i_old;
 	int		i_new;
 
-	new_pwd = getcwd(NULL, 0);
-	if (!new_pwd)
+	if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
 	{
 		ft_print_cwd_error();
 		return ;
@@ -63,7 +62,6 @@ void	ft_update_pwd(t_ms *ms)
 			ms->env[i_new] = ft_updated_new_pwd(ms, i_new, new_pwd);
 			if (!ms->env[i_new])
 				return ;
-			ft_free(&new_pwd);
 		}
 	}
 }

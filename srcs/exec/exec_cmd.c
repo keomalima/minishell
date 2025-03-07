@@ -82,6 +82,7 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 	wait_children(ms);
 }
 
+
 void	exec_init(t_ms *ms)
 {
 	t_cmd	*current;
@@ -100,7 +101,8 @@ void	exec_init(t_ms *ms)
 		ms->exec->current_cmd = current->cmd[0];
 		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0]))
 		{
-			solo_file_handler(ms->cmd, ms);
+			if (!solo_file_handler(ms->cmd, ms))
+				return;
 			exec_builtin(ms, current);
 			dup2(ms->saved_in, STDIN_FILENO);
 			dup2(ms->saved_out, STDOUT_FILENO);

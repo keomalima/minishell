@@ -36,7 +36,6 @@ size_t	ft_count_arg(char **cmd)
 	return (count);
 }
 
-
 void	export_command(t_ms *ms, t_cmd *cmd)
 {
 	t_var	**env_var;
