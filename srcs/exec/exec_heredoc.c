@@ -65,3 +65,16 @@ int	solo_exec_here_doc(t_ms *ms, char *limiter)
 		free(str);
 	}
 }
+
+void	init_here_doc(t_ms *ms, t_cmd *cmd, int i)
+{
+	size_t	index;
+
+	index = 0;
+	while (cmd->files_size > index)
+	{
+		if (cmd->files[index]->type == IN && cmd->files[index]->is_lim)
+			exec_here_doc(ms, cmd->files[index]->name, i);
+		index++;
+	}
+}

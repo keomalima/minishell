@@ -8,51 +8,12 @@ CFLAGS = -Wall -Wextra -Werror -Iincludes -I$(LIBFTDIR)/includes -MMD -MP -g3
 LDFLAGS = -lreadline
 RM := rm -f
 
-
-OBJ_SUBDIR = \
-	$(OBJDIR) \
-	$(OBJDIR)/tester \
-	$(OBJDIR)/token \
-	$(OBJDIR)/lexical \
-	$(OBJDIR)/parsing \
-	$(OBJDIR)/translator \
-	$(OBJDIR)/expanser \
-	$(OBJDIR)/exec \
-	$(OBJDIR)/builtins
-
-MAIN = main ms_utils ms_utils2 ms_clean
-TESTER = print_test
-TOKENISER = token_creator list_handler token_utils
-LEXICAL = lex_analysis lex_heredoc
-PARSER = parsing parsing_utils ft_list_cmd
-TRANSLATOR = translator joined_list final_joined_list
-EXPANSER = expanser expanser_utils split_expand remplace_expand remplace_expand_utils clear_multi_space
-EXECUTOR = exec_cmd exec_utils exec_parse exec_heredoc exec_file_handler exec_file_handler_solo
-BUILTINS = exec_builtin builtins_clean env_management\
-			cd_command cd_update_pwd cd_check_valid\
-			pwd_command\
-			env_command\
-			echo_command\
-			export_command export_utils export_get_variable export_modify_env\
-			exit_command\
-			unset_command
-
-SRCS = $(addsuffix .c, $(addprefix $(SRCSDIR)/, $(MAIN))) \
-			$(addsuffix .c, $(addprefix $(SRCSDIR)/tester/, $(TESTER))) \
-			$(addsuffix .c, $(addprefix $(SRCSDIR)/token/, $(TOKENISER))) \
-			$(addsuffix .c, $(addprefix $(SRCSDIR)/lexical/, $(LEXICAL))) \
-			$(addsuffix .c, $(addprefix $(SRCSDIR)/parsing/, $(PARSER))) \
-			$(addsuffix .c, $(addprefix $(SRCSDIR)/translator/, $(TRANSLATOR))) \
-			$(addsuffix .c, $(addprefix $(SRCSDIR)/expanser/, $(EXPANSER))) \
-			$(addsuffix .c, $(addprefix $(SRCSDIR)/exec/, $(EXECUTOR))) \
-			$(addsuffix .c, $(addprefix $(SRCSDIR)/builtins/, $(BUILTINS)))
-
 ##======================    MINISHELL SOURCES    ======================##
 SRCSDIR = srcs
 
 MAIN = main ms_utils ms_utils2 ms_clean
 TESTER = print_test
-TOKENISER = token_creator list_handler token_cleaner token_utils
+TOKENISER = token_creator list_handler token_utils
 LEXICAL = lex_analysis lex_heredoc
 PARSER = parsing parsing_utils ft_list_cmd
 TRANSLATOR = translator joined_list final_joined_list ft_reset_outside_quote
