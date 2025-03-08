@@ -22,10 +22,9 @@ static void	ft_add_to_list(t_ms *ms)
 	if (ms->lexer.state == CMD && ft_count_alpha_exp(content))
 		ms->lexer.state = EXP;
 	last_list = ft_tknlast(ms->token);
-	if (!last_list)
-		content = ft_translate_file(content, ms);
-	else if (last_list->type != OPP
-		&& ft_strcmp(last_list->content, "<<"))
+	last_list = ft_tknlast(ms->token);
+	if (!(last_list && last_list->type == OPP
+		&& !ft_strcmp(last_list->content, "<<")))
 		content = ft_translate_file(content, ms);
 	if (content)
 	{

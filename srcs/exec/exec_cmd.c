@@ -1,32 +1,35 @@
 #include "minishell.h"
 
-void	wait_children(t_ms *ms)
+void wait_children(t_ms *ms)
 {
-	int		i;
-	int		status;
+	int	i;
+	int	status;
+	int	sigint_handled;
 
 	i = 0;
-	while (ms->exec->cmd_count > i)
+	sigint_handled = 0;
+	while (i < ms->exec->cmd_count)
 	{
 		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
 			exit_handler(ms, 1);
+		if (WIFSIGNALED(status))
+		{
+			if (WTERMSIG(status) == SIGINT && !sigint_handled)
+			{
+				ft_printf("\n");
+				ms->exit_status = 130;
+			}
+			else if (WTERMSIG(status) == SIGQUIT && !sigint_handled)
+			{
+				ft_print_error("Quit (core dumped)\n", NULL, NULL);
+				ms->exit_status = 131;
+			}
+			sigint_handled = 1;
+		}
+		else
+			ms->exit_status = WEXITSTATUS(status);
 		i++;
 	}
-	if (WIFSIGNALED(status))
-	{
-		if (WTERMSIG(status) == SIGINT)
-		{
-			ft_printf("\n");
-			ms->exit_status = 130;
-		}
-		else if (WTERMSIG(status) == SIGQUIT)
-		{
-			ft_print_error("Quit (core dumped)\n", NULL, NULL);
-			ms->exit_status = 131;
-		}
-	}
-	else
-		ms->exit_status = WEXITSTATUS(status);
 }
 
 void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
@@ -48,6 +51,7 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 		exit_handler(ms, 0);
 	if (execve(ms->exec->cmd[0], ms->exec->cmd, ms->env) == -1)
 	{
+		printf("teste\n");
 		ft_print_error(strerror(errno), ms->exec->cmd[0], NULL);
 		exit_handler(ms, 126);
 	}
@@ -58,14 +62,16 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 	int		i;
 
 	i = 0;
+	signal(SIGINT, SIG_IGN);
 	while (current)
 	{
-		signal(SIGINT, SIG_IGN);
 		if (ms->exec->cmd_count - 1 > i)
 			if (pipe(ms->exec->pipe_fd[i % 2]) < 0)
 				exit_handler(ms, 1);
 		if (current->files_size > 0)
 			init_here_doc(ms, current, i);
+		if (g_signal > 0)
+			return ;
 		ms->exec->child_pids[i] = fork();
 		if (ms->exec->child_pids[i] < 0)
 			exit_handler(ms, -1);
@@ -81,7 +87,6 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 	}
 	wait_children(ms);
 }
-
 
 void	exec_init(t_ms *ms)
 {
@@ -102,7 +107,7 @@ void	exec_init(t_ms *ms)
 		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0]))
 		{
 			if (!solo_file_handler(ms->cmd, ms))
-				return;
+				return ;
 			exec_builtin(ms, current);
 			dup2(ms->saved_in, STDIN_FILENO);
 			dup2(ms->saved_out, STDOUT_FILENO);

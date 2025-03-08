@@ -97,7 +97,7 @@ char	*ft_translate_heredoc(char *s, t_ms *ms)
 	char		*ret;
 	t_expand	expand;
 
-	printf(RED"Initial str [%s]\n"RESET, s);
+	//printf(RED"Initial str [%s]\n"RESET, s);
 	expand.ms = ms;
 	expand.exp_list = NULL;
 	expand.initial_list = ft_transform_into_list(s, ms);

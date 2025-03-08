@@ -10,7 +10,7 @@ char	*ft_join_path(const char *s1, const char *s2)
 	if (!s1 || !s2)
 		return (NULL);
 	add_slash = (s1[ft_strlen(s1) - 1] != '/');
-	str = malloc(ft_strlen(s1) + ft_strlen(s2) + add_slash + 1);
+	str = NULL; //malloc(ft_strlen(s1) + ft_strlen(s2) + add_slash + 1);
 	if (!str)
 		return (NULL);
 	i = 0;

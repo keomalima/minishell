@@ -10,7 +10,8 @@ static int	solo_open_outfile(t_ms *ms, char *name, t_redir type)
 		fd = open(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
 	{
-		ft_print_error("minishell: ", name, ": Permission denied\n");
+		ft_print_error("minishell: ", name, ": ");
+		ft_print_error(strerror(errno), " \n", NULL);
 		errno = 0;
 		ms->exit_status = 1;
 		return (0);
