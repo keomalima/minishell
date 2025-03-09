@@ -180,9 +180,10 @@ t_cmd		*ft_lst_new_cmd(t_ms *ms);
 t_cmd		*ft_lstlast_cmd(t_cmd *lst);
 void		ft_lstadd_back_cmd(t_cmd **cmd_list, t_cmd *new);
 size_t		is_opp_file(const char *s1);
-t_files		*ft_new_file(t_token *token, t_ms *ms);
+t_files		*ft_new_file(t_token *token, t_ms *ms, t_cmd *cmd);
 void		ft_find_cmd_size(t_token *token, t_cmd *new);
 void		ft_initialize_index(t_index *index);
+void		clean_new_cmd(t_ms *ms, t_cmd *new);
 
 /******************    EXEC    ******************/
 void		exec_init(t_ms *ms);
@@ -202,6 +203,7 @@ int			ft_strcmp_here_doc(const char *s1, const char *s2);
 int			check_interupt(void);
 void		sigint_here_doc(int sig);
 void		sigquit_handler(void);
+int			is_valid_string(const char *str);
 
 /******************    BUILTIN    ******************/
 void		exec_builtin(t_ms *ms, t_cmd *cmd);

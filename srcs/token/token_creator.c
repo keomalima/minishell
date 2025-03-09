@@ -10,19 +10,17 @@ static void	ft_add_to_list(t_ms *ms)
 
 	start_ptr = ms->lexer.str_start;
 	end_ptr = ms->lexer.str_ptr;
-	new_token = NULL;
 	content = ft_strndup(start_ptr, end_ptr - start_ptr);
+	if (!content)
+		exit_handler(ms, 1);
+	new_token = ft_lstnew_tk(ms, content);
 	if (ms->lexer.state == CMD && ft_count_alpha_exp(content))
-		ms->lexer.state = EXP;
+		new_token->type = EXP;
 	last_list = ft_lstlast_tk(ms->token);
+	ft_lstadd_back_tk(&ms->token, new_token);
 	if (!(last_list && last_list->type == OPP
 			&& !ft_strcmp(last_list->content, "<<")))
-		content = ft_translate_file(content, ms);
-	if (content)
-	{
-		new_token = ft_lstnew_tk(ms, content);
-		ft_lstadd_back_tk(&ms->token, new_token);
-	}
+		new_token->content = ft_translate_file(content, ms);
 	ms->lexer.state = START;
 }
 

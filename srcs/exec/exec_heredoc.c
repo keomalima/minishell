@@ -20,7 +20,7 @@ static void	exec_here_doc(t_ms *ms, char *limiter, int i)
 {
 	char	*str;
 
-	rl_event_hook = check_interupt;
+	//rl_event_hook = check_interupt;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sigint_here_doc);
 	close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][1]);

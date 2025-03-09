@@ -32,7 +32,7 @@ static char	*ft_strdup_trans(char *s, size_t *i)
 	size_t	len;
 
 	len = ft_strlen_trans(s, *i);
-	dest = ft_calloc((len + 1), sizeof(char));
+	dest = ft_calloc((len + 1), sizeof(char)); //this calloc freezes the here_doc
 	if (!dest)
 		return (NULL);
 	ft_strlcpy(dest, &s[*i], (len + 1));
@@ -118,7 +118,15 @@ char	*ft_translate_heredoc(char *s, t_ms *ms)
 	// }
 	ret = ft_joined_final_list(&expand);
 	if (ret)
+	{
 		ret = ft_reset_outside_quote(ret, s, ms);
+		if (!ret)
+		{
+			ft_lstclear(&expand.initial_list);
+			ft_lstclear(&expand.exp_list);
+			exit_handler(ms, 12);
+		}
+	}
 	// printf(red"ret file = [%s]\n"RESET, ret);
 	ft_lstclear(&expand.initial_list);
 	ft_lstclear(&expand.exp_list);

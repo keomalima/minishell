@@ -12,7 +12,7 @@ static int	is_str_num(char *s)
 	if (*s == '-' || *s == '+')
 		s++;
 	if (ft_atoi(s) == -1)
-		return (0);
+		return (1);
 	while (*s)
 	{
 		if (!ft_isdigit(*s))
@@ -40,7 +40,7 @@ static int	parse_and_validate_args(t_ms *ms, t_cmd *cmd, int *num_arg)
 				exit_program(ms, 1);
 			return (0);
 		}
-		else if (!is_str_num(cmd->cmd[i]))
+		else if (!is_str_num(cmd->cmd[i]) || !ft_strcmp(cmd->cmd[i], "\0"))
 		{
 			ft_print_error("minishell: exit: ",
 				cmd->cmd[i], ": numeric argument required\n");

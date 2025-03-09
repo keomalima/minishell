@@ -44,7 +44,7 @@ static void	clean_t_cmd(t_ms *ms)
 		while (tmp)
 		{
 			i = 0;
-			while (tmp->files[i])
+			while (tmp->files && tmp->files[i])
 				free(tmp->files[i++]);
 			free(tmp->files);
 			tmp->files = NULL;

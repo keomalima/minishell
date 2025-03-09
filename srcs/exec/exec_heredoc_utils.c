@@ -31,11 +31,20 @@ int	check_interupt(void)
 void	sigint_here_doc(int sig)
 {
 	g_signal = sig;
-	rl_done = 1;
+	//rl_done = 1;
 }
 
 void	sigquit_handler(void)
 {
 	ft_printf("minishell: warning: here-document delimited by"
 		"end-of-file (wanted `EOF')\n");
+}
+
+int	is_valid_string(const char *str)
+{
+
+	if (!ft_strcmp(str, ".") || !ft_strcmp(str, "..") ||
+		!ft_strcmp(str, "...") || !ft_strcmp(str, "...."))
+		return (0);
+	return (1);
 }

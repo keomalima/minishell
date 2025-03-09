@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*ft_join_path(const char *s1, const char *s2)
+static char	*ft_join_path(const char *s1, const char *s2)
 {
 	char	*str;
 	int		i;
@@ -10,7 +10,7 @@ char	*ft_join_path(const char *s1, const char *s2)
 	if (!s1 || !s2)
 		return (NULL);
 	add_slash = (s1[ft_strlen(s1) - 1] != '/');
-	str = malloc(ft_strlen(s1) + ft_strlen(s2) + add_slash + 1);
+	str = malloc(sizeof(char) * ft_strlen(s1) + ft_strlen(s2) + add_slash + 1);
 	if (!str)
 		return (NULL);
 	i = 0;
@@ -26,13 +26,14 @@ char	*ft_join_path(const char *s1, const char *s2)
 	return (str);
 }
 
-char	*get_exec_path(char *path, char *cmd)
+
+static char	*get_exec_path(char *path, char *cmd)
 {
 	char	*prefixed_path;
 	char	**path_env;
 	int		i;
 
-	if (!path || ft_is_only_space(path))
+	if (!path || !cmd[0] || ft_is_only_space(path))
 		return (NULL);
 	path_env = ft_split(path + 5, ':');
 	if (!path_env)
@@ -55,7 +56,29 @@ char	*get_exec_path(char *path, char *cmd)
 	return (NULL);
 }
 
-void	error_handler(t_ms *ms, char **cmd, char *path)
+
+static void	dir_check(t_ms *ms, const char *path)
+{
+	struct stat	path_stat;
+
+	if (!stat(path, &path_stat))
+	{
+		if (S_ISDIR(path_stat.st_mode))
+		{
+			ft_print_error("minishell: ", (char *)path,
+				": Is a directory\n");
+			exit_handler(ms, 126);
+		}
+	}
+	else
+	{
+		ft_print_error("minishell: ", (char *)path,
+			": No such file or directory\n");
+		exit_handler(ms, 127);
+	}
+}
+
+static void	error_handler(t_ms *ms, char **cmd, char *path)
 {
 	if (!path || ft_is_only_space(path))
 	{
@@ -81,28 +104,6 @@ void	error_handler(t_ms *ms, char **cmd, char *path)
 	}
 }
 
-void	dir_check(t_ms *ms, const char *path)
-{
-	struct stat	path_stat;
-
-	if (!stat(path, &path_stat))
-	{
-		if (S_ISDIR(path_stat.st_mode))
-		{
-			ft_print_error("minishell: ", (char *)path,
-				": Is a directory\n");
-			exit_handler(ms, 126);
-		}
-	}
-	else
-	{
-		ft_print_error("minishell: ", (char *)path,
-			": No such file or directory\n");
-		// ft_print_error("minishell: ", (char *)path, ": Is not a directory\n");
-		exit_handler(ms, 127);
-	}
-}
-
 char	**parse_arg(t_cmd *cmd, t_ms *ms)
 {
 	char	*exec_path;
@@ -114,17 +115,20 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 		dir_check(ms, cmd->cmd[0]);
 	exec_path = NULL;
 	path = ft_getenv(ms, "PATH");
-	// printf("		--> command {%s}\n", cmd->cmd[0]);
 	if (cmd->cmd[0])
 	{
 		if (ft_strcmp(cmd->cmd[0], "0") != 0 && access(cmd->cmd[0], X_OK) == 0)/// weird behavior here!
+		{
 			exec_path = ft_strdup(cmd->cmd[0]);
+			if (!exec_path)
+				exit_handler(ms, 12);
+		}
 		else
 			exec_path = get_exec_path(path, cmd->cmd[0]);
 	}
 	else
 		exec_path = get_exec_path(path, cmd->cmd[0]);
-	if (!exec_path)
+	if (!exec_path || !is_valid_string(cmd->cmd[0]))
 		error_handler(ms, cmd->cmd, path);
 	free(cmd->cmd[0]);
 	cmd->cmd[0] = exec_path;

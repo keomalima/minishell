@@ -1,12 +1,35 @@
 #include "minishell.h"
 
-t_files	*ft_new_file(t_token *token, t_ms *ms)
+void	clean_new_cmd(t_ms *ms, t_cmd *new)
+{
+	int		i;
+	t_cmd	*tmp;
+
+	tmp = new;
+	if (tmp)
+	{
+		i = 0;
+
+		while (tmp->files && tmp->files[i])
+			free(tmp->files[i++]);
+		free(tmp->files);
+		tmp->files = NULL;
+		if (tmp->cmd)
+			free_split(tmp->cmd);
+		tmp->cmd = NULL;
+		free(tmp);
+		tmp = NULL;
+	}
+	exit_handler(ms, 12);
+}
+
+t_files	*ft_new_file(t_token *token, t_ms *ms, t_cmd *cmd)
 {
 	t_files	*new;
 
 	new = malloc(sizeof(t_files));
 	if (!new)
-		exit_handler(ms, 12);
+		clean_new_cmd(ms, cmd);
 	new->name = token->content;
 	new->is_lim = 0;
 	if (!ft_strcmp(token->prev->content, "<<"))
@@ -23,9 +46,9 @@ t_cmd	*ft_lst_new_cmd(t_ms *ms)
 {
 	t_cmd	*new;
 
-	new = malloc(sizeof(t_cmd));
+	new = ft_calloc(1, sizeof(t_cmd));
 	if (!new)
-		exit_handler(ms, 12);
+		clean_new_cmd(ms, new);
 	new->cmd = NULL;
 	new->cmd_size = 0;
 	new->files = NULL;

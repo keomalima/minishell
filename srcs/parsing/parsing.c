@@ -9,7 +9,7 @@ static void	ft_allocate_cmd(t_cmd *new, t_token *token, t_index *ind, t_ms *ms)
 	{
 		tab = ft_split_set(token->content, " \t\n\v\f\r");
 		if (!tab)
-			exit_handler(ms, 12);
+			clean_new_cmd(ms, new);
 		i = 0;
 		while (tab[i])
 		{
@@ -17,7 +17,7 @@ static void	ft_allocate_cmd(t_cmd *new, t_token *token, t_index *ind, t_ms *ms)
 			if (!new->cmd[ind->cmd_i])
 			{
 				free_split(tab);
-				exit_handler(ms, 12);
+				clean_new_cmd(ms, new);
 			}
 			ind->cmd_i++;
 		}
@@ -26,20 +26,20 @@ static void	ft_allocate_cmd(t_cmd *new, t_token *token, t_index *ind, t_ms *ms)
 	}
 	new->cmd[ind->cmd_i++] = ft_strdup(token->content);
 	if (!new->cmd[ind->cmd_i - 1])
-		exit_handler(ms, 12);
+		clean_new_cmd(ms, new);
 }
 
 static void	ft_complete_cmd(t_cmd *new, t_token *token, t_index *ind, t_ms *ms)
 {
 	if (!new->cmd || !new->files)
-		exit_handler(ms, 12);
+		clean_new_cmd(ms, new);
 	if (token->type == OPP && !ft_strcmp(token->content, ">"))
 		new->redir = OUT_TRUNC;
 	else if (token->type == OPP && !ft_strcmp(token->content, ">>"))
 		new->redir = OUT_APPEND;
 	else if (token->prev && token->prev->type == OPP
 		&& !is_opp_file(token->prev->content))
-		new->files[ind->file_i++] = ft_new_file(token, ms);
+		new->files[ind->file_i++] = ft_new_file(token, ms, new);
 	else if (token->type != OPP && token->content)
 		ft_allocate_cmd(new, token, ind, ms);
 }
@@ -49,8 +49,9 @@ static void	ft_parsing_allocation(t_cmd *new, t_ms *ms)
 	new->cmd = ft_calloc((new->cmd_size + 1), sizeof(char *));
 	new->files = ft_calloc((new->files_size + 1), sizeof(t_files *));
 	if (!new->cmd || !new->files)
-		exit_handler(ms, 12);
+		clean_new_cmd(ms, new);
 }
+
 
 void	parse_cmd(t_ms *ms)
 {
