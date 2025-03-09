@@ -4,7 +4,7 @@ t_files	*ft_new_file(t_token *token, t_ms *ms)
 {
 	t_files	*new;
 
-	new = NULL; //malloc(sizeof(t_files));
+	new = malloc(sizeof(t_files));
 	if (!new)
 		exit_handler(ms, 12);
 	new->name = token->content;

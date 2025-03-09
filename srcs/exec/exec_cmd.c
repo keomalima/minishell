@@ -1,6 +1,20 @@
 #include "minishell.h"
 
-void wait_children(t_ms *ms)
+static void	handle_signals(t_ms *ms, int status, int sigint_handled)
+{
+	if (WTERMSIG(status) == SIGINT && !sigint_handled)
+	{
+		ft_printf("\n");
+		ms->exit_status = 130;
+	}
+	else if (WTERMSIG(status) == SIGQUIT && !sigint_handled)
+	{
+		ft_print_error("Quit (core dumped)\n", NULL, NULL);
+		ms->exit_status = 131;
+	}
+}
+
+void	wait_children(t_ms *ms)
 {
 	int	i;
 	int	status;
@@ -14,16 +28,7 @@ void wait_children(t_ms *ms)
 			exit_handler(ms, 1);
 		if (WIFSIGNALED(status))
 		{
-			if (WTERMSIG(status) == SIGINT && !sigint_handled)
-			{
-				ft_printf("\n");
-				ms->exit_status = 130;
-			}
-			else if (WTERMSIG(status) == SIGQUIT && !sigint_handled)
-			{
-				ft_print_error("Quit (core dumped)\n", NULL, NULL);
-				ms->exit_status = 131;
-			}
+			handle_signals(ms, status, sigint_handled);
 			sigint_handled = 1;
 		}
 		else
@@ -68,8 +73,7 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 		if (ms->exec->cmd_count - 1 > i)
 			if (pipe(ms->exec->pipe_fd[i % 2]) < 0)
 				exit_handler(ms, 1);
-		if (current->files_size > 0)
-			init_here_doc(ms, current, i);
+		init_here_doc(ms, current, i);
 		if (g_signal > 0)
 			return ;
 		ms->exec->child_pids[i] = fork();
@@ -82,8 +86,6 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 		close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][0]);
 		i++;
 		current = current->next;
-		if (current)
-			ms->exec->current_cmd = current->cmd[0];
 	}
 	wait_children(ms);
 }
@@ -103,7 +105,6 @@ void	exec_init(t_ms *ms)
 		if (!ms->exec->child_pids)
 			exit_handler(ms, 12);
 		current = ms->cmd;
-		ms->exec->current_cmd = current->cmd[0];
 		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0]))
 		{
 			if (!solo_file_handler(ms->cmd, ms))

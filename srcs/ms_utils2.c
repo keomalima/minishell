@@ -17,7 +17,7 @@ int	handle_key(char *rl)
 		printf("\033[H\033[J");
 		return (1);
 	}
-	else if(ft_is_special_cmd(rl, "!") || ft_is_special_cmd(rl, ":")
+	else if (ft_is_special_cmd(rl, "!") || ft_is_special_cmd(rl, ":")
 		|| ft_is_special_cmd(rl, "~"))
 		return (1);
 	return (0);

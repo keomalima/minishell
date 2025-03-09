@@ -35,7 +35,8 @@ static int	solo_open_infile(t_ms *ms, char *name, int is_lim)
 		if (access(name, R_OK) < 0 && access(name, F_OK) == 0)
 			ft_print_error("minishell: ", name, ": Permission denied\n");
 		else
-			ft_print_error("minishell: ", name, ": No such file or directory\n");
+			ft_print_error("minishell: ", name,
+				": No such file or directory\n");
 		errno = 0;
 		ms->exit_status = 1;
 		return (0);
@@ -46,7 +47,6 @@ static int	solo_open_infile(t_ms *ms, char *name, int is_lim)
 	return (1);
 }
 
-
 int	solo_file_handler(t_cmd *cmd, t_ms *ms)
 {
 	size_t	index;
@@ -56,13 +56,15 @@ int	solo_file_handler(t_cmd *cmd, t_ms *ms)
 	{
 		if (cmd->files[index]->type == IN)
 		{
-			if (!solo_open_infile(ms, cmd->files[index]->name, cmd->files[index]->is_lim))
+			if (!solo_open_infile(ms, cmd->files[index]->name,
+					cmd->files[index]->is_lim))
 				return (0);
 		}
 		else
 		{
-			if (!solo_open_outfile(ms, cmd->files[index]->name, cmd->files[index]->type))
-			return (0);
+			if (!solo_open_outfile(ms, cmd->files[index]->name,
+					cmd->files[index]->type))
+				return (0);
 		}
 		index++;
 	}
