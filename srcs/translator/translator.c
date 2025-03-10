@@ -61,7 +61,7 @@ static t_list	*ft_transform_into_list(char *s, t_ms *ms)
 	return (list);
 }
 
-char	*ft_translate_file(char *s, t_ms *ms)
+char	*ft_translate(char *s, t_ms *ms, int hd)
 {
 	char		*ret;
 	t_expand	expand;
@@ -77,56 +77,14 @@ char	*ft_translate_file(char *s, t_ms *ms)
 	// 	printf(yellow"initial list -> %s\n"RESET, (char *)current->content);
 	// 	current = current->next;
 	// }
-	ft_set_expanded_list(&expand);
+	ft_set_expanded_list(&expand, hd);
 	// current = expand.exp_list;
 	// while (current)
 	// {
 	// 	printf(green"expanded list -> %s\n"RESET, (char *)current->content);
 	// 	current = current->next;
 	// }
-	ret = ft_joined_final_list(&expand);
-	// printf(red"ret file = [%s]\n"RESET, ret);
-	ft_lstclear(&expand.initial_list);
-	ft_lstclear(&expand.exp_list);
-	ft_free(&s);
-	return (ret);
-}
-
-char	*ft_translate_heredoc(char *s, t_ms *ms)
-{
-	char		*ret;
-	t_expand	expand;
-
-	//printf(RED"Initial str [%s]\n"RESET, s);
-	expand.ms = ms;
-	expand.exp_list = NULL;
-	expand.initial_list = ft_transform_into_list(s, ms);
-	if (!expand.initial_list)
-		exit_handler(ms, 1);
-	// t_list *current = expand.initial_list;
-	// while (current)
-	// {
-	// 	printf(yellow"initial list -> %s\n"RESET, (char *)current->content);
-	// 	current = current->next;
-	// }
-	ft_set_expanded_list(&expand);
-	// current = expand.exp_list;
-	// while (current)
-	// {
-	// 	printf(green"expanded list -> %s\n"RESET, (char *)current->content);
-	// 	current = current->next;
-	// }
-	ret = ft_joined_final_list(&expand);
-	if (ret)
-	{
-		ret = ft_reset_outside_quote(ret, s, ms);
-		if (!ret)
-		{
-			ft_lstclear(&expand.initial_list);
-			ft_lstclear(&expand.exp_list);
-			exit_handler(ms, 12);
-		}
-	}
+	ret = ft_joined_final_list(&expand, hd);
 	// printf(red"ret file = [%s]\n"RESET, ret);
 	ft_lstclear(&expand.initial_list);
 	ft_lstclear(&expand.exp_list);

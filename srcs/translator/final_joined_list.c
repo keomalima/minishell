@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static size_t	ft_strlen_final_joined(t_expand *expand, int *check_empty)
+static size_t	ft_strlen_final_joined(t_expand *expand, int *check_empty, int hd)
 {
 	t_list	*current;
 	size_t	len;
@@ -14,7 +14,7 @@ static size_t	ft_strlen_final_joined(t_expand *expand, int *check_empty)
 		s = current->content;
 		if (s)
 			*check_empty += 1;
-		if (s && ft_isquote(s[0]))
+		if (hd == 0 && (s && ft_isquote(s[0])))
 			len += (ft_strlen(s) - 2);
 		else
 		{
@@ -29,7 +29,7 @@ static size_t	ft_strlen_final_joined(t_expand *expand, int *check_empty)
 	return (len);
 }
 
-static void	ft_fill_final_joined(t_expand *expand, char *dest)
+static void	ft_fill_final_joined(t_expand *expand, char *dest, int hd)
 {
 	t_list	*current;
 	char	*clear_space;
@@ -39,7 +39,7 @@ static void	ft_fill_final_joined(t_expand *expand, char *dest)
 	while (current)
 	{
 		s = current->content;
-		if (s && ft_isquote(s[0]))
+		if (hd == 0 && (s && ft_isquote(s[0])))
 			ft_strlcpy(&dest[ft_strlen(dest)], &s[1], ft_strlen(s) - 1);
 		else
 		{
@@ -54,19 +54,19 @@ static void	ft_fill_final_joined(t_expand *expand, char *dest)
 	}
 }
 
-char	*ft_joined_final_list(t_expand *expand)
+char	*ft_joined_final_list(t_expand *expand, int hd)
 {
 	char	*dest;
 	int		check_empty;
 	size_t	len;
 
 	check_empty = 0;
-	len = ft_strlen_final_joined(expand, &check_empty);
+	len = ft_strlen_final_joined(expand, &check_empty, hd);
 	if (check_empty == 0)
 		return (NULL);
 	dest = ft_calloc((len + 1), sizeof(char));
 	if (!dest)
 		ft_clear_expand(expand, 12);
-	ft_fill_final_joined(expand, dest);
+	ft_fill_final_joined(expand, dest, hd);
 	return (dest);
 }

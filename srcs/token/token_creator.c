@@ -20,7 +20,7 @@ static void	ft_add_to_list(t_ms *ms)
 	ft_lstadd_back_tk(&ms->token, new_token);
 	if (!(last_list && last_list->type == OPP
 			&& !ft_strcmp(last_list->content, "<<")))
-		new_token->content = ft_translate_file(content, ms);
+		new_token->content = ft_translate(content, ms, 0);
 	ms->lexer.state = START;
 }
 
