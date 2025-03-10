@@ -39,7 +39,10 @@ char	*ft_split_expand(char *s, int *j, t_expand *expand)
 		len = ft_strlen_expand(&s[*j]);
 	str = ft_calloc((len + 1), sizeof(char));
 	if (!str)
+	{
+		ft_free(&s);
 		ft_clear_expand(expand, 12);
+	}
 	ft_strlcpy(str, &s[*j], (len + 1));
 	*j = *j + len - 1;
 	return (str);

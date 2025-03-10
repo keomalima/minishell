@@ -1,16 +1,16 @@
 #include "minishell.h"
 
-char	*exp_exit_code(t_expand *expand)
+char	*exp_exit_code(char *str, t_expand *expand, t_exp_utils *util)
 {
 	char	*exit_code;
 
 	exit_code = ft_itoa(expand->ms->exit_status);
 	if (!exit_code)
-		ft_clear_expand(expand, 12);
+		ft_handle_expand_alloc_failure(expand, util, str);
 	return (exit_code);
 }
 
-char	*exp_uid(t_expand *expand)
+char	*exp_uid(char *str, t_expand *expand, t_exp_utils *util)
 {
 	struct stat	info;
 	char		*tty;
@@ -21,7 +21,7 @@ char	*exp_uid(t_expand *expand)
 	{
 		dest = ft_itoa(info.st_uid);
 		if (!dest)
-			ft_clear_expand(expand, 12);
+			ft_handle_expand_alloc_failure(expand, util, str);
 	}
 	else
 	{
@@ -31,41 +31,50 @@ char	*exp_uid(t_expand *expand)
 	return (dest);
 }
 
-char	*exp_digit_variable(char *s, t_expand *expand)
+char    *exp_digit_variable(char *str, t_expand *expand, t_exp_utils *util)
 {
-	char	*dest;
+    char    *dest;
 
-	dest = ft_calloc((ft_strlen(s) - 1), sizeof(char));
-	if (!dest)
-		ft_clear_expand(expand, 12);
-	ft_strlcpy(dest, &s[2], (ft_strlen(&s[2]) + 1));
-	return (dest);
+    if (ft_strlen(str) == 1)
+        return (NULL);
+    dest = ft_calloc(ft_strlen(str), sizeof(char));
+    if (!dest)
+		ft_handle_expand_alloc_failure(expand, util, str);
+    ft_strlcpy(dest, &str[1], ft_strlen(str));
+    return (dest);
 }
 
-char	*exp_quote_variable(char *s, t_expand *expand)
+char	*exp_quote_variable(char *str, t_expand *expand, t_exp_utils *util)
 {
 	char	*dest;
+	char	*s;
 
+	printf("str [%s]\n", str);
+	s = str + 1;
 	if (s[0] && s[1] && ft_isquote(s[0]) && s[0] == s[1])
 	{
 		dest = ft_strdup(s);
 		if (!dest)
-			ft_clear_expand(expand, 12);
+			ft_handle_expand_alloc_failure(expand, util, str);
+
 	}
 	else
 	{
-		dest = ft_strdup(s);
+		dest = ft_strdup(str);
 		if (!dest)
-			ft_clear_expand(expand, 12);
+			ft_handle_expand_alloc_failure(expand, util, str);
+
 	}
 	return (dest);
 }
 
-char	*exp_valid_variable(char *s, t_expand *expand)
+char	*exp_valid_variable(char *str, t_expand *expand, t_exp_utils *util)
 {
 	char	*variable;
 	char	*dest;
+	char	*s;
 
+	s= str + 1;
 	if (!s)
 		return (NULL);
 	variable = ft_getenv(expand->ms, s);
@@ -75,7 +84,7 @@ char	*exp_valid_variable(char *s, t_expand *expand)
 	{
 		dest = ft_strdup(variable);
 		if (!dest)
-			ft_clear_expand(expand, 12);
+			ft_handle_expand_alloc_failure(expand, util, str);
 	}
 	return (dest);
 }
