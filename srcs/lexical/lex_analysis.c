@@ -1,25 +1,5 @@
 #include "minishell.h"
 
-static void	ft_print_syntax_error(char *s)
-{
-	ft_print_error("ms: syntax error near unexpected token '", s, "'\n");
-}
-
-static size_t	is_redir(const char *content)
-{
-	int			i;
-	const char	*valid_ops[] = {">", ">>", "<", "<>", "<<", "<<<", NULL};
-
-	i = 0;
-	while (valid_ops[i])
-	{
-		if (!ft_strcmp(content, valid_ops[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 int	lexical_error(t_ms *ms)
 {
 	t_token	*token;
@@ -39,42 +19,21 @@ int	lexical_error(t_ms *ms)
 		}
 		else if (token->type == OPP)
 		{
-			if (!token->prev || (token->next && token->next->type == OPP
+			if ((!token->prev || !token->next) || (token->next
+					&& token->next->type == OPP
 					&& is_redir(token->next->content)))
 				return (1);
 		}
 		token = token->next;
 	}
-	ft_print_syntax_error(ms->lex_err);
-	return (1);
-}
-
-static	int	is_valid_operand(t_token *token)
-{
-	int	i;
-	const char	*valid_ops[] = {">", ">>", "<", "<<", "|", NULL};
-
-	i = 0;
-	if (token->type != OPP)
-		return (0);
-	while (valid_ops[i])
-	{
-		if (!ft_strcmp(token->content, valid_ops[i]))
-			return (0);
-		i++;
-	}
-	ft_print_error("ms: not a valid operand: ", token->content, NULL);
-	ft_printf("\n");
-	return (1);
+	return (ft_print_syntax_error(ms->lex_err));
 }
 
 static int	check_token(t_ms *ms, t_token *token)
 {
 	while (token)
 	{
-		if (token->type == OPP && is_redir(token->content) && !token->next)
-			ms->lex_err = "newline";
-		else if (token->type == OPP && !is_redir(token->content))
+		if (token->type == OPP && !is_redir(token->content))
 		{
 			if (token->next && token->next->type == OPP)
 				ms->lex_err = token->next->content;
@@ -83,7 +42,7 @@ static int	check_token(t_ms *ms, t_token *token)
 		}
 		else if (token->type == OPP)
 		{
-			if (!token->prev)
+			if (!token->prev || !token->next)
 				ms->lex_err = token->content;
 			else if (token->next && token->next->type == OPP
 				&& is_redir(token->next->content))

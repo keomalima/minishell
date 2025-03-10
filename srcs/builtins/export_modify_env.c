@@ -71,7 +71,7 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	while (ms->env[i])
 		new_env[j++] = ms->env[i++];
 	free(ms->env);
-	ms->env = NULL;
+	ms->env = NULL; // can we erase this line?
 	return (new_env);
 }
 

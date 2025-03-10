@@ -54,8 +54,3 @@ int	ft_isquote(char c)
 		return (1);
 	return (0);
 }
-
-int	ft_isspace(char c)
-{
-	return (c == ' ' || (c >= 9 && c <= 13));
-}

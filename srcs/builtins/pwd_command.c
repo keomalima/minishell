@@ -7,10 +7,10 @@ static void	ft_print_pwd_error(void)
 		"No such file or directory\n");
 }
 
-void    pwd_command(t_ms *ms)
+void	pwd_command(t_ms *ms)
 {
-	char    pwd[4096];
-	
+	char	pwd[4096];
+
 	if (getcwd(pwd, sizeof(pwd)) == NULL)
 	{
 		ft_print_pwd_error();

@@ -2,9 +2,11 @@
 
 int	g_signal;
 
-void	minishell(t_ms *ms, char *rl)
+void	minishell(t_ms *ms)
 {
-	initialize_var(ms);
+	char	*rl;
+
+	rl = ms->input_main;
 	if (handle_key(rl))
 		return (clean_ms(ms, 0));
 	create_tokens(rl, ms);
@@ -17,48 +19,38 @@ void	minishell(t_ms *ms, char *rl)
 	clean_ms(ms, -1);
 }
 
-static void	init_ms(t_ms *ms, int arc, char **arv, char **env)
-{
-	(void)arc;
-	(void)arv;
-	ms->exit_status = 0;
-	ms->saved_out = dup(STDOUT_FILENO);
-	ms->saved_in = dup(STDIN_FILENO);
-	if (ms->saved_in < 0 || ms->saved_out < 0)
-	{
-		perror("dup failed\n");
-		exit(1);
-	}
-	ms->env = ft_duplicate_env(ms, env);
-}
-
 int	main(int arc, char **arv, char **env)
 {
 	t_ms	ms;
-	char	*input;
 
-	init_ms(&ms, arc, arv, env);
+	(void)arc;
+	(void)arv;
+	ms.exit_status = 0;
+	ms.env = ft_duplicate_env(&ms, env);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		signal(SIGINT, sigint_handler);
-		input = readline("minishell$ ");
+		initialize_var(&ms);
+		ms.input_main = readline("minishell$ ");
 		if (g_signal)
 		{
 			ms.exit_status = 130;
 			g_signal = 0;
 		}
-		if (!input)
+		if (!ms.input_main)
 		{
 			printf("exit\n");
+			exit_handler(&ms, 0);
 			break ;
 		}
-		if (*input)
+		if (*ms.input_main)
 		{
-			add_history(input);
-			minishell(&ms, input);
+			add_history(ms.input_main);
+			minishell(&ms);
 		}
-		free(input);
+		free(ms.input_main);
+		ms.input_main = NULL;
 	}
 	return (0);
 }

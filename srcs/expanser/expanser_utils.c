@@ -9,7 +9,7 @@ size_t	ft_count_alpha_exp(char *s)
 	tmp = ft_strchr(s, '$');
 	while (tmp)
 	{
-		if ((tmp + 1) && ft_isalpha(*(tmp + 1)))
+		if (tmp && *(tmp + 1) && ft_isalpha(*(tmp + 1))) // check if its correct
 			count_exp++;
 		tmp = ft_strchr((tmp + 1), '$');
 	}
@@ -25,7 +25,7 @@ size_t	ft_count_exp(char *s)
 	tmp = ft_strchr(s, '$');
 	while (tmp)
 	{
-		if ((tmp + 1) && (ft_isalnum(*(tmp + 1)) || *(tmp + 1) == '?'
+		if (tmp && *(tmp + 1) && (ft_isalnum(*(tmp + 1)) || *(tmp + 1) == '?'
 				|| ft_isquote(*(tmp + 1))))
 			count_exp++;
 		tmp = ft_strchr((tmp + 1), '$');

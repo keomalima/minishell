@@ -44,7 +44,7 @@ static void	clean_t_cmd(t_ms *ms)
 		while (tmp)
 		{
 			i = 0;
-			while (tmp->files[i])
+			while (tmp->files && tmp->files[i])
 				free(tmp->files[i++]);
 			free(tmp->files);
 			tmp->files = NULL;
@@ -73,6 +73,8 @@ void	exit_handler(t_ms *ms, int exit_code)
 	clean_t_token(ms);
 	clean_t_cmd(ms);
 	clean_t_exec(ms->exec, ms);
+	if (ms->input_main)
+		free(ms->input_main);
 	if (ms->env)
 		free_split(ms->env);
 	ms->exit_status = exit_code;

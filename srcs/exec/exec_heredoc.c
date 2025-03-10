@@ -1,17 +1,22 @@
 #include "minishell.h"
 
-int	check_interupt(void)
+static void	add_str_pipe(char **str, t_ms *ms, int i, char *limiter)
 {
-	return (0);
+	size_t	len;
+
+	len = ft_strlen(limiter);
+	if (len <= 1 || (limiter[0] != limiter[len - 1])
+		|| (limiter[0] != '"' && limiter[0] != '\''))
+		*str = ft_translate_heredoc(*str, ms);
+	if (ft_putstr_fd(*str, ms->exec->pipe_fd[(i + 1) % 2][1]) < 0 ||
+		ft_putstr_fd("\n", ms->exec->pipe_fd[(i + 1) % 2][1]) < 0)
+	{
+		free(*str);
+		exit_handler(ms, 1);
+	}
 }
 
-void	sigint_here_doc(int sig)
-{
-	g_signal = sig;
-	rl_done = 1;
-}
-
-void	exec_here_doc(t_ms *ms, char *limiter, int i)
+static void	exec_here_doc(t_ms *ms, char *limiter, int i)
 {
 	char	*str;
 
@@ -27,17 +32,11 @@ void	exec_here_doc(t_ms *ms, char *limiter, int i)
 		str = readline("> ");
 		if (g_signal != 0)
 			return ;
-		ft_printf("g_signal [%i]\n", g_signal);
 		if (!str)
-			exit_handler(ms, 1);
-		if (ft_strncmp(str, limiter, ft_strlen(limiter)) == 0
-			&& str[ft_strlen(limiter)] && str[ft_strlen(limiter)] == '\n')
+			return (sigquit_handler());
+		if (!ft_strcmp_here_doc(limiter, str))
 			return (free(str));
-		if (ft_putstr_fd(str, ms->exec->pipe_fd[(i + 1) % 2][1]) < 0)
-		{
-			free(str);
-			exit_handler(ms, 1);
-		}
+		add_str_pipe(&str, ms, i, limiter);
 		free(str);
 	}
 }
@@ -46,21 +45,24 @@ int	solo_exec_here_doc(t_ms *ms, char *limiter)
 {
 	char	*str;
 
+	(void)ms;
+	rl_event_hook = check_interupt;
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sigint_here_doc);
 	while (1)
 	{
-		ft_printf("> ");
-		str = get_next_line(STDIN_FILENO);
+		str = readline("> ");
+		if (g_signal != 0)
+			return (0);
 		if (!str)
 		{
-			ms->exit_status = 1;
+			sigquit_handler();
 			return (1);
 		}
-		if (ft_strncmp(str, limiter, ft_strlen(limiter)) == 0
-			&& str[ft_strlen(limiter)] && str[ft_strlen(limiter)] == '\n')
+		if (!ft_strcmp_here_doc(limiter, str))
 		{
 			free(str);
-			return (0);
+			return (1);
 		}
 		free(str);
 	}
@@ -73,6 +75,8 @@ void	init_here_doc(t_ms *ms, t_cmd *cmd, int i)
 	index = 0;
 	while (cmd->files_size > index)
 	{
+		if (g_signal != 0)
+			return ;
 		if (cmd->files[index]->type == IN && cmd->files[index]->is_lim)
 			exec_here_doc(ms, cmd->files[index]->name, i);
 		index++;

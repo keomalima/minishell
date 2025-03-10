@@ -5,6 +5,7 @@ char	*ft_reset_outside_quote(char *ret, char *s, t_ms *ms)
 	int		len;
 	char	*dest;
 
+	(void)ms;
 	len = 0;
 	if (s[0] && ft_isquote(s[0]))
 		len++;
@@ -14,7 +15,10 @@ char	*ft_reset_outside_quote(char *ret, char *s, t_ms *ms)
 		return (ret);
 	dest = ft_calloc((len + ft_strlen(ret) + 1), sizeof(char));
 	if (!dest)
-		exit_handler(ms, 12);
+	{
+		ft_free(&ret);
+		return (NULL);
+	}
 	len = 0;
 	if (s[0] && ft_isquote(s[0]))
 		dest[len++] = s[0];

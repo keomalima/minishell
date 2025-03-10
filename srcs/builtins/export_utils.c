@@ -30,7 +30,7 @@ t_var	*ft_create_new_var(t_ms *ms, t_var **env_var)
 {
 	t_var	*new;
 
-	new = malloc(sizeof(t_var));
+	new = ft_calloc(1, sizeof(t_var));
 	if (!new)
 	{
 		ft_builtins_exit(ms, env_var, 12);

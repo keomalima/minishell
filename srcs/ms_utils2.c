@@ -17,7 +17,7 @@ int	handle_key(char *rl)
 		printf("\033[H\033[J");
 		return (1);
 	}
-	else if(ft_is_special_cmd(rl, "!") || ft_is_special_cmd(rl, ":")
+	else if (ft_is_special_cmd(rl, "!") || ft_is_special_cmd(rl, ":")
 		|| ft_is_special_cmd(rl, "~"))
 		return (1);
 	return (0);
@@ -29,6 +29,9 @@ void	initialize_var(t_ms *ms)
 	ms->cmd = NULL;
 	ms->exec = NULL;
 	ms->lex_err = NULL;
+	ms->input_main = NULL;
+	ms->saved_in = 0;
+	ms->saved_out = 0;
 }
 
 void	sigint_handler(int sig)
