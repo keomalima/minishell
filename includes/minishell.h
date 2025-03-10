@@ -126,6 +126,12 @@ typedef struct s_expand
 	t_ms	*ms;
 }				t_expand;
 
+typedef struct	s_exp_utils
+{
+	t_list	*new_list;
+	char	*clean_quote;
+}				t_exp_utils;
+
 /******************    UTILS    ******************/
 int			ft_strcmp(const char *s1, const char *s2);
 void		clean_ms(t_ms *ms, int exit_code);
@@ -151,15 +157,16 @@ void		ft_lstdel_last_tk(t_token **lst);
 
 /******************    EXPANSER    ******************/
 void		ft_set_expanded_list(t_expand *expand, int hd);
-t_list		*ft_remplace_by_expand(char *str, t_expand *expand, char quote);
-char		*exp_exit_code(t_expand *expand);
-char		*exp_uid(t_expand *expand);
-char		*exp_digit_variable(char *s, t_expand *expand);
-char		*exp_quote_variable(char *s, t_expand *expand);
-char		*exp_valid_variable(char *s, t_expand *expand);
+t_list		*ft_remplace_by_expand(char *str, t_expand *expand, char quote, t_exp_utils *util);
+char		*exp_exit_code(char *str, t_expand *expand, t_exp_utils *util);
+char		*exp_uid(char *str, t_expand *expand, t_exp_utils *util);
+char		*exp_digit_variable(char *str, t_expand *expand, t_exp_utils *util);
+char		*exp_quote_variable(char *str, t_expand *expand, t_exp_utils *util);
+char		*exp_valid_variable(char *s, t_expand *expand, t_exp_utils *util);
 
 char		*clear_string_space(char *s, t_expand *expand);
 void		ft_clear_expand(t_expand *expand, int exit_code);
+void		ft_handle_expand_alloc_failure(t_expand *expand, t_exp_utils *util, char *str);
 void		ft_skip_quote(char *s, int *i);
 char		*ft_split_expand(char *s, int *j, t_expand *expand);
 size_t		ft_count_exp(char *s);
