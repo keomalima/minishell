@@ -7,7 +7,7 @@ static void	add_str_pipe(char **str, t_ms *ms, int i, char *limiter)
 	len = ft_strlen(limiter);
 	if (len <= 1 || (limiter[0] != limiter[len - 1])
 		|| (limiter[0] != '"' && limiter[0] != '\''))
-		*str = ft_translate_heredoc(*str, ms);
+		*str = ft_translate(*str, ms, 1);
 	if (ft_putstr_fd(*str, ms->exec->pipe_fd[(i + 1) % 2][1]) < 0 ||
 		ft_putstr_fd("\n", ms->exec->pipe_fd[(i + 1) % 2][1]) < 0)
 	{
