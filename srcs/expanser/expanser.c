@@ -95,7 +95,7 @@ void	ft_set_expanded_list(t_expand *expand, int hd)
 			continue ;
 		}
 		if (hd == 0 && (*s == '\'' || ft_count_exp(s) == 0))
-			new_node = ft_lstnew(ft_strdup(s));
+			new_node = safe_lstnew_strdup(s, expand);
 		else
 			new_node = ft_expanded_node(s, expand, s[0]);
 		if (!new_node)

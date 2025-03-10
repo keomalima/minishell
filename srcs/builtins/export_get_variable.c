@@ -58,7 +58,7 @@ static int	ft_initialize_var(t_var **env_var, t_ms *ms, t_cmd *cmd)
 		if (!ft_strchr(cmd->cmd[i + 1], '='))
 		{
 			env_var[i]->name = ft_strdup(cmd->cmd[i + 1]);
-			if (!env_var[i])
+			if (!env_var[i]->name)
 			{
 				ft_builtins_exit(ms, env_var, 12);
 				exit (12);

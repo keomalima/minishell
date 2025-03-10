@@ -26,7 +26,7 @@ int	main(int arc, char **arv, char **env)
 	(void)arc;
 	(void)arv;
 	ms.exit_status = 0;
-	ms.env = ft_duplicate_env(&ms, env);
+	ms.env = ft_duplicate_env(env);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{

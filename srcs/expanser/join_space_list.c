@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-size_t	ft_strlen_joined_list(t_list *list, int *check_empty)
+static size_t	ft_strlen_joined_space(t_list *list, int *check_empty)
 {
 	size_t		len;
 	t_list		*current;
@@ -17,7 +17,7 @@ size_t	ft_strlen_joined_list(t_list *list, int *check_empty)
 	return (len);
 }
 
-char	*ft_joined_list(t_list *list, t_expand *expand)
+char	*ft_joined_space_list(t_list *list, t_expand *expand)
 {
 	size_t		len;
 	t_list		*current;
@@ -25,17 +25,22 @@ char	*ft_joined_list(t_list *list, t_expand *expand)
 	int			check_empty;
 
 	check_empty = 0;
-	len = ft_strlen_joined_list(list, &check_empty);
+	len = ft_strlen_joined_space(list, &check_empty);
 	if (check_empty == 0)
 		return (NULL);
-	dest = ft_calloc((len + 1), sizeof(char));
+	dest = ft_calloc((len + 1 + (ft_lstsize(list) - 1)), sizeof(char));
 	if (!dest)
+	{
+		ft_lstclear(&list);
 		ft_clear_expand(expand, 12);
+	}
 	current = list;
 	while (current)
 	{
 		ft_strlcpy(&dest[ft_strlen(dest)], current->content,
 			(ft_strlen(current->content) + 1));
+		if (current->next)
+			dest[ft_strlen(dest)] = ' ';
 		current = current->next;
 	}
 	return (dest);

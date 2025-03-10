@@ -16,9 +16,9 @@ TESTER = print_test
 TOKENISER = token_creator list_handler token_utils
 LEXICAL = lex_analysis lex_heredoc lex_utils
 PARSER = parsing parsing_utils ft_list_cmd
-TRANSLATOR = translator joined_list final_joined_list
-EXPANSER = expanser expanser_utils split_expand remplace_expand remplace_expand_utils clear_multi_space
-EXECUTOR = exec_cmd exec_utils exec_parse exec_heredoc exec_file_handler exec_file_handler_solo exec_heredoc_utils exec_cmd_utils
+TRANSLATOR = translator final_joined_list
+EXPANSER = expanser expanser_utils split_expand remplace_expand remplace_expand_utils clear_multi_space joined_list join_space_list quote_handler
+EXECUTOR = exec_cmd exec_utils exec_parse exec_heredoc exec_file_handler exec_file_handler_solo exec_heredoc_utils
 BUILTINS = exec_builtin builtins_clean env_management\
 			cd_command cd_update_pwd cd_check_valid\
 			pwd_command\

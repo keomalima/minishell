@@ -169,16 +169,19 @@ char		*exp_valid_variable(char *s, t_expand *expand, t_exp_utils *util);
 
 char		*clear_string_space(char *s, t_expand *expand);
 void		ft_clear_expand(t_expand *expand, int exit_code);
-void		ft_handle_expand_alloc_failure(t_expand *expand, t_exp_utils *util, char *str);
+void		ft_expand_alloc_failure(t_expand *expand, t_exp_utils *util, char *str);
 void		ft_skip_quote(char *s, int *i);
 char		*ft_split_expand(char *s, int *j, t_expand *expand);
 size_t		ft_count_exp(char *s);
 size_t		ft_count_alpha_exp(char *s);
 int			ft_check_for_space(char *s);
+char	*ft_joined_list(t_exp_utils *util, t_expand *expand);
+char	*ft_joined_space_list(t_list *list, t_expand *expand);
+char	*ft_handle_quote(char *s, t_expand *expand);
+void	ft_reset_quote(char *s, t_exp_utils *util, t_expand *expand);
 
 /******************    TRANSLATOR    ******************/
 char		*ft_translate(char *s, t_ms *ms, int hd);
-char		*ft_joined_list(t_list *list, t_expand *expand);
 char		*ft_joined_final_list(t_expand *expand, int hd);
 
 /******************    PARSER    ******************/
@@ -226,11 +229,11 @@ int			is_builtin_solo_cmd(t_ms *ms, char *cmd);
 // ENVIRONNEMENT MANAGEMENT
 size_t		ft_env_count(char **env);
 int			ft_find_var(char *name, t_ms *ms);
-char		**ft_duplicate_env(t_ms *ms, char **env);
+char		**ft_duplicate_env(char **env);
 // UTILS
 void		ft_builtins_exit(t_ms *ms, t_var **env_var, int exit_code);
 // CD
-void		ft_update_pwd(t_ms *ms);
+void		ft_update_pwd(t_ms *ms, char *path);
 int			ft_check_valid_dir(t_ms *ms, t_cmd *cmd, char **path);
 void		cd_command(t_ms *ms, t_cmd *cmd);
 // PWD

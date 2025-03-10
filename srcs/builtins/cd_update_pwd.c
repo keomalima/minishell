@@ -7,13 +7,14 @@ static void	ft_print_cwd_error(void)
 		"No such file or directory\n");
 }
 
-static char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
+static char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old, char *path)
 {
 	char	*tmp;
 
 	tmp = ft_calloc((ft_strlen(ms->env[i_new]) + 4), sizeof(char));
 	if (!tmp)
 	{
+		ft_free(&path);
 		ft_builtins_exit(ms, NULL, 12);
 		exit (12);
 	}
@@ -23,13 +24,14 @@ static char	*ft_uptaded_old_pwd(t_ms *ms, int i_new, int i_old)
 	return (tmp);
 }
 
-static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
+static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd, char *path)
 {
 	char	*tmp;
 
 	tmp = ft_calloc((ft_strlen(new_pwd) + 5), sizeof(char));
 	if (!tmp)
 	{
+		ft_free(&path);
 		ft_builtins_exit(ms, NULL, 12);
 		exit (12);
 	}
@@ -39,7 +41,7 @@ static char	*ft_updated_new_pwd(t_ms *ms, int i_new, char *new_pwd)
 	return (tmp);
 }
 
-void	ft_update_pwd(t_ms *ms)
+void	ft_update_pwd(t_ms *ms, char *path)
 {
 	char	new_pwd[4096];
 	int		i_old;
@@ -56,10 +58,10 @@ void	ft_update_pwd(t_ms *ms)
 		i_new = ft_find_var("PWD", ms);
 		if (i_new >= 0)
 		{
-			ms->env[i_old] = ft_uptaded_old_pwd(ms, i_new, i_old);
+			ms->env[i_old] = ft_uptaded_old_pwd(ms, i_new, i_old, path);
 			if (!ms->env[i_old])
 				return ;
-			ms->env[i_new] = ft_updated_new_pwd(ms, i_new, new_pwd);
+			ms->env[i_new] = ft_updated_new_pwd(ms, i_new, new_pwd, path);
 			if (!ms->env[i_new])
 				return ;
 		}
