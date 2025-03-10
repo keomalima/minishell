@@ -21,6 +21,8 @@ static void	ft_add_to_list(t_ms *ms)
 	if (!(last_list && last_list->type == OPP
 			&& !ft_strcmp(last_list->content, "<<")))
 		new_token->content = ft_translate(content, ms, 0);
+	if (!new_token->content)
+		ft_lstdel_last_tk(&ms->token);
 	ms->lexer.state = START;
 }
 

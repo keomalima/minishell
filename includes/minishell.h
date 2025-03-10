@@ -147,6 +147,7 @@ void		ft_lstadd_back_tk(t_token **lst, t_token *new);
 char		*ft_strchr_set(char *set, int c);
 void		exit_handler(t_ms *ms, int exit_code);
 size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
+void		ft_lstdel_last_tk(t_token **lst);
 
 /******************    EXPANSER    ******************/
 void		ft_set_expanded_list(t_expand *expand, int hd);

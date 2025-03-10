@@ -24,6 +24,25 @@ t_token	*ft_lstlast_tk(t_token *lst)
 	return (lst);
 }
 
+void	ft_lstdel_last_tk(t_token **lst)
+{
+	t_token *last;
+
+	if (!lst || !*lst)
+		return;
+	last = *lst;
+	if (!last->next)
+	{
+		free(last);
+		*lst = NULL;
+		return;
+	}
+	while (last->next)
+		last = last->next;
+	last->prev->next = NULL;
+	free(last);
+}
+
 void	ft_lstadd_back_tk(t_token **lst, t_token *new)
 {
 	t_token	*last;
@@ -31,7 +50,10 @@ void	ft_lstadd_back_tk(t_token **lst, t_token *new)
 	if (!lst || !new)
 		return ;
 	if (!*lst)
+	{
 		*lst = new;
+		new->prev = NULL;
+	}
 	else
 	{
 		last = ft_lstlast_tk(*lst);
