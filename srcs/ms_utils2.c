@@ -29,6 +29,7 @@ void	initialize_var(t_ms *ms)
 	ms->cmd = NULL;
 	ms->exec = NULL;
 	ms->lex_err = NULL;
+	ms->input_main = NULL;
 	ms->saved_in = 0;
 	ms->saved_out = 0;
 }
@@ -38,7 +39,7 @@ void	sigint_handler(int sig)
 	g_signal = sig;
 	printf("\n");
 	rl_on_new_line();
-	//rl_replace_line("", 0);
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 

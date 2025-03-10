@@ -112,13 +112,14 @@ typedef struct s_ms
 	struct s_cmd	*cmd;
 	struct s_exec	*exec;
 	int				exit_status;
+	char			*input_main;
 	char			**env;
 	char			*lex_err;
 	int				saved_out;
 	int				saved_in;
 }				t_ms;
 
-typedef struct s_expans
+typedef struct s_expand
 {
 	t_list	*initial_list;
 	t_list	*exp_list;

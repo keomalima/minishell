@@ -76,7 +76,7 @@ static t_list	*ft_expanded_node(char *s, t_expand *expand, char quote)
 	return (new_list);
 }
 
-void	ft_set_expanded_list(t_expand *expand)
+void	ft_set_expanded_list(t_expand *expand, int hd)
 {
 	t_list	*current;
 	t_list	*new_node;

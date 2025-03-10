@@ -2,8 +2,11 @@
 
 int	g_signal;
 
-void	minishell(t_ms *ms, char *rl)
+void	minishell(t_ms *ms)
 {
+	char	*rl;
+
+	rl = ms->input_main;
 	if (handle_key(rl))
 		return (clean_ms(ms, 0));
 	create_tokens(rl, ms);
@@ -19,7 +22,6 @@ void	minishell(t_ms *ms, char *rl)
 int	main(int arc, char **arv, char **env)
 {
 	t_ms	ms;
-	char	*input;
 
 	(void)arc;
 	(void)arv;
@@ -30,24 +32,25 @@ int	main(int arc, char **arv, char **env)
 	{
 		signal(SIGINT, sigint_handler);
 		initialize_var(&ms);
-		input = readline("minishell$ ");
+		ms.input_main = readline("minishell$ ");
 		if (g_signal)
 		{
 			ms.exit_status = 130;
 			g_signal = 0;
 		}
-		if (!input)
+		if (!ms.input_main)
 		{
 			printf("exit\n");
 			exit_handler(&ms, 0);
 			break ;
 		}
-		if (*input)
+		if (*ms.input_main)
 		{
-			add_history(input);
-			minishell(&ms, input);
+			add_history(ms.input_main);
+			minishell(&ms);
 		}
-		free(input);
+		free(ms.input_main);
+		ms.input_main = NULL;
 	}
 	return (0);
 }

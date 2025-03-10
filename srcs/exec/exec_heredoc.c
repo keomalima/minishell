@@ -20,7 +20,7 @@ static void	exec_here_doc(t_ms *ms, char *limiter, int i)
 {
 	char	*str;
 
-	//rl_event_hook = check_interupt;
+	rl_event_hook = check_interupt;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sigint_here_doc);
 	close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][1]);
@@ -45,21 +45,24 @@ int	solo_exec_here_doc(t_ms *ms, char *limiter)
 {
 	char	*str;
 
+	(void)ms;
+	rl_event_hook = check_interupt;
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sigint_here_doc);
 	while (1)
 	{
-		ft_printf("> ");
-		str = get_next_line(STDIN_FILENO);
+		str = readline("> ");
+		if (g_signal != 0)
+			return (0);
 		if (!str)
 		{
-			ms->exit_status = 1;
+			sigquit_handler();
 			return (1);
 		}
-		if (ft_strncmp(str, limiter, ft_strlen(limiter)) == 0
-			&& str[ft_strlen(limiter)] && str[ft_strlen(limiter)] == '\n')
+		if (!ft_strcmp_here_doc(limiter, str))
 		{
 			free(str);
-			return (0);
+			return (1);
 		}
 		free(str);
 	}

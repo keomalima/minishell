@@ -33,7 +33,7 @@ char	*ft_split_expand(char *s, int *j, t_expand *expand)
 	char	*str;
 	size_t	len;
 
-	if (s[*j] == '\0') //check if its chorrect
+	if (!s[*j])
 		len = 0;
 	else
 		len = ft_strlen_expand(&s[*j]);

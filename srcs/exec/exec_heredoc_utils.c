@@ -31,7 +31,7 @@ int	check_interupt(void)
 void	sigint_here_doc(int sig)
 {
 	g_signal = sig;
-	//rl_done = 1;
+	rl_done = 1;
 }
 
 void	sigquit_handler(void)
