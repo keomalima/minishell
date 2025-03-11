@@ -34,10 +34,11 @@ void	free_split(char **arr)
 
 void	close_fd(t_ms *ms, int *fd)
 {
-	if (*fd >= 0)
+	(void)ms;
+	if (fd && *fd >= 0)
 	{
 		if (close(*fd) < 0)
-			exit_handler(ms, 1);
+			perror("minishell: close failed");
 		*fd = -1;
 	}
 }
@@ -47,13 +48,24 @@ void	close_all_fds(t_ms *ms)
 	int	i;
 
 	i = 0;
-	while (2 > i)
+	while (i < 2)
 	{
-		close_fd(ms, &ms->exec->pipe_fd[i][0]);
-		close_fd(ms, &ms->exec->pipe_fd[i][1]);
+		if (ms->exec->pipe_fd[i][0] >= 0)
+			close_fd(ms, &ms->exec->pipe_fd[i][0]);
+		if (ms->exec->pipe_fd[i][1] >= 0)
+			close_fd(ms, &ms->exec->pipe_fd[i][1]);
 		i++;
 	}
+	if (ms->exec->fd_in >= 0)
+		close_fd(ms, &ms->exec->fd_in);
+	if (ms->exec->fd_out >= 0)
+		close_fd(ms, &ms->exec->fd_out);
+	if (ms->exec->pipe_hd[0] >= 0)
+		close_fd(ms, &ms->exec->pipe_hd[0]);
+	if (ms->exec->pipe_hd[1] >= 0)
+		close_fd(ms, &ms->exec->pipe_hd[1]);
 }
+
 
 void	initialize_variables(t_ms *ms)
 {
@@ -65,4 +77,8 @@ void	initialize_variables(t_ms *ms)
 	ms->exec->pipe_fd[0][1] = -1;
 	ms->exec->pipe_fd[1][0] = -1;
 	ms->exec->pipe_fd[1][1] = -1;
+	ms->exec->fd_in = -1;
+	ms->exec->fd_out = -1;
+	ms->exec->pipe_hd[0] = -1;
+	ms->exec->pipe_hd[1] = -1;
 }
