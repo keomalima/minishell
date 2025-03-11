@@ -2,7 +2,26 @@
 
 int	g_signal;
 
-void	minishell(t_ms *ms)
+static void fisrt_init_ms(int arc, char **arv, char **env, t_ms *ms)
+{
+	(void)arc;
+	(void)arv;
+	ms->exit_status = 0;
+	ms->env = ft_duplicate_env(env);
+}
+
+static void	initialize_ms(t_ms *ms)
+{
+	ms->token = NULL;
+	ms->cmd = NULL;
+	ms->exec = NULL;
+	ms->lex_err = NULL;
+	ms->input_main = NULL;
+	ms->saved_in = 0;
+	ms->saved_out = 0;
+}
+
+static void	minishell(t_ms *ms)
 {
 	char	*rl;
 
@@ -23,15 +42,12 @@ int	main(int arc, char **arv, char **env)
 {
 	t_ms	ms;
 
-	(void)arc;
-	(void)arv;
-	ms.exit_status = 0;
-	ms.env = ft_duplicate_env(env);
+	fisrt_init_ms(arc, arv, env, &ms);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		signal(SIGINT, sigint_handler);
-		initialize_var(&ms);
+		initialize_ms(&ms);
 		ms.input_main = readline("minishell$ ");
 		if (g_signal)
 		{

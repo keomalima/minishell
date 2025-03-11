@@ -10,6 +10,20 @@ void	ft_print_error(char *s1, char *s2, char *s3)
 		ft_putstr_fd(s3, 2);
 }
 
+static int	ft_is_special_cmd(char *big, char *little)
+{
+	size_t	i;
+
+	i = 0;
+	while (big[i] && big[i] == ' ')
+		i++;
+	if (ft_strncmp(&big[i], little, ft_strlen(little)) == 0
+		&& ((&big[i])[ft_strlen(little)] == ' '
+		|| (&big[i])[ft_strlen(little)] == 0))
+		return (1);
+	return (0);
+}
+
 int	handle_key(char *rl)
 {
 	if (ft_is_special_cmd(rl, "clear"))
@@ -23,17 +37,6 @@ int	handle_key(char *rl)
 	return (0);
 }
 
-void	initialize_var(t_ms *ms)
-{
-	ms->token = NULL;
-	ms->cmd = NULL;
-	ms->exec = NULL;
-	ms->lex_err = NULL;
-	ms->input_main = NULL;
-	ms->saved_in = 0;
-	ms->saved_out = 0;
-}
-
 void	sigint_handler(int sig)
 {
 	g_signal = sig;
@@ -41,18 +44,4 @@ void	sigint_handler(int sig)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-}
-
-int	ft_is_only_space(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (!ft_isspace(s[i]))
-			return (0);
-		i++;
-	}
-	return (1);
 }

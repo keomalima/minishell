@@ -5,15 +5,17 @@ static void	ft_add_to_list(t_ms *ms)
 	t_token		*new_token;
 	t_token		*last_list;
 	char		*content;
-	const char	*start_ptr;
-	const char	*end_ptr;
 
-	start_ptr = ms->lexer.str_start;
-	end_ptr = ms->lexer.str_ptr;
-	content = ft_strndup(start_ptr, end_ptr - start_ptr);
+	content = ft_strndup(ms->lexer.str_start,
+		ms->lexer.str_ptr - ms->lexer.str_start);
 	if (!content)
 		exit_handler(ms, 1);
 	new_token = ft_lstnew_tk(ms, content);
+	if (!new_token)
+	{
+		ft_free(&content);
+		exit_handler(ms, 12);
+	}
 	if (ms->lexer.state == CMD && ft_count_alpha_exp(content))
 		new_token->type = EXP;
 	last_list = ft_lstlast_tk(ms->token);

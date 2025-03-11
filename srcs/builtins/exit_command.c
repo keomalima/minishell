@@ -62,6 +62,6 @@ void	exit_command(t_ms *ms, t_cmd *cmd)
 	{
 		if (num_arg > 0)
 			exit_program(ms, ft_atoi(cmd->cmd[1]));
-		exit_program(ms, 0);
+		exit_program(ms, ms->exit_status);
 	}
 }

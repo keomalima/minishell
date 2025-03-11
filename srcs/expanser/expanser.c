@@ -56,7 +56,7 @@ static t_list	*ft_expanded_node(char *s, t_expand *expand, char quote)
 {
 	t_list		*node;
 	int			i;
-	t_exp_utils	util;
+	t_ex_u		util;
 
 	util.new_list = NULL;
 	util.clean_quote = ft_handle_quote(s, expand);

@@ -133,20 +133,21 @@ typedef struct	s_exp_utils
 {
 	t_list	*new_list;
 	char	*clean_quote;
-}				t_exp_utils;
+}				t_ex_u;
 
 /******************    UTILS    ******************/
 int			ft_strcmp(const char *s1, const char *s2);
-void		clean_ms(t_ms *ms, int exit_code);
 char		*ft_getenv(t_ms *ms, char *str);
-int			ft_is_special_cmd(char *big, char *little);
 int			ft_isquote(char c);
-void		initialize_var(t_ms *ms);
+int			ft_is_only_space(char *s);
+void		ft_print_error(char *s1, char *s2, char *s3);
 int			handle_key(char *rl);
 void		sigint_handler(int sig);
-// void	del_content(void *content);
-void		ft_print_error(char *s1, char *s2, char *s3);
-int			ft_is_only_space(char *s);
+
+/******************    CLEANER    ******************/
+void		clean_ms(t_ms *ms, int exit_code);
+void		exit_handler(t_ms *ms, int exit_code);
+void		clean_t_cmd(t_cmd *cmd);
 
 /******************    TOKENIZER    ******************/
 void		create_tokens(char *input, t_ms *ms);
@@ -154,31 +155,29 @@ t_token		*ft_lstnew_tk(t_ms *ms, char *content);
 t_token		*ft_lstlast_tk(t_token *lst);
 void		ft_lstadd_back_tk(t_token **lst, t_token *new);
 char		*ft_strchr_set(char *set, int c);
-void		exit_handler(t_ms *ms, int exit_code);
 size_t		is_val_opp(const char *str_ptr, const char *end_ptr);
 void		ft_lstdel_last_tk(t_token **lst);
 
 /******************    EXPANSER    ******************/
 void		ft_set_expanded_list(t_expand *expand, int hd);
-t_list		*ft_remplace_by_expand(char *str, t_expand *expand, char quote, t_exp_utils *util);
-char		*exp_exit_code(char *str, t_expand *expand, t_exp_utils *util);
-char		*exp_uid(char *str, t_expand *expand, t_exp_utils *util);
-char		*exp_digit_variable(char *str, t_expand *expand, t_exp_utils *util);
-char		*exp_quote_variable(char *str, t_expand *expand, t_exp_utils *util);
-char		*exp_valid_variable(char *s, t_expand *expand, t_exp_utils *util);
-
-char		*clear_string_space(char *s, t_expand *expand);
 void		ft_clear_expand(t_expand *expand, int exit_code);
-void		ft_expand_alloc_failure(t_expand *expand, t_exp_utils *util, char *str);
+void		ft_expand_alloc_failure(t_expand *expand, t_ex_u *util, char *str);
 void		ft_skip_quote(char *s, int *i);
 char		*ft_split_expand(char *s, int *j, t_expand *expand);
 size_t		ft_count_exp(char *s);
 size_t		ft_count_alpha_exp(char *s);
 int			ft_check_for_space(char *s);
-char	*ft_joined_list(t_exp_utils *util, t_expand *expand);
-char	*ft_joined_space_list(t_list *list, t_expand *expand);
-char	*ft_handle_quote(char *s, t_expand *expand);
-void	ft_reset_quote(char *s, t_exp_utils *util, t_expand *expand);
+char		*ft_joined_list(t_ex_u *util, t_expand *expand);
+char		*ft_joined_space_list(t_list *list, t_expand *expand);
+char		*ft_handle_quote(char *s, t_expand *expand);
+// REMPLACE EXPAND
+t_list		*ft_remp_expand(char *str, t_expand *expand, char quote, t_ex_u *util);
+char		*exp_exit_code(char *str, t_expand *expand, t_ex_u *util);
+char		*exp_uid(char *str, t_expand *expand, t_ex_u *util);
+char		*exp_digit_variable(char *str, t_expand *expand, t_ex_u *util);
+char		*exp_quote_variable(char *str, t_expand *expand, t_ex_u *util);
+char		*exp_valid_variable(char *s, t_expand *expand, t_ex_u *util);
+char		*clear_string_space(char *s, t_expand *expand);
 
 /******************    TRANSLATOR    ******************/
 char		*ft_translate(char *s, t_ms *ms, int hd);

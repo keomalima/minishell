@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*exp_exit_code(char *str, t_expand *expand, t_exp_utils *util)
+char	*exp_exit_code(char *str, t_expand *expand, t_ex_u *util)
 {
 	char	*exit_code;
 
@@ -10,7 +10,7 @@ char	*exp_exit_code(char *str, t_expand *expand, t_exp_utils *util)
 	return (exit_code);
 }
 
-char	*exp_uid(char *str, t_expand *expand, t_exp_utils *util)
+char	*exp_uid(char *str, t_expand *expand, t_ex_u *util)
 {
 	struct stat	info;
 	char		*tty;
@@ -31,9 +31,9 @@ char	*exp_uid(char *str, t_expand *expand, t_exp_utils *util)
 	return (dest);
 }
 
-char    *exp_digit_variable(char *str, t_expand *expand, t_exp_utils *util)
+char	*exp_digit_variable(char *str, t_expand *expand, t_ex_u *util)
 {
-    char    *dest;
+	char	*dest;
 
     if (ft_strlen(str) == 1)
         return (NULL);
@@ -44,7 +44,7 @@ char    *exp_digit_variable(char *str, t_expand *expand, t_exp_utils *util)
     return (dest);
 }
 
-char	*exp_quote_variable(char *str, t_expand *expand, t_exp_utils *util)
+char	*exp_quote_variable(char *str, t_expand *expand, t_ex_u *util)
 {
 	char	*dest;
 	char	*s;
@@ -68,13 +68,13 @@ char	*exp_quote_variable(char *str, t_expand *expand, t_exp_utils *util)
 	return (dest);
 }
 
-char	*exp_valid_variable(char *str, t_expand *expand, t_exp_utils *util)
+char	*exp_valid_variable(char *str, t_expand *expand, t_ex_u *util)
 {
 	char	*variable;
 	char	*dest;
 	char	*s;
 
-	s= str + 1;
+	s = str + 1;
 	if (!s)
 		return (NULL);
 	variable = ft_getenv(expand->ms, s);

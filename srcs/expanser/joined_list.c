@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-size_t	ft_strlen_joined_list(t_list *list, int *check_empty)
+static size_t	ft_strlen_joined_list(t_list *list, int *check_empty)
 {
 	size_t		len;
 	t_list		*current;
@@ -17,7 +17,7 @@ size_t	ft_strlen_joined_list(t_list *list, int *check_empty)
 	return (len);
 }
 
-char	*ft_joined_list(t_exp_utils *util, t_expand *expand)
+char	*ft_joined_list(t_ex_u *util, t_expand *expand)
 {
 	size_t		len;
 	t_list		*current;

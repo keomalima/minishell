@@ -20,7 +20,7 @@ static t_list *exp_other_case(char *str, t_expand *expand, t_exp_utils *util)
 	return (new);
 }
 
-t_list	*ft_remplace_by_expand(char *str, t_expand *expand, char quote, t_exp_utils *util)
+t_list	*ft_remp_expand(char *str, t_expand *expand, char quote, t_ex_u *util)
 {
 	char	*s;
 	t_list	*new;
