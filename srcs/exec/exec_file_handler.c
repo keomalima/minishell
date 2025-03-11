@@ -61,13 +61,13 @@ int	file_handler(t_ms *ms, t_cmd *cmd)
 		if (cmd->files[index]->type == IN)
 		{
 			if (open_infile(ms, cmd->files[index]->name,
-				cmd->files[index]->is_lim))
+					cmd->files[index]->is_lim))
 				return (1);
 		}
 		else
 		{
 			if (open_outfile(ms, cmd->files[index]->name,
-				cmd->files[index]->type))
+					cmd->files[index]->type))
 				return (1);
 		}
 		index++;

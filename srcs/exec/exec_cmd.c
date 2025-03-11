@@ -1,16 +1,16 @@
 #include "minishell.h"
 
-void	wait_children(t_ms *ms)
+void	wait_children(t_ms *ms, int i)
 {
-	int	i;
+	int	j;
 	int	status;
 	int	sigint_handled;
 
-	i = 0;
 	sigint_handled = 0;
-	while (ms->exec->child_pids[i])
+	j = 0;
+	while (i > j)
 	{
-		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
+		if (waitpid(ms->exec->child_pids[j], &status, 0) < 0)
 			exit_handler(ms, 1);
 		if (WIFSIGNALED(status))
 		{
@@ -19,7 +19,7 @@ void	wait_children(t_ms *ms)
 		}
 		else
 			ms->exit_status = WEXITSTATUS(status);
-		i++;
+		j++;
 	}
 }
 
@@ -76,9 +76,8 @@ static void	exec_cmd(t_ms *ms, t_cmd *current, int i)
 				exit_handler(ms, 1);
 		if (file_handler(ms, current))
 		{
-			close_all_fds(ms);
 			current = current->next;
-			continue ;
+			continue;
 		}
 		if (g_signal > 0)
 			return ;
@@ -91,7 +90,7 @@ static void	exec_cmd(t_ms *ms, t_cmd *current, int i)
 		i++;
 		current = current->next;
 	}
-	wait_children(ms);
+	wait_children(ms, i);
 }
 
 void	exec_init(t_ms *ms)
@@ -107,7 +106,7 @@ void	exec_init(t_ms *ms)
 			exit_handler(ms, 12);
 		initialize_variables(ms);
 		ms->exec->cmd_count = ft_cmd_count(ms);
-		ms->exec->child_pids = ft_calloc (ms->exec->cmd_count * sizeof(pid_t), 1);
+		ms->exec->child_pids = ft_calloc(ms->exec->cmd_count, sizeof(pid_t));
 		if (!ms->exec->child_pids)
 			exit_handler(ms, 12);
 		current = ms->cmd;

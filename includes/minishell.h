@@ -200,6 +200,8 @@ t_files		*ft_new_file(t_token *token, t_ms *ms, t_cmd *cmd);
 void		ft_find_cmd_size(t_token *token, t_cmd *new);
 void		ft_initialize_index(t_index *index);
 void		clean_new_cmd(t_ms *ms, t_cmd *new);
+char		*ft_join_path(const char *s1, const char *s2);
+void		error_handler(t_ms *ms, char **cmd, char *path);
 
 /******************    EXEC    ******************/
 void		exec_init(t_ms *ms);

@@ -8,8 +8,8 @@ static void	add_str_pipe(char **str, t_ms *ms, char *limiter)
 	if (len <= 1 || (limiter[0] != limiter[len - 1])
 		|| (limiter[0] != '"' && limiter[0] != '\''))
 		*str = ft_translate(*str, ms, 1);
-	if (ft_putstr_fd(*str, ms->exec->pipe_hd[1]) < 0 ||
-		ft_putstr_fd("\n", ms->exec->pipe_hd[1]) < 0)
+	if (ft_putstr_fd(*str, ms->exec->pipe_hd[1]) < 0
+		|| ft_putstr_fd("\n", ms->exec->pipe_hd[1]) < 0)
 	{
 		close_fd(ms, &ms->exec->pipe_hd[0]);
 		close_fd(ms, &ms->exec->pipe_hd[1]);
@@ -29,10 +29,7 @@ static int	exec_here_doc(t_ms *ms, char *limiter, char *str)
 		if (g_signal != 0)
 		{
 			if (str)
-			{
 				free(str);
-				str = NULL;
-			}
 			close_fd(ms, &ms->exec->pipe_hd[0]);
 			close_fd(ms, &ms->exec->pipe_hd[1]);
 			return (1);
@@ -40,15 +37,13 @@ static int	exec_here_doc(t_ms *ms, char *limiter, char *str)
 		if (!ft_strcmp_here_doc(limiter, str))
 		{
 			free(str);
-			str = NULL;
-			break;
+			break ;
 		}
 		add_str_pipe(&str, ms, limiter);
 		free(str);
 	}
 	return (0);
 }
-
 
 int	init_here_doc(t_ms *ms, char *limiter)
 {
@@ -79,10 +74,7 @@ int	solo_exec_here_doc(t_ms *ms, char *limiter)
 		if (g_signal != 0)
 		{
 			if (str)
-			{
 				free(str);
-				str = NULL;
-			}
 			return (1);
 		}
 		if (!str)
@@ -90,7 +82,6 @@ int	solo_exec_here_doc(t_ms *ms, char *limiter)
 		if (!ft_strcmp_here_doc(limiter, str))
 		{
 			free(str);
-			str = NULL;
 			return (1);
 		}
 		free(str);
