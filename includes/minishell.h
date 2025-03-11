@@ -102,6 +102,9 @@ typedef struct s_exec
 	char	**env;
 	char	**cmd;
 	int		pipe_fd[2][2];
+	int		fd_in;
+	int		fd_out;
+	int		pipe_hd[2];
 	pid_t	*child_pids;
 }				t_exec;
 
@@ -201,16 +204,20 @@ char		**parse_arg(t_cmd *cmd, t_ms *ms);
 void		free_split(char **arr);
 void		close_fd(t_ms *ms, int *fd);
 void		close_all_fds(t_ms *ms);
-void		file_handler(t_cmd *cmd, t_ms *ms, int i);
+int			file_handler(t_ms *ms, t_cmd *cmd);
 void		switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i);
 int			solo_file_handler(t_cmd *cmd, t_ms *ms);
 int			solo_exec_here_doc(t_ms *ms, char *limiter);
-void		init_here_doc(t_ms *ms, t_cmd *cmd, int i);
+int			init_here_doc(t_ms *ms, char *limiter);
 int			ft_strcmp_here_doc(const char *s1, const char *s2);
 int			check_interupt(void);
 void		sigint_here_doc(int sig);
-void		sigquit_handler(void);
+int			sigquit_handler(t_ms *ms);
 int			is_valid_string(const char *str);
+void		handle_signals(t_ms *ms, int status, int sigint_handled);
+void		handle_hd_fds(t_ms *ms);
+void		handle_solo_builtins_exec(t_ms *ms, t_cmd *current);
+void		close_exec_fds(t_ms *ms, int i);
 
 /******************    BUILTIN    ******************/
 void		exec_builtin(t_ms *ms, t_cmd *cmd);

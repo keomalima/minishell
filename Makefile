@@ -18,7 +18,7 @@ LEXICAL = lex_analysis lex_heredoc lex_utils
 PARSER = parsing parsing_utils ft_list_cmd
 TRANSLATOR = translator joined_list final_joined_list
 EXPANSER = expanser expanser_utils split_expand remplace_expand remplace_expand_utils clear_multi_space
-EXECUTOR = exec_cmd exec_utils exec_parse exec_heredoc exec_file_handler exec_file_handler_solo exec_heredoc_utils
+EXECUTOR = exec_cmd exec_utils exec_parse exec_heredoc exec_file_handler exec_file_handler_solo exec_heredoc_utils exec_cmd_utils
 BUILTINS = exec_builtin builtins_clean env_management\
 			cd_command cd_update_pwd cd_check_valid\
 			pwd_command\

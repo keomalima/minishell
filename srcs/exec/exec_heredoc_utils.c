@@ -34,10 +34,26 @@ void	sigint_here_doc(int sig)
 	rl_done = 1;
 }
 
-void	sigquit_handler(void)
+int	sigquit_handler(t_ms *ms)
 {
+	if (ms->exec->pipe_hd[0] != -1)
+		close_fd(ms, &ms->exec->pipe_hd[0]);
+	if (ms->exec->pipe_hd[1] != -1)
+		close_fd(ms, &ms->exec->pipe_hd[1]);
 	ft_printf("minishell: warning: here-document delimited by"
 		"end-of-file (wanted `EOF')\n");
+	return (1);
+}
+
+void	handle_hd_fds(t_ms *ms)
+{
+	if (ms->exec->fd_in != -1)
+		close_fd(ms, &ms->exec->fd_in);
+	close_fd(ms, &ms->exec->pipe_hd[1]);
+	ms->exec->fd_in = dup(ms->exec->pipe_hd[0]);
+	close_fd(ms, &ms->exec->pipe_hd[0]);
+	if (ms->exec->fd_in < 0)
+		exit_handler(ms, 1);
 }
 
 int	is_valid_string(const char *str)

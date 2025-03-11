@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static void	add_str_pipe(char **str, t_ms *ms, int i, char *limiter)
+static void	add_str_pipe(char **str, t_ms *ms, char *limiter)
 {
 	size_t	len;
 
@@ -8,44 +8,68 @@ static void	add_str_pipe(char **str, t_ms *ms, int i, char *limiter)
 	if (len <= 1 || (limiter[0] != limiter[len - 1])
 		|| (limiter[0] != '"' && limiter[0] != '\''))
 		*str = ft_translate(*str, ms, 1);
-	if (ft_putstr_fd(*str, ms->exec->pipe_fd[(i + 1) % 2][1]) < 0 ||
-		ft_putstr_fd("\n", ms->exec->pipe_fd[(i + 1) % 2][1]) < 0)
+	if (ft_putstr_fd(*str, ms->exec->pipe_hd[1]) < 0 ||
+		ft_putstr_fd("\n", ms->exec->pipe_hd[1]) < 0)
 	{
+		close_fd(ms, &ms->exec->pipe_hd[0]);
+		close_fd(ms, &ms->exec->pipe_hd[1]);
 		free(*str);
+		*str = NULL;
 		exit_handler(ms, 1);
 	}
 }
 
-static void	exec_here_doc(t_ms *ms, char *limiter, int i)
+static int	exec_here_doc(t_ms *ms, char *limiter, char *str)
+{
+	while (1)
+	{
+		str = readline("> ");
+		if (!str)
+			return (sigquit_handler(ms));
+		if (g_signal != 0)
+		{
+			if (str)
+			{
+				free(str);
+				str = NULL;
+			}
+			close_fd(ms, &ms->exec->pipe_hd[0]);
+			close_fd(ms, &ms->exec->pipe_hd[1]);
+			return (1);
+		}
+		if (!ft_strcmp_here_doc(limiter, str))
+		{
+			free(str);
+			str = NULL;
+			break;
+		}
+		add_str_pipe(&str, ms, limiter);
+		free(str);
+	}
+	return (0);
+}
+
+
+int	init_here_doc(t_ms *ms, char *limiter)
 {
 	char	*str;
 
 	rl_event_hook = check_interupt;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sigint_here_doc);
-	close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][1]);
-	close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][0]);
-	if (pipe(ms->exec->pipe_fd[(i + 1) % 2]) < 0)
+	str = NULL;
+	if (pipe(ms->exec->pipe_hd) < 0)
 		exit_handler(ms, 1);
-	while (1)
-	{
-		str = readline("> ");
-		if (g_signal != 0)
-			return ;
-		if (!str)
-			return (sigquit_handler());
-		if (!ft_strcmp_here_doc(limiter, str))
-			return (free(str));
-		add_str_pipe(&str, ms, i, limiter);
-		free(str);
-	}
+	if (exec_here_doc(ms, limiter, str))
+		return (1);
+	handle_hd_fds(ms);
+	return (0);
 }
 
 int	solo_exec_here_doc(t_ms *ms, char *limiter)
 {
 	char	*str;
 
-	(void)ms;
 	rl_event_hook = check_interupt;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sigint_here_doc);
@@ -53,32 +77,22 @@ int	solo_exec_here_doc(t_ms *ms, char *limiter)
 	{
 		str = readline("> ");
 		if (g_signal != 0)
-			return (0);
-		if (!str)
 		{
-			sigquit_handler();
+			if (str)
+			{
+				free(str);
+				str = NULL;
+			}
 			return (1);
 		}
+		if (!str)
+			return (sigquit_handler(ms));
 		if (!ft_strcmp_here_doc(limiter, str))
 		{
 			free(str);
+			str = NULL;
 			return (1);
 		}
 		free(str);
-	}
-}
-
-void	init_here_doc(t_ms *ms, t_cmd *cmd, int i)
-{
-	size_t	index;
-
-	index = 0;
-	while (cmd->files_size > index)
-	{
-		if (g_signal != 0)
-			return ;
-		if (cmd->files[index]->type == IN && cmd->files[index]->is_lim)
-			exec_here_doc(ms, cmd->files[index]->name, i);
-		index++;
 	}
 }

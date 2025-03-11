@@ -1,19 +1,5 @@
 #include "minishell.h"
 
-static void	handle_signals(t_ms *ms, int status, int sigint_handled)
-{
-	if (WTERMSIG(status) == SIGINT && !sigint_handled)
-	{
-		ft_printf("\n");
-		ms->exit_status = 130;
-	}
-	else if (WTERMSIG(status) == SIGQUIT && !sigint_handled)
-	{
-		ft_print_error("Quit (core dumped)\n", NULL, NULL);
-		ms->exit_status = 131;
-	}
-}
-
 void	wait_children(t_ms *ms)
 {
 	int	i;
@@ -22,7 +8,7 @@ void	wait_children(t_ms *ms)
 
 	i = 0;
 	sigint_handled = 0;
-	while (i < ms->exec->cmd_count)
+	while (ms->exec->child_pids[i])
 	{
 		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
 			exit_handler(ms, 1);
@@ -37,20 +23,40 @@ void	wait_children(t_ms *ms)
 	}
 }
 
+static void	handle_dup(t_cmd *cmd, t_ms *ms, int i)
+{
+	if (ms->exec->fd_in != -1)
+	{
+		close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][0]);
+		ms->exec->pipe_fd[(i + 1) % 2][0] = dup(ms->exec->fd_in);
+		if (ms->exec->pipe_fd[(i + 1) % 2][0] < 0)
+			exit_handler(ms, 1);
+	}
+	if (ms->exec->pipe_fd[(i + 1) % 2][0] > 0
+		&& ms->exec->pipe_fd[(i + 1) % 2][0] != STDIN_FILENO)
+		if (dup2(ms->exec->pipe_fd[(i + 1) % 2][0], STDIN_FILENO) < 0)
+			exit_handler(ms, 1);
+	if (ms->exec->fd_out != -1)
+	{
+		close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
+		ms->exec->pipe_fd[i % 2][1] = dup(ms->exec->fd_out);
+		if (ms->exec->pipe_fd[i % 2][1] < 0)
+			exit_handler(ms, 1);
+	}
+	if (cmd->redir != UNDEFINED && ms->exec->pipe_fd[i % 2][1] > 0
+		&& ms->exec->pipe_fd[i % 2][1] != STDOUT_FILENO)
+		if (dup2(ms->exec->pipe_fd[i % 2][1], STDOUT_FILENO) < 0)
+			exit_handler(ms, 1);
+	close_all_fds(ms);
+}
+
 void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	file_handler(cmd, ms, i);
 	if (cmd->cmd[0])
 		ms->exec->cmd = parse_arg(cmd, ms);
-	if (ms->exec->pipe_fd[(i + 1) % 2][0] > 0
-		&& dup2(ms->exec->pipe_fd[(i + 1) % 2][0], STDIN_FILENO) < 0)
-		exit_handler(ms, 1);
-	if (cmd->redir != UNDEFINED
-		&& dup2(ms->exec->pipe_fd[i % 2][1], STDOUT_FILENO) < 0)
-		exit_handler(ms, 1);
-	close_all_fds(ms);
+	handle_dup(cmd, ms, i);
 	exec_builtin(ms, cmd);
 	if (!cmd->cmd[0])
 		exit_handler(ms, 0);
@@ -61,18 +67,19 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 	}
 }
 
-static void	exec_cmd(t_ms *ms, t_cmd *current)
+static void	exec_cmd(t_ms *ms, t_cmd *current, int i)
 {
-	int		i;
-
-	i = 0;
-	signal(SIGINT, SIG_IGN);
 	while (current)
 	{
 		if (ms->exec->cmd_count - 1 > i)
 			if (pipe(ms->exec->pipe_fd[i % 2]) < 0)
 				exit_handler(ms, 1);
-		init_here_doc(ms, current, i);
+		if (file_handler(ms, current))
+		{
+			close_all_fds(ms);
+			current = current->next;
+			continue ;
+		}
 		if (g_signal > 0)
 			return ;
 		ms->exec->child_pids[i] = fork();
@@ -80,30 +87,19 @@ static void	exec_cmd(t_ms *ms, t_cmd *current)
 			exit_handler(ms, -1);
 		if (ms->exec->child_pids[i] == 0)
 			switch_io_n_execve(current, ms, i);
-		close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
-		close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][1]);
-		close_fd(ms, &ms->exec->pipe_fd[(i + 1) % 2][0]);
+		close_exec_fds(ms, i);
 		i++;
 		current = current->next;
 	}
 	wait_children(ms);
 }
 
-void	handle_solo_builtins_exec(t_ms *ms, t_cmd *current)
-{
-	if (!solo_file_handler(ms->cmd, ms))
-		return ;
-	exec_builtin(ms, current);
-	if (dup2(ms->saved_in, STDIN_FILENO) < 0)
-		exit_handler(ms, 1);
-	if (dup2(ms->saved_out, STDOUT_FILENO) < 0)
-		exit_handler(ms, 1);
-}
-
 void	exec_init(t_ms *ms)
 {
 	t_cmd	*current;
+	int		i;
 
+	i = 0;
 	if (ms->cmd)
 	{
 		ms->exec = ft_calloc(sizeof(t_exec), 1);
@@ -117,6 +113,7 @@ void	exec_init(t_ms *ms)
 		current = ms->cmd;
 		if (current->cmd[0] && is_builtin_solo_cmd(ms, current->cmd[0]))
 			return (handle_solo_builtins_exec(ms, current));
-		exec_cmd(ms, current);
+		signal(SIGINT, SIG_IGN);
+		exec_cmd(ms, current, i);
 	}
 }
