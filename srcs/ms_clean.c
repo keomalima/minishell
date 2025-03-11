@@ -33,14 +33,14 @@ static void	clean_t_token(t_ms *ms)
 	}
 }
 
-static void	clean_t_cmd(t_ms *ms)
+void	clean_t_cmd(t_cmd *cmd)
 {
 	t_cmd	*tmp;
 	int		i;
 
-	if (ms->cmd)
+	if (cmd)
 	{
-		tmp = ms->cmd;
+		tmp = cmd;
 		while (tmp)
 		{
 			i = 0;
@@ -51,10 +51,10 @@ static void	clean_t_cmd(t_ms *ms)
 			if (tmp->cmd)
 				free_split(tmp->cmd);
 			tmp->cmd = NULL;
-			ms->cmd = ms->cmd->next;
+			cmd = cmd->next;
 			free(tmp);
 			tmp = NULL;
-			tmp = ms->cmd;
+			tmp = cmd;
 		}
 	}
 }
@@ -62,7 +62,7 @@ static void	clean_t_cmd(t_ms *ms)
 void	clean_ms(t_ms *ms, int exit_code)
 {
 	clean_t_token(ms);
-	clean_t_cmd(ms);
+	clean_t_cmd(ms->cmd);
 	clean_t_exec(ms->exec, ms);
 	if (exit_code >= 0)
 		ms->exit_status = exit_code;
@@ -71,7 +71,7 @@ void	clean_ms(t_ms *ms, int exit_code)
 void	exit_handler(t_ms *ms, int exit_code)
 {
 	clean_t_token(ms);
-	clean_t_cmd(ms);
+	clean_t_cmd(ms->cmd);
 	clean_t_exec(ms->exec, ms);
 	if (ms->input_main)
 		free(ms->input_main);

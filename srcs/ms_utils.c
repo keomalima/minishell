@@ -34,18 +34,18 @@ char	*ft_getenv(t_ms *ms, char *str)
 	return (NULL);
 }
 
-int	ft_is_special_cmd(char *big, char *little)
+int	ft_is_only_space(char *s)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	while (big[i] && big[i] == ' ')
+	while (s[i])
+	{
+		if (!ft_isspace(s[i]))
+			return (0);
 		i++;
-	if (ft_strncmp(&big[i], little, ft_strlen(little)) == 0
-		&& ((&big[i])[ft_strlen(little)] == ' '
-		|| (&big[i])[ft_strlen(little)] == 0))
-		return (1);
-	return (0);
+	}
+	return (1);
 }
 
 int	ft_isquote(char c)

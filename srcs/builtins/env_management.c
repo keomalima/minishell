@@ -9,8 +9,7 @@ int	ft_find_var(char *name, t_ms *ms)
 	while (ms->env[i])
 	{
 		comp = ft_strncmp(ms->env[i], name, ft_strlen(name));
-		if (comp == 0 && ms->env[i][ft_strlen(name)]
-			&& ms->env[i][ft_strlen(name)] == '=')
+		if (comp == 0 && (!ms->env[i][ft_strlen(name)] || (ms->env[i][ft_strlen(name)] && ms->env[i][ft_strlen(name)] == '=')))
 			return (i);
 		i++;
 	}
@@ -54,14 +53,14 @@ static void	ft_sort_env(char ***env)
 	}
 }
 
-char	**ft_duplicate_env(t_ms *ms, char **env)
+char	**ft_duplicate_env(char **env)
 {
 	char	**new_env;
 	int		i;
 
 	new_env = ft_calloc((ft_env_count(env) + 1), sizeof(char *));
 	if (!new_env)
-		exit_handler(ms, 12);
+		exit(12);
 	i = 0;
 	while (env[i])
 	{
@@ -69,7 +68,7 @@ char	**ft_duplicate_env(t_ms *ms, char **env)
 		if (!new_env[i])
 		{
 			free_split(new_env);
-			exit_handler(ms, 12);
+			exit(12);
 		}
 		i++;
 	}

@@ -16,9 +16,9 @@ TESTER = print_test
 TOKENISER = token_creator list_handler token_utils
 LEXICAL = lex_analysis lex_heredoc lex_utils
 PARSER = parsing parsing_utils ft_list_cmd
-TRANSLATOR = translator joined_list final_joined_list
-EXPANSER = expanser expanser_utils split_expand remplace_expand remplace_expand_utils clear_multi_space
-EXECUTOR = exec_cmd exec_utils exec_parse exec_heredoc exec_file_handler exec_file_handler_solo exec_heredoc_utils exec_cmd_utils
+TRANSLATOR = translator final_joined_list
+EXPANSER = expanser expanser_utils split_expand remplace_expand remplace_expand_utils clear_multi_space joined_list join_space_list quote_handler
+EXECUTOR = exec_cmd exec_utils exec_parse exec_heredoc exec_file_handler exec_file_handler_solo exec_heredoc_utils
 BUILTINS = exec_builtin builtins_clean env_management\
 			cd_command cd_update_pwd cd_check_valid\
 			pwd_command\
@@ -61,22 +61,19 @@ DEPS = $($(OBJDIR)/%.o=.d)
 LIBFT = $(LIBFTDIR)/libft.a
 
 
-
 ##=========================    MAIN RULES    =========================##
 
-
-
-all: $(NAME)
+all:  $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
-	@echo "🔥\\e[1;33mMinishell compiled\\e[0m🔥"
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
+	@echo "\n\033[1;32mMinishell compiled\033[0m 🔥🚀\n"
 
-$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS)  Makefile | $(OBJ_SUBDIRS)
+$(OBJDIR)/%.o: $(SRCSDIR)/%.c $(HEADERS) Makefile | $(OBJ_SUBDIRS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_SUBDIRS):
-	mkdir -p $@
+	@mkdir -p $@
 
 $(LIBFT): FORCE
 	@$(MAKE) -C $(LIBFTDIR) --no-print-directory
@@ -89,29 +86,21 @@ val:
 valmax:
 	valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
 
-clean:
-	$(RM) -rf $(OBJDIR) $(SRCSDIR)/*.d $(SRCSDIR)/*.o
-	$(MAKE) -C $(LIBFTDIR) clean
-
-valmax:
-	valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes --suppressions=ignore_readline.supp --track-origins=yes --show-mismatched-frees=yes ./$(NAME)
-
-
 ##============================	CLEANING RULES	============================##
 clean:
 	@$(RM) -rf $(OBJDIR)
 	@$(MAKE) -C $(LIBFTDIR) clean --no-print-directory
-	@echo "\033[92mClean minishell\033[0m"
+	@echo "\033[34mClean minishell\033[0m"
 
 fclean:
 	@$(RM) -rf $(OBJDIR)
 	@$(RM) $(NAME)
 	@$(MAKE) -C $(LIBFTDIR) fclean --no-print-directory
-	@echo "\033[92mClean minishell\033[0m"
+	@echo "\033[34mClean minishell\033[0m"
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re val valmax
 
 .PHONY: FORCE
 FORCE:

@@ -23,25 +23,26 @@ static char	*ft_remplace_value(t_var *cur_var, t_var **env_var, t_ms *ms, int i)
 	return (dest);
 }
 
-static char	*ft_set_new_variable(t_var *cur_var, t_var **env_var, t_ms *ms)
+static char	*ft_set_new_var(t_var *c_var, t_var **env_var, t_ms *ms, char **env)
 {
 	size_t	len;
 	char	*new_var;
 
-	len = ft_strlen(cur_var->name) + ft_strlen(cur_var->value);
-	if (cur_var->value)
+	len = ft_strlen(c_var->name) + ft_strlen(c_var->value);
+	if (c_var->value)
 		len++;
 	new_var = ft_calloc((len + 1), sizeof(char));
 	if (!new_var)
 	{
+		free(env);
 		ft_builtins_exit(ms, env_var, 12);
 		exit (12);
 	}
-	ft_strlcpy(new_var, cur_var->name, (ft_strlen(cur_var->name) + 1));
-	if (cur_var->value)
+	ft_strlcpy(new_var, c_var->name, (ft_strlen(c_var->name) + 1));
+	if (c_var->value)
 		ft_strlcpy(&new_var[ft_strlen(new_var)], "=", 2);
 	ft_strlcpy(&new_var[ft_strlen(new_var)],
-		cur_var->value, (ft_strlen(cur_var->value) + 1));
+		c_var->value, (ft_strlen(c_var->value) + 1));
 	return (new_var);
 }
 
@@ -61,7 +62,7 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	j = 0;
 	while (ms->env[i] && ft_strcmp(ms->env[i], current_var->name) < 0)
 		new_env[j++] = ms->env[i++];
-	new_env[j++] = ft_set_new_variable(current_var, env_var, ms);
+	new_env[j++] = ft_set_new_var(current_var, env_var, ms, new_env);
 	if (!new_env[j - 1])
 	{
 		free_split(new_env);
@@ -71,7 +72,6 @@ static char	**ft_add_var_to_env(t_var *current_var, t_var **env_var, t_ms *ms)
 	while (ms->env[i])
 		new_env[j++] = ms->env[i++];
 	free(ms->env);
-	ms->env = NULL; // can we erase this line?
 	return (new_env);
 }
 

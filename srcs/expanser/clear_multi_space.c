@@ -12,10 +12,28 @@ static size_t	ft_strlen_between_space(char *s)
 	return (i);
 }
 
+static t_list	*ft_node_space_creator(t_expand *expand, char *s, t_list **list)
+{
+	char	*str;
+	t_list	*node;
+
+	str = ft_calloc((ft_strlen_between_space(s) + 1), sizeof(char));
+	if (!str)
+		ft_clear_expand(expand, 12);
+	ft_strlcpy(str, s, (ft_strlen_between_space(s) + 1));
+	node = ft_lstnew(str);
+	if (!node)
+	{
+		free(str);
+		ft_lstclear(list);
+	}
+	return (node);
+}
+
 static t_list	*ft_split_into_list_space(char *s, t_expand *expand)
 {
 	t_list	*list;
-	char	*str;
+	t_list	*node;
 	int		i;
 
 	if (!s)
@@ -28,61 +46,12 @@ static t_list	*ft_split_into_list_space(char *s, t_expand *expand)
 			i++;
 		if (s[i])
 		{
-			str = ft_calloc((ft_strlen_between_space(&s[i]) + 1), sizeof(char));
-			if (!str)
-				ft_clear_expand(expand, 12);
-			ft_strlcpy(str, &s[i], (ft_strlen_between_space(&s[i]) + 1));
-			ft_lstadd_back(&list, ft_lstnew(str));
+			node = ft_node_space_creator(expand, &s[i], &list);
+			ft_lstadd_back(&list, node);
 			i += ft_strlen_between_space(&s[i]);
 		}
 	}
 	return (list);
-}
-
-static size_t	ft_strlen_joined_space(t_list *list, int *check_empty)
-{
-	size_t		len;
-	t_list		*current;
-
-	current = list;
-	len = 0;
-	while (current)
-	{
-		if (current->content)
-			*check_empty += 1;
-		len += ft_strlen(current->content);
-		current = current->next;
-	}
-	return (len);
-}
-
-static char	*ft_joined_space_list(t_list *list, t_expand *expand)
-{
-	size_t		len;
-	t_list		*current;
-	char		*dest;
-	int			check_empty;
-
-	check_empty = 0;
-	len = ft_strlen_joined_space(list, &check_empty);
-	if (check_empty == 0)
-		return (NULL);
-	dest = ft_calloc((len + 1 + (ft_lstsize(list) - 1)), sizeof(char));
-	if (!dest)
-	{
-		ft_lstclear(&list);
-		ft_clear_expand(expand, 12);
-	}
-	current = list;
-	while (current)
-	{
-		ft_strlcpy(&dest[ft_strlen(dest)], current->content,
-			(ft_strlen(current->content) + 1));
-		if (current->next)
-			dest[ft_strlen(dest)] = ' ';
-		current = current->next;
-	}
-	return (dest);
 }
 
 char	*clear_string_space(char *s, t_expand *expand)

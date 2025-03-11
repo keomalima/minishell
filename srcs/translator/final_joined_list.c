@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static size_t	ft_strlen_final_joined(t_expand *expand, int *check_empty, int hd)
+static size_t	ft_strlen_final_joined(t_expand *expand, int *empty, int hd)
 {
 	t_list	*current;
 	size_t	len;
@@ -13,7 +13,7 @@ static size_t	ft_strlen_final_joined(t_expand *expand, int *check_empty, int hd)
 	{
 		s = current->content;
 		if (s)
-			*check_empty += 1;
+			*empty += 1;
 		if (hd == 0 && (s && ft_isquote(s[0])))
 			len += (ft_strlen(s) - 2);
 		else

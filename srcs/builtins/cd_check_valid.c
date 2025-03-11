@@ -64,7 +64,11 @@ int	ft_check_valid_dir(t_ms *ms, t_cmd *cmd, char **path)
 		}
 	}
 	else
+	{
 		*path = ft_strdup(cmd->cmd[1]);
+		if (!*path)
+			ft_builtins_exit(ms, NULL, 12);
+	}
 	if (stat(*path, &sb) == -1)
 		return (ft_check_existing_dir(*path, ms));
 	if (!S_ISDIR(sb.st_mode))

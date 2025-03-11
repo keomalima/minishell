@@ -8,7 +8,7 @@ t_token	*ft_lstnew_tk(t_ms *ms, char *content)
 	if (!new)
 	{
 		free(content);
-		exit_handler(ms, 1);
+		exit_handler(ms, 12);
 	}
 	new->type = ms->lexer.state;
 	new->content = content;
