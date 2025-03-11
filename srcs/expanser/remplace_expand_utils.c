@@ -1,3 +1,4 @@
+
 #include "minishell.h"
 
 char	*exp_exit_code(char *str, t_expand *expand, t_ex_u *util)
@@ -6,7 +7,7 @@ char	*exp_exit_code(char *str, t_expand *expand, t_ex_u *util)
 
 	exit_code = ft_itoa(expand->ms->exit_status);
 	if (!exit_code)
-		ft_handle_expand_alloc_failure(expand, util, str);
+		ft_expand_alloc_failure(expand, util, str);
 	return (exit_code);
 }
 
@@ -21,7 +22,7 @@ char	*exp_uid(char *str, t_expand *expand, t_ex_u *util)
 	{
 		dest = ft_itoa(info.st_uid);
 		if (!dest)
-			ft_handle_expand_alloc_failure(expand, util, str);
+			ft_expand_alloc_failure(expand, util, str);
 	}
 	else
 	{
@@ -35,13 +36,13 @@ char	*exp_digit_variable(char *str, t_expand *expand, t_ex_u *util)
 {
 	char	*dest;
 
-    if (ft_strlen(str) == 1)
-        return (NULL);
-    dest = ft_calloc(ft_strlen(str), sizeof(char));
-    if (!dest)
-		ft_handle_expand_alloc_failure(expand, util, str);
-    ft_strlcpy(dest, &str[1], ft_strlen(str));
-    return (dest);
+	if (ft_strlen(str) == 1)
+		return (NULL);
+	dest = ft_calloc(ft_strlen(str), sizeof(char));
+	if (!dest)
+		ft_expand_alloc_failure(expand, util, str);
+	ft_strlcpy(dest, &str[1], ft_strlen(str));
+	return (dest);
 }
 
 char	*exp_quote_variable(char *str, t_expand *expand, t_ex_u *util)
@@ -55,15 +56,13 @@ char	*exp_quote_variable(char *str, t_expand *expand, t_ex_u *util)
 	{
 		dest = ft_strdup(s);
 		if (!dest)
-			ft_handle_expand_alloc_failure(expand, util, str);
-
+			ft_expand_alloc_failure(expand, util, str);
 	}
 	else
 	{
 		dest = ft_strdup(str);
 		if (!dest)
-			ft_handle_expand_alloc_failure(expand, util, str);
-
+			ft_expand_alloc_failure(expand, util, str);
 	}
 	return (dest);
 }
@@ -84,7 +83,7 @@ char	*exp_valid_variable(char *str, t_expand *expand, t_ex_u *util)
 	{
 		dest = ft_strdup(variable);
 		if (!dest)
-			ft_handle_expand_alloc_failure(expand, util, str);
+			ft_expand_alloc_failure(expand, util, str);
 	}
 	return (dest);
 }
