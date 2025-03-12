@@ -7,7 +7,10 @@ static void	add_str_pipe(char **str, t_ms *ms, char *limiter)
 	len = ft_strlen(limiter);
 	if (len <= 1 || (limiter[0] != limiter[len - 1])
 		|| (limiter[0] != '"' && limiter[0] != '\''))
-		*str = ft_translate(*str, ms, 1);
+	{
+		if (*str && *str[0] != 0)
+			*str = ft_translate(*str, ms, 1);
+	}
 	if (ft_putstr_fd(*str, ms->exec->pipe_hd[1]) < 0
 		|| ft_putstr_fd("\n", ms->exec->pipe_hd[1]) < 0)
 	{
