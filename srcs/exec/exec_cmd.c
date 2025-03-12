@@ -1,26 +1,26 @@
 #include "minishell.h"
 
-void	wait_children(t_ms *ms)
+void	wait_children(t_ms *ms, int i)
 {
-	int	i;
+	int	j;
 	int	status;
 	int	sigint_handled;
 
-	i = 0;
 	sigint_handled = 0;
-	while (ms->exec->child_pids[i])
+	j = 0;
+	while (i > j)
 	{
-		if (waitpid(ms->exec->child_pids[i], &status, 0) < 0)
+		if (waitpid(ms->exec->child_pids[j], &status, 0) < 0)
 			exit_handler(ms, 1);
-		if (WIFSIGNALED(status))
-		{
-			handle_signals(ms, status, sigint_handled);
-			sigint_handled = 1;
-		}
-		else
-			ms->exit_status = WEXITSTATUS(status);
-		i++;
+		j++;
 	}
+	if (WIFSIGNALED(status))
+	{
+		handle_signals(ms, status, sigint_handled);
+		sigint_handled = 1;
+	}
+	else
+		ms->exit_status = WEXITSTATUS(status);
 }
 
 static void	handle_dup(t_cmd *cmd, t_ms *ms, int i)
@@ -34,8 +34,10 @@ static void	handle_dup(t_cmd *cmd, t_ms *ms, int i)
 	}
 	if (ms->exec->pipe_fd[(i + 1) % 2][0] > 0
 		&& ms->exec->pipe_fd[(i + 1) % 2][0] != STDIN_FILENO)
+	{
 		if (dup2(ms->exec->pipe_fd[(i + 1) % 2][0], STDIN_FILENO) < 0)
 			exit_handler(ms, 1);
+	}
 	if (ms->exec->fd_out != -1)
 	{
 		close_fd(ms, &ms->exec->pipe_fd[i % 2][1]);
@@ -45,8 +47,10 @@ static void	handle_dup(t_cmd *cmd, t_ms *ms, int i)
 	}
 	if (cmd->redir != UNDEFINED && ms->exec->pipe_fd[i % 2][1] > 0
 		&& ms->exec->pipe_fd[i % 2][1] != STDOUT_FILENO)
+	{
 		if (dup2(ms->exec->pipe_fd[i % 2][1], STDOUT_FILENO) < 0)
 			exit_handler(ms, 1);
+	}
 	close_all_fds(ms);
 }
 
@@ -56,6 +60,8 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 	signal(SIGQUIT, SIG_DFL);
 	if (cmd->cmd[0])
 		ms->exec->cmd = parse_arg(cmd, ms);
+	if (ms->exec->in_file_err || ms->exec->out_file_err)
+		exit_handler(ms, -1);
 	handle_dup(cmd, ms, i);
 	exec_builtin(ms, cmd);
 	if (!cmd->cmd[0])
@@ -74,12 +80,7 @@ static void	exec_cmd(t_ms *ms, t_cmd *current, int i)
 		if (ms->exec->cmd_count - 1 > i)
 			if (pipe(ms->exec->pipe_fd[i % 2]) < 0)
 				exit_handler(ms, 1);
-		if (file_handler(ms, current))
-		{
-			close_all_fds(ms);
-			current = current->next;
-			continue ;
-		}
+		file_handler(ms, current, i);
 		if (g_signal > 0)
 			return ;
 		ms->exec->child_pids[i] = fork();
@@ -91,7 +92,7 @@ static void	exec_cmd(t_ms *ms, t_cmd *current, int i)
 		i++;
 		current = current->next;
 	}
-	wait_children(ms);
+	wait_children(ms, i);
 }
 
 void	exec_init(t_ms *ms)
@@ -107,7 +108,7 @@ void	exec_init(t_ms *ms)
 			exit_handler(ms, 12);
 		initialize_variables(ms);
 		ms->exec->cmd_count = ft_cmd_count(ms);
-		ms->exec->child_pids = ft_calloc (ms->exec->cmd_count * sizeof(pid_t), 1);
+		ms->exec->child_pids = ft_calloc(ms->exec->cmd_count, sizeof(pid_t));
 		if (!ms->exec->child_pids)
 			exit_handler(ms, 12);
 		current = ms->cmd;

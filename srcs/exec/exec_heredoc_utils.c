@@ -55,12 +55,3 @@ void	handle_hd_fds(t_ms *ms)
 	if (ms->exec->fd_in < 0)
 		exit_handler(ms, 1);
 }
-
-int	is_valid_string(const char *str)
-{
-
-	if (!ft_strcmp(str, ".") || !ft_strcmp(str, "..") ||
-		!ft_strcmp(str, "...") || !ft_strcmp(str, "...."))
-		return (0);
-	return (1);
-}

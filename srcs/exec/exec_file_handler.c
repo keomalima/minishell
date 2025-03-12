@@ -46,12 +46,14 @@ static int	open_infile(t_ms *ms, char *name, int is_lim)
 		ms->exit_status = 1;
 		return (1);
 	}
+	ms->exec->in_file_err = 0;
 	return (0);
 }
 
-int	file_handler(t_ms *ms, t_cmd *cmd)
+int	file_handler(t_ms *ms, t_cmd *cmd, int i)
 {
 	size_t	index;
+	(void)i;
 
 	index = 0;
 	while (cmd->files_size > index)
@@ -61,16 +63,24 @@ int	file_handler(t_ms *ms, t_cmd *cmd)
 		if (cmd->files[index]->type == IN)
 		{
 			if (open_infile(ms, cmd->files[index]->name,
-				cmd->files[index]->is_lim))
+					cmd->files[index]->is_lim))
+			{
+				ms->exec->in_file_err = 1;
 				return (1);
+			}
 		}
 		else
 		{
 			if (open_outfile(ms, cmd->files[index]->name,
-				cmd->files[index]->type))
+					cmd->files[index]->type))
+			{
+				ms->exec->in_file_err = 1;
 				return (1);
+			}
 		}
 		index++;
 	}
+	ms->exec->in_file_err = 0;
+	ms->exec->out_file_err = 0;
 	return (0);
 }

@@ -1,31 +1,5 @@
 #include "minishell.h"
 
-static char	*ft_join_path(const char *s1, const char *s2)
-{
-	char	*str;
-	int		i;
-	int		j;
-	int		add_slash;
-
-	if (!s1 || !s2)
-		return (NULL);
-	add_slash = (s1[ft_strlen(s1) - 1] != '/');
-	str = malloc(sizeof(char) * ft_strlen(s1) + ft_strlen(s2) + add_slash + 1);
-	if (!str)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i])
-		str[j++] = s1[i++];
-	if (add_slash)
-		str[j++] = '/';
-	i = 0;
-	while (s2[i])
-		str[j++] = s2[i++];
-	str[j] = '\0';
-	return (str);
-}
-
 static char	*get_exec_path(char *path, char *cmd)
 {
 	char	*prefixed_path;
@@ -55,6 +29,14 @@ static char	*get_exec_path(char *path, char *cmd)
 	return (NULL);
 }
 
+int	is_valid_string(const char *str)
+{
+	if (!ft_strcmp(str, ".") || !ft_strcmp(str, "..")
+		|| !ft_strcmp(str, "...") || !ft_strcmp(str, "...."))
+		return (0);
+	return (1);
+}
+
 static void	dir_check(t_ms *ms, const char *path)
 {
 	struct stat	path_stat;
@@ -76,29 +58,26 @@ static void	dir_check(t_ms *ms, const char *path)
 	}
 }
 
-static void	error_handler(t_ms *ms, char **cmd, char *path)
+void	check_path(t_ms *ms, t_cmd *cmd, char **exec_path, char *path)
 {
-	if (!path || ft_is_only_space(path))
+	if (cmd->cmd[0])
 	{
-		ft_print_error("minishell: ", cmd[0], ": No such file or directory\n");
-		exit_handler(ms, 127);
+		if (ft_strcmp(cmd->cmd[0], "0") != 0 && access(cmd->cmd[0], X_OK) == 0)/// weird behavior here!
+		{
+			*exec_path = ft_strdup(cmd->cmd[0]);
+			if (!exec_path)
+				exit_handler(ms, 12);
+		}
+		else
+			*exec_path = get_exec_path(path, cmd->cmd[0]);
 	}
-	else if (cmd[0] && ft_strncmp(cmd[0], "/", 1) == 0)
+	else
+		*exec_path = get_exec_path(path, cmd->cmd[0]);
+	if (!*exec_path || !is_valid_string(cmd->cmd[0]))
 	{
-		ft_print_error(cmd[0], ": ", strerror(errno));
-		ft_print_error("\n", NULL, NULL);
-		exit_handler(ms, 127);
-	}
-	else if (cmd[0] && access(cmd[0], X_OK) != 0 && ft_strlen(cmd[0]) > 2
-		&& access(cmd[0] + 2, F_OK) == 0)
-	{
-		ft_print_error("minishell: ", cmd[0], ": Permission denied\n");
-		exit_handler(ms, 126);
-	}
-	else if (cmd[0])
-	{
-		ft_print_error("minishell: ", cmd[0], ": command not found\n");
-		exit_handler(ms, 127);
+		if (*exec_path)
+			free(*exec_path);
+		error_handler(ms, cmd->cmd, path);
 	}
 }
 
@@ -113,21 +92,7 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 		dir_check(ms, cmd->cmd[0]);
 	exec_path = NULL;
 	path = ft_getenv(ms, "PATH");
-	if (cmd->cmd[0])
-	{
-		if (access(cmd->cmd[0], X_OK) == 0)
-		{
-			exec_path = ft_strdup(cmd->cmd[0]);
-			if (!exec_path)
-				exit_handler(ms, 12);
-		}
-		else
-			exec_path = get_exec_path(path, cmd->cmd[0]);
-	}
-	else
-		exec_path = get_exec_path(path, cmd->cmd[0]);
-	if (!exec_path || !is_valid_string(cmd->cmd[0]))
-		error_handler(ms, cmd->cmd, path);
+	check_path(ms, cmd, &exec_path, path);
 	free(cmd->cmd[0]);
 	cmd->cmd[0] = exec_path;
 	return (cmd->cmd);
