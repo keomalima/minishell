@@ -27,6 +27,10 @@
 # include <sys/stat.h>
 # include <signal.h>
 
+#ifndef ARG_MAX
+# define ARG_MAX 2097152
+#endif
+
 extern int	g_signal;
 
 typedef enum e_type

@@ -34,7 +34,7 @@ void	free_split(char **arr)
 
 void	close_fd(t_ms *ms, int *fd)
 {
-	(void)ms;
+	(void)ms;				// quit the program?
 	if (fd && *fd >= 0)
 	{
 		if (close(*fd) < 0)
@@ -65,7 +65,6 @@ void	close_all_fds(t_ms *ms)
 	if (ms->exec->pipe_hd[1] >= 0)
 		close_fd(ms, &ms->exec->pipe_hd[1]);
 }
-
 
 void	initialize_variables(t_ms *ms)
 {
