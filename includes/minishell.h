@@ -103,6 +103,8 @@ typedef struct s_var
 typedef struct s_exec
 {
 	int		cmd_count;
+	int		in_file_err;
+	int		out_file_err;
 	char	**env;
 	char	**cmd;
 	int		pipe_fd[2][2];
@@ -212,7 +214,7 @@ char		**parse_arg(t_cmd *cmd, t_ms *ms);
 void		free_split(char **arr);
 void		close_fd(t_ms *ms, int *fd);
 void		close_all_fds(t_ms *ms);
-int			file_handler(t_ms *ms, t_cmd *cmd);
+int			file_handler(t_ms *ms, t_cmd *cmd, int i);
 void		switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i);
 int			solo_file_handler(t_cmd *cmd, t_ms *ms);
 int			solo_exec_here_doc(t_ms *ms, char *limiter);
