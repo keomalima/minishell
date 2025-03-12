@@ -26,7 +26,6 @@ static char	*ft_join_path(const char *s1, const char *s2)
 	return (str);
 }
 
-
 static char	*get_exec_path(char *path, char *cmd)
 {
 	char	*prefixed_path;
@@ -55,7 +54,6 @@ static char	*get_exec_path(char *path, char *cmd)
 	free_split(path_env);
 	return (NULL);
 }
-
 
 static void	dir_check(t_ms *ms, const char *path)
 {
@@ -117,7 +115,7 @@ char	**parse_arg(t_cmd *cmd, t_ms *ms)
 	path = ft_getenv(ms, "PATH");
 	if (cmd->cmd[0])
 	{
-		if (ft_strcmp(cmd->cmd[0], "0") != 0 && access(cmd->cmd[0], X_OK) == 0)/// weird behavior here!
+		if (access(cmd->cmd[0], X_OK) == 0)
 		{
 			exec_path = ft_strdup(cmd->cmd[0]);
 			if (!exec_path)

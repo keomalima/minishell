@@ -41,7 +41,7 @@ char	*exp_digit_variable(char *str, t_expand *expand, t_ex_u *util)
 	dest = ft_calloc(ft_strlen(str), sizeof(char));
 	if (!dest)
 		ft_expand_alloc_failure(expand, util, str);
-	ft_strlcpy(dest, &str[1], ft_strlen(str));
+	ft_strlcpy(dest, &str[2], ft_strlen(str) - 1);
 	return (dest);
 }
 
@@ -50,7 +50,6 @@ char	*exp_quote_variable(char *str, t_expand *expand, t_ex_u *util)
 	char	*dest;
 	char	*s;
 
-	printf("str [%s]\n", str);
 	s = str + 1;
 	if (s[0] && s[1] && ft_isquote(s[0]) && s[0] == s[1])
 	{
@@ -60,9 +59,10 @@ char	*exp_quote_variable(char *str, t_expand *expand, t_ex_u *util)
 	}
 	else
 	{
-		dest = ft_strdup(str);
+		dest = ft_calloc((ft_strlen(str) - 3 + 1), sizeof(char));
 		if (!dest)
 			ft_expand_alloc_failure(expand, util, str);
+		ft_strlcpy(dest, &str[2], (ft_strlen(str) - 3 + 1));
 	}
 	return (dest);
 }

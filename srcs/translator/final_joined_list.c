@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+static void	handle_add_spaces(const char *s, size_t *len, t_list *current)
+{
+	if (*len > 0 && s && s[0] && ft_isspace(s[0]))
+		*len += 1;
+	if (*len > 0 && s && s[ft_strlen(s) - 1]
+		&& ft_isspace(s[ft_strlen(s) - 1]) && current->next)
+		*len += 1;
+}
+
 static size_t	ft_strlen_final_joined(t_expand *expand, int *empty, int hd)
 {
 	t_list	*current;
@@ -20,8 +29,7 @@ static size_t	ft_strlen_final_joined(t_expand *expand, int *empty, int hd)
 		{
 			clear_space = clear_string_space(s, expand);
 			len += ft_strlen(clear_space);
-			if (len > 0 && s && s[0] && ft_isspace(s[0]))
-				len++;
+			handle_add_spaces(s, &len, current);
 			ft_free(&clear_space);
 		}
 		current = current->next;
@@ -48,6 +56,9 @@ static void	ft_fill_final_joined(t_expand *expand, char *dest, int hd)
 				dest[ft_strlen(dest)] = ' ';
 			ft_strlcpy(&dest[ft_strlen(dest)], clear_space,
 				(ft_strlen(clear_space) + 1));
+			if (dest && *dest && s && s[ft_strlen(s) - 1]
+				&& ft_isspace(s[ft_strlen(s) - 1]) && current->next)
+				dest[ft_strlen(dest)] = ' ';
 			ft_free(&clear_space);
 		}
 		current = current->next;

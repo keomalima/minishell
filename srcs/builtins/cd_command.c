@@ -29,6 +29,8 @@ void	cd_back_to_oldpwd(t_ms *ms)
 	}
 	if (chdir(ft_getenv(ms, "OLDPWD")) == -1)
 		return (ft_builtins_exit(ms, NULL, 1));
+	printf("%s\n", ft_getenv(ms, "OLDPWD"));
+	ft_update_pwd(ms, NULL);
 	ms->exit_status = 0;
 }
 
@@ -44,17 +46,17 @@ void	cd_command(t_ms *ms, t_cmd *cmd)
 		|| (cmd->cmd[1] && ft_strcmp(cmd->cmd[1], "--") == 0))
 		cd_home(ms);
 	else if (cmd->cmd[1] && ft_strcmp(cmd->cmd[1], "-") == 0)
-	{
 		cd_back_to_oldpwd(ms);
-		printf("%s\n", ft_getenv(ms, "OLDPWD"));
-		ft_update_pwd(ms, NULL);
-	}
 	else if (ft_check_valid_dir(ms, cmd, &path))
 	{
 		if (chdir(path) == -1)
+		{
+			ft_free(&path);
 			return (ft_builtins_exit(ms, NULL, 1));
+		}
 		ft_update_pwd(ms, path);
 		ms->exit_status = 0;
+		ft_free(&path);
 	}
 	ft_builtins_exit(ms, NULL, 0);
 }
