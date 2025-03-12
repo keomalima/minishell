@@ -14,7 +14,7 @@ static int	is_str_num(char *s)
 	if (*s == '-' || *s == '+')
 		s++;
 	if (ft_atoi(s) == -1)
-		return (1);
+		return (0);
 	while (*s)
 	{
 		if (!ft_isdigit(*s))

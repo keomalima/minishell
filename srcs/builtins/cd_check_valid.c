@@ -11,6 +11,7 @@ static char	*ft_retrieve_home_path(t_ms *ms, t_cmd *cmd)
 	{
 		ft_print_error("cd: HOME not set\n", NULL, NULL);
 		ft_builtins_exit(ms, NULL, 1);
+		ms->exit_status = 1;
 		return (NULL);
 	}
 	path = (cmd->cmd[1]) + 1;
@@ -59,6 +60,7 @@ int	ft_check_valid_dir(t_ms *ms, t_cmd *cmd, char **path)
 		*path = ft_retrieve_home_path(ms, cmd);
 		if (!*path)
 		{
+			ms->exit_status = 1;
 			ft_builtins_exit(ms, NULL, 1);
 			return (0);
 		}

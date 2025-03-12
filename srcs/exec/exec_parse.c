@@ -8,7 +8,10 @@ static char	*get_exec_path(char *path, char *cmd)
 
 	if (!path || !cmd[0] || ft_is_only_space(path))
 		return (NULL);
-	path_env = ft_split(path + 5, ':');
+	if (ft_strncmp(path, "/home", ft_strlen("/home")) == 0)
+		path_env = ft_split(path + 5, ':');
+	else
+		path_env = ft_split(path, ':');
 	if (!path_env)
 		return (NULL);
 	i = 0;
@@ -62,7 +65,7 @@ void	check_path(t_ms *ms, t_cmd *cmd, char **exec_path, char *path)
 {
 	if (cmd->cmd[0])
 	{
-		if (ft_strcmp(cmd->cmd[0], "0") != 0 && access(cmd->cmd[0], X_OK) == 0)/// weird behavior here!
+		if (access(cmd->cmd[0], X_OK) == 0)
 		{
 			*exec_path = ft_strdup(cmd->cmd[0]);
 			if (!exec_path)

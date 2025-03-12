@@ -12,10 +12,14 @@ void	cd_home(t_ms *ms)
 	if (!ft_getenv(ms, "HOME"))
 	{
 		ft_print_error("cd: HOME not set\n", NULL, NULL);
+		ms->exit_status = 1;
 		return (ft_builtins_exit(ms, NULL, 1));
 	}
 	if (chdir(ft_getenv(ms, "HOME")) == -1)
+	{
+		ms->exit_status = 1;
 		return (ft_builtins_exit(ms, NULL, 1));
+	}
 	ft_update_pwd(ms, NULL);
 	ms->exit_status = 0;
 }
@@ -25,10 +29,14 @@ void	cd_back_to_oldpwd(t_ms *ms)
 	if (!ft_getenv(ms, "OLDPWD"))
 	{
 		ft_print_error("cd: OLDPWD not set\n", NULL, NULL);
+		ms->exit_status = 1;
 		return (ft_builtins_exit(ms, NULL, 1));
 	}
 	if (chdir(ft_getenv(ms, "OLDPWD")) == -1)
+	{
+		ms->exit_status = 1;
 		return (ft_builtins_exit(ms, NULL, 1));
+	}
 	printf("%s\n", ft_getenv(ms, "OLDPWD"));
 	ft_update_pwd(ms, NULL);
 	ms->exit_status = 0;
