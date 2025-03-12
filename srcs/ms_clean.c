@@ -89,7 +89,7 @@ void	exit_handler(t_ms *ms, int exit_code)
 		errno = ENOMEM;
 	if (errno && exit_code != 0)
 		perror("Error");
-	close_fd (ms, ms->saved_in);
-	close_fd (ms, ms->saved_out);
+	close_fd (ms, &ms->saved_in);
+	close_fd (ms, &ms->saved_out);
 	exit(exit_code);
 }

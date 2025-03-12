@@ -4,8 +4,8 @@ static void	exit_program(t_ms *ms, int exit_code)
 {
 	free_split(ms->env);
 	clean_ms(ms, 2);
-	close_fd (ms, ms->saved_in);
-	close_fd (ms, ms->saved_out);
+	close_fd (ms, &ms->saved_in);
+	close_fd (ms, &ms->saved_out);
 	exit (exit_code);			//exit handler ? Need to free ms->input ?
 }
 

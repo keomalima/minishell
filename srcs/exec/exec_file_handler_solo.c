@@ -18,7 +18,7 @@ static int	solo_open_outfile(t_ms *ms, char *name, t_redir type)
 	}
 	if (dup2(fd, STDOUT_FILENO) < 0)
 		exit_handler(ms, 1);
-	close_fd(ms, fd);
+	close_fd(ms, &fd);
 	return (1);
 }
 
@@ -43,7 +43,7 @@ static int	solo_open_infile(t_ms *ms, char *name, int is_lim)
 	}
 	if (dup2(fd, STDIN_FILENO) < 0)
 		exit_handler(ms, 1);
-	close_fd(ms, fd);
+	close_fd(ms, &fd);
 	return (1);
 }
 
