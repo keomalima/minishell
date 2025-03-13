@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:48:40 by lthan             #+#    #+#             */
-/*   Updated: 2025/03/13 10:59:48 by lthan            ###   ########.fr       */
+/*   Updated: 2025/03/13 11:39:42 by kricci-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 # include <sys/stat.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <sys/stat.h>
 # include <signal.h>
 
 # ifndef ARG_MAX

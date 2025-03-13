@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expanser.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:46:08 by lthan             #+#    #+#             */
-/*   Updated: 2025/03/13 10:46:09 by lthan            ###   ########.fr       */
+/*   Updated: 2025/03/13 12:57:26 by kricci-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ static t_list	*safe_lstnew_strdup(char *s, t_expand *expand)
 	if (!tmp)
 		ft_clear_expand(expand, 12);
 	new_node = ft_lstnew(tmp);
+	if (!new_node)
+		free(tmp);
 	return (new_node);
 }
 

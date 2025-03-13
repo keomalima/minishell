@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_utils2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:47:32 by lthan             #+#    #+#             */
-/*   Updated: 2025/03/13 10:47:33 by lthan            ###   ########.fr       */
+/*   Updated: 2025/03/13 11:46:36 by kricci-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,7 @@ static int	ft_is_special_cmd(char *big, char *little)
 
 int	handle_key(char *rl)
 {
-	if (ft_is_special_cmd(rl, "clear"))
-	{
-		printf("\033[H\033[J");
-		return (1);
-	}
-	else if (ft_is_special_cmd(rl, "!") || ft_is_special_cmd(rl, ":")
+	if (ft_is_special_cmd(rl, "!") || ft_is_special_cmd(rl, ":")
 		|| ft_is_special_cmd(rl, "~"))
 		return (1);
 	return (0);
