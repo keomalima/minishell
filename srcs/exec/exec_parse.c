@@ -1,4 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_parse.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/13 11:04:39 by lthan             #+#    #+#             */
+/*   Updated: 2025/03/13 11:04:40 by lthan            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+static char	**set_path_env(char *path)
+{
+	char	**path_env;
+
+	if (ft_strncmp(path, "/home", ft_strlen("/home")) == 0)
+		path_env = ft_split(path + 5, ':');
+	else
+		path_env = ft_split(path, ':');
+	if (!path_env)
+		return (NULL);
+	return (path_env);
+}
 
 static char	*get_exec_path(char *path, char *cmd)
 {
@@ -8,12 +33,7 @@ static char	*get_exec_path(char *path, char *cmd)
 
 	if (!path || !cmd[0] || ft_is_only_space(path))
 		return (NULL);
-	if (ft_strncmp(path, "/home", ft_strlen("/home")) == 0)
-		path_env = ft_split(path + 5, ':');
-	else
-		path_env = ft_split(path, ':');
-	if (!path_env)
-		return (NULL);
+	path_env = set_path_env(path);
 	i = 0;
 	while (path_env[i])
 	{
@@ -30,14 +50,6 @@ static char	*get_exec_path(char *path, char *cmd)
 	}
 	free_split(path_env);
 	return (NULL);
-}
-
-int	is_valid_string(const char *str)
-{
-	if (!ft_strcmp(str, ".") || !ft_strcmp(str, "..")
-		|| !ft_strcmp(str, "...") || !ft_strcmp(str, "...."))
-		return (0);
-	return (1);
 }
 
 static void	dir_check(t_ms *ms, const char *path)
@@ -61,7 +73,7 @@ static void	dir_check(t_ms *ms, const char *path)
 	}
 }
 
-void	check_path(t_ms *ms, t_cmd *cmd, char **exec_path, char *path)
+static void	check_path(t_ms *ms, t_cmd *cmd, char **exec_path, char *path)
 {
 	if (cmd->cmd[0])
 	{

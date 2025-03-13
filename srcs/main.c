@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/13 10:54:16 by lthan             #+#    #+#             */
+/*   Updated: 2025/03/13 11:20:10 by lthan            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	g_signal;
 
-static void	fisrt_init_ms(int arc, char **arv, char **env, t_ms *ms)
+static void	first_init_ms(int arc, char **arv, char **env, t_ms *ms)
 {
 	(void)arc;
 	(void)arv;
@@ -31,20 +43,62 @@ static void	minishell(t_ms *ms)
 	if (handle_key(rl))
 		return (clean_ms(ms, 0));
 	create_tokens(rl, ms);
-	//print_token(ms->token);
 	if (lexical_analysis(ms))
 		return (clean_ms(ms, 2));
 	parse_cmd(ms);
-	//print_cmd(ms->cmd);
 	exec_init(ms);
 	clean_ms(ms, -1);
 }
+
+// static void	handle_input(t_ms *ms)
+// {
+// 	if (ft_strlen(ms->input_main) > ARG_MAX)
+// 	{
+// 		ft_print_error("arg list too long \n", NULL, NULL);
+// 		free(ms->input_main);
+// 		return ;
+// 	}
+// 	if (g_signal)
+// 	{
+// 		ms->exit_status = 130;
+// 		g_signal = 0;
+// 	}
+// 	if (!ms->input_main)
+// 	{
+// 		printf("exit\n");
+// 		exit_handler(ms, 0);
+// 		return ;
+// 	}
+// 	if (*ms->input_main)
+// 	{
+// 		add_history(ms->input_main);
+// 		minishell(ms);
+// 	}
+// 	free(ms->input_main);
+// 	ms->input_main = NULL;
+// }
+
+// int	main(int arc, char **arv, char **env)
+// {
+// 	t_ms	ms;
+
+// 	first_init_ms(arc, arv, env, &ms);
+// 	signal(SIGQUIT, SIG_IGN);
+// 	while (1)
+// 	{
+// 		signal(SIGINT, sigint_handler);
+// 		initialize_ms(&ms);
+// 		ms.input_main = readline("minishell$ ");
+// 		handle_input(&ms);
+// 	}
+// 	return (0);
+// }
 
 int	main(int arc, char **arv, char **env)
 {
 	t_ms	ms;
 
-	fisrt_init_ms(arc, arv, env, &ms);
+	first_init_ms(arc, arv, env, &ms);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{

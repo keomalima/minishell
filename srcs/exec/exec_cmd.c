@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_cmd.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/13 11:11:03 by lthan             #+#    #+#             */
+/*   Updated: 2025/03/13 11:11:04 by lthan            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	wait_children(t_ms *ms, int i)
@@ -47,10 +59,8 @@ static void	handle_dup(t_cmd *cmd, t_ms *ms, int i)
 	}
 	if (cmd->redir != UNDEFINED && ms->exec->pipe_fd[i % 2][1] > 0
 		&& ms->exec->pipe_fd[i % 2][1] != STDOUT_FILENO)
-	{
 		if (dup2(ms->exec->pipe_fd[i % 2][1], STDOUT_FILENO) < 0)
 			exit_handler(ms, 1);
-	}
 	close_all_fds(ms);
 }
 

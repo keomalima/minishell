@@ -1,17 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/13 10:48:40 by lthan             #+#    #+#             */
+/*   Updated: 2025/03/13 10:59:48 by lthan            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
-# define RED		"\033[1;31m"
-# define red		"\033[0;31m"
-# define GREEN	"\033[1;32m"
-# define green	"\033[0;32m"
-# define YELLOW	"\033[1;33m"
-# define yellow	"\033[0;33m"
-# define BLUE	"\033[1;34m"
-# define blue	"\033[0;34m"
-# define PURPLE	"\033[1;35m"
-# define purple	"\033[0;35m"
-# define RESET   "\033[0m"
 
 # include <stdio.h>
 # include <string.h>
@@ -27,9 +27,9 @@
 # include <sys/stat.h>
 # include <signal.h>
 
-#ifndef ARG_MAX
-# define ARG_MAX 2097152
-#endif
+# ifndef ARG_MAX
+#  define ARG_MAX 2097152
+# endif
 
 extern int	g_signal;
 
@@ -136,7 +136,7 @@ typedef struct s_expand
 	t_ms	*ms;
 }				t_expand;
 
-typedef struct	s_exp_utils
+typedef struct s_exp_utils
 {
 	t_list	*new_list;
 	char	*clean_quote;
@@ -178,7 +178,8 @@ char		*ft_joined_list(t_ex_u *util, t_expand *expand);
 char		*ft_joined_space_list(t_list *list, t_expand *expand);
 char		*ft_handle_quote(char *s, t_expand *expand);
 // REMPLACE EXPAND
-t_list		*ft_remp_expand(char *str, t_expand *expand, char quote, t_ex_u *util);
+t_list		*ft_remp_expand(char *str, t_expand *expand,
+				char quote, t_ex_u *util);
 char		*exp_exit_code(char *str, t_expand *expand, t_ex_u *util);
 char		*exp_uid(char *str, t_expand *expand, t_ex_u *util);
 char		*exp_digit_variable(char *str, t_expand *expand, t_ex_u *util);
@@ -205,10 +206,10 @@ void		ft_initialize_index(t_index *index);
 void		clean_new_cmd(t_ms *ms, t_cmd *new);
 char		*ft_join_path(const char *s1, const char *s2);
 void		error_handler(t_ms *ms, char **cmd, char *path);
+int			is_valid_string(const char *str);
 
 /******************    EXEC    ******************/
 void		exec_init(t_ms *ms);
-// EXEC UTILS
 int			ft_cmd_count(t_ms *ms);
 void		initialize_variables(t_ms *ms);
 char		**parse_arg(t_cmd *cmd, t_ms *ms);
@@ -262,12 +263,6 @@ void		unset_command(t_ms *ms, t_cmd *cmd);
 void		echo_command(t_ms *ms, t_cmd *cmd);
 // EXIT
 void		exit_command(t_ms *ms, t_cmd *cmd);
-
-/******************    TESTER    ******************/
-void		print_token(t_token *list);
-void		print_split(char **split);
-void		print_cmd(t_cmd *list);
-void		ft_print_res_export(t_var **env_var);
 
 /******************    LEXICAL    ******************/
 int			lexical_analysis(t_ms *ms);

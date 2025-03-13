@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_parse_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/13 10:52:06 by lthan             #+#    #+#             */
+/*   Updated: 2025/03/13 11:05:55 by lthan            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*ft_join_path(const char *s1, const char *s2)
@@ -61,4 +73,12 @@ void	error_handler(t_ms *ms, char **cmd, char *path)
 	}
 	else if (cmd[0])
 		error_handler_2(ms, cmd);
+}
+
+int	is_valid_string(const char *str)
+{
+	if (!ft_strcmp(str, ".") || !ft_strcmp(str, "..")
+		|| !ft_strcmp(str, "...") || !ft_strcmp(str, "...."))
+		return (0);
+	return (1);
 }

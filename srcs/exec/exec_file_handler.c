@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_file_handler.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/13 11:12:38 by lthan             #+#    #+#             */
+/*   Updated: 2025/03/13 11:13:11 by lthan            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	open_outfile(t_ms *ms, char *name, t_redir type)
@@ -40,7 +52,8 @@ static int	open_infile(t_ms *ms, char *name, int is_lim)
 		if (access(name, R_OK) < 0 && access(name, F_OK) == 0)
 			ft_print_error("minishell: ", name, ": Permission denied\n");
 		else
-			ft_print_error("minishell: ", name, ": No such file or directory\n");
+			ft_print_error("minishell: ", name,
+				": No such file or directory\n");
 		return (ms->exit_status = 1);
 	}
 	return (ms->exec->in_file_err = 0);

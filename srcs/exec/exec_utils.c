@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/13 11:18:18 by lthan             #+#    #+#             */
+/*   Updated: 2025/03/13 11:18:19 by lthan            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_cmd_count(t_ms *ms)
@@ -34,7 +46,7 @@ void	free_split(char **arr)
 
 void	close_fd(t_ms *ms, int *fd)
 {
-	(void)ms;				// quit the program?
+	(void)ms;
 	if (fd && *fd >= 0)
 	{
 		if (close(*fd) < 0)

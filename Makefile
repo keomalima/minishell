@@ -12,7 +12,6 @@ RM := rm -f
 SRCSDIR = srcs
 
 MAIN = main ms_utils ms_utils2 ms_clean
-TESTER = print_test
 TOKENISER = token_creator list_handler token_utils
 LEXICAL = lex_analysis lex_heredoc lex_utils
 PARSER = parsing parsing_utils ft_list_cmd
@@ -29,7 +28,6 @@ BUILTINS = exec_builtin builtins_clean env_management\
 			unset_command
 
 SRCS = $(addsuffix .c, $(addprefix $(SRCSDIR)/, $(MAIN))) \
-			$(addsuffix .c, $(addprefix $(SRCSDIR)/tester/, $(TESTER))) \
 			$(addsuffix .c, $(addprefix $(SRCSDIR)/token/, $(TOKENISER))) \
 			$(addsuffix .c, $(addprefix $(SRCSDIR)/lexical/, $(LEXICAL))) \
 			$(addsuffix .c, $(addprefix $(SRCSDIR)/parsing/, $(PARSER))) \
@@ -38,13 +36,13 @@ SRCS = $(addsuffix .c, $(addprefix $(SRCSDIR)/, $(MAIN))) \
 			$(addsuffix .c, $(addprefix $(SRCSDIR)/exec/, $(EXECUTOR))) \
 			$(addsuffix .c, $(addprefix $(SRCSDIR)/builtins/, $(BUILTINS)))
 
+HEADERS = includes/minishell.h
 
 ##==================    OBJECTS & DEPENDENCIES    ===================##
 OBJDIR = objects
 OBJS = $(SRCS:$(SRCSDIR)/%.c=$(OBJDIR)/%.o)
 OBJ_SUBDIRS = \
 	$(OBJDIR) \
-	$(OBJDIR)/tester \
 	$(OBJDIR)/token \
 	$(OBJDIR)/lexical \
 	$(OBJDIR)/parsing \
