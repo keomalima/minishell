@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quote_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:46:16 by lthan             #+#    #+#             */
-/*   Updated: 2025/03/13 10:46:17 by lthan            ###   ########.fr       */
+/*   Updated: 2025/03/13 15:46:53 by kricci-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,26 @@ static char	*ft_clean_quote_string(char *s, t_expand *expand)
 	return (dest);
 }
 
-char	*ft_handle_quote(char *s, t_expand *expand)
+char	*ft_handle_double_quote(char *s, t_expand *expand)
 {
 	char	*dest;
 
 	if (s && *s && *s == '\"')
+		dest = ft_clean_quote_string(s, expand);
+	else
+	{
+		dest = ft_strdup(s);
+		if (!dest)
+			ft_clear_expand(expand, 12);
+	}
+	return (dest);
+}
+
+char	*ft_handle_all_quotes(char *s, t_expand *expand)
+{
+	char	*dest;
+
+	if (s && *s && ft_isquote(*s))
 		dest = ft_clean_quote_string(s, expand);
 	else
 	{

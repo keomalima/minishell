@@ -6,7 +6,7 @@
 /*   By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:48:40 by lthan             #+#    #+#             */
-/*   Updated: 2025/03/13 11:39:42 by kricci-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:17:27 by kricci-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,8 @@ size_t		ft_count_alpha_exp(char *s);
 int			ft_check_for_space(char *s);
 char		*ft_joined_list(t_ex_u *util, t_expand *expand);
 char		*ft_joined_space_list(t_list *list, t_expand *expand);
-char		*ft_handle_quote(char *s, t_expand *expand);
+char		*ft_handle_double_quote(char *s, t_expand *expand);
+char		*ft_handle_all_quotes(char *s, t_expand *expand);
 // REMPLACE EXPAND
 t_list		*ft_remp_expand(char *str, t_expand *expand,
 				char quote, t_ex_u *util);
@@ -220,7 +221,6 @@ void		switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i);
 int			solo_file_handler(t_cmd *cmd, t_ms *ms);
 int			solo_exec_here_doc(t_ms *ms, char *limiter);
 int			init_here_doc(t_ms *ms, char *limiter);
-int			ft_strcmp_here_doc(const char *s1, const char *s2);
 int			check_interupt(void);
 void		sigint_here_doc(int sig);
 int			sigquit_handler(t_ms *ms);

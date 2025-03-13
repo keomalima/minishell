@@ -6,7 +6,7 @@
 /*   By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:54:16 by lthan             #+#    #+#             */
-/*   Updated: 2025/03/13 11:35:08 by kricci-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:50:42 by kricci-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ int	main(int arc, char **arv, char **env)
 {
 	t_ms	ms;
 
+	if (!isatty(STDOUT_FILENO) || !isatty(STDIN_FILENO))
+	{
+		ft_print_error("minishell: not a tty\n", NULL, NULL);
+		return (-1);
+	}
 	(void)arc;
 	(void)arv;
 	ms.exit_status = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_creator.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:47:11 by lthan             #+#    #+#             */
-/*   Updated: 2025/03/13 10:47:12 by lthan            ###   ########.fr       */
+/*   Updated: 2025/03/13 14:58:18 by kricci-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	ft_add_to_list(t_ms *ms)
 {
 	t_token		*new_token;
-	t_token		*last_list;
+	t_token		*lst_el;
 	char		*content;
 
 	content = ft_strndup(ms->lexer.str_start,
@@ -30,10 +30,11 @@ static void	ft_add_to_list(t_ms *ms)
 	}
 	if (ms->lexer.state == CMD && ft_count_alpha_exp(content))
 		new_token->type = EXP;
-	last_list = ft_lstlast_tk(ms->token);
+	lst_el = ft_lstlast_tk(ms->token);
 	ft_lstadd_back_tk(&ms->token, new_token);
-	if (!(last_list && last_list->type == OPP
-			&& !ft_strcmp(last_list->content, "<<")))
+	if (lst_el && lst_el->type == OPP && !ft_strcmp(lst_el->content, "<<"))
+		new_token->content = ft_translate(content, ms, 2);
+	else
 		new_token->content = ft_translate(content, ms, 0);
 	if (!new_token->content)
 		ft_lstdel_last_tk(&ms->token);

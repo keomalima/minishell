@@ -6,7 +6,7 @@
 /*   By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:46:08 by lthan             #+#    #+#             */
-/*   Updated: 2025/03/13 12:57:26 by kricci-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:17:43 by kricci-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static t_list	*ft_expanded_node(char *s, t_expand *expand, char quote)
 	t_ex_u		util;
 
 	util.new_list = NULL;
-	util.clean_quote = ft_handle_quote(s, expand);
+	util.clean_quote = ft_handle_double_quote(s, expand);
 	i = 0;
 	while (util.clean_quote[i])
 	{
@@ -87,8 +87,6 @@ static t_list	*safe_lstnew_strdup(char *s, t_expand *expand)
 	if (!tmp)
 		ft_clear_expand(expand, 12);
 	new_node = ft_lstnew(tmp);
-	if (!new_node)
-		free(tmp);
 	return (new_node);
 }
 
@@ -107,7 +105,9 @@ void	ft_set_expanded_list(t_expand *expand, int hd)
 			current = current->next;
 			continue ;
 		}
-		if (hd == 0 && (*s == '\'' || ft_count_exp(s) == 0))
+		if (hd == 2)
+			new_node = ft_lstnew(ft_handle_all_quotes(s, expand));
+		else if (hd == 0 && (*s == '\'' || ft_count_exp(s) == 0))
 			new_node = safe_lstnew_strdup(s, expand);
 		else
 			new_node = ft_expanded_node(s, expand, s[0]);

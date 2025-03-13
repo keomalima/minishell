@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lthan <lthan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kricci-d <kricci-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:52:10 by lthan             #+#    #+#             */
-/*   Updated: 2025/03/13 10:52:11 by lthan            ###   ########.fr       */
+/*   Updated: 2025/03/13 15:18:28 by kricci-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	exec_here_doc(t_ms *ms, char *limiter, char *str)
 			close_fd(ms, &ms->exec->pipe_hd[1]);
 			return (1);
 		}
-		if (!ft_strcmp_here_doc(limiter, str))
+		if (!ft_strcmp(limiter, str))
 		{
 			free(str);
 			break ;
@@ -98,7 +98,7 @@ int	solo_exec_here_doc(t_ms *ms, char *limiter)
 		}
 		if (!str)
 			return (sigquit_handler(ms));
-		if (!ft_strcmp_here_doc(limiter, str))
+		if (!ft_strcmp(limiter, str))
 		{
 			free(str);
 			return (1);
