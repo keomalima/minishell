@@ -58,10 +58,14 @@ void	switch_io_n_execve(t_cmd *cmd, t_ms *ms, int i)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+	if (ms->exec->in_file_err || ms->exec->out_file_err)
+	{
+		if (ms->exec->here_doc_quit)
+			exit_handler(ms, 0);
+		exit_handler(ms, -1);
+	}
 	if (cmd->cmd[0])
 		ms->exec->cmd = parse_arg(cmd, ms);
-	if (ms->exec->in_file_err || ms->exec->out_file_err)
-		exit_handler(ms, -1);
 	handle_dup(cmd, ms, i);
 	exec_builtin(ms, cmd);
 	if (!cmd->cmd[0])
@@ -89,6 +93,7 @@ static void	exec_cmd(t_ms *ms, t_cmd *current, int i)
 		if (ms->exec->child_pids[i] == 0)
 			switch_io_n_execve(current, ms, i);
 		close_exec_fds(ms, i);
+		ms->exec->here_doc_quit = 0;
 		i++;
 		current = current->next;
 	}

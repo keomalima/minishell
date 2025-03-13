@@ -111,6 +111,7 @@ typedef struct s_exec
 	int		fd_in;
 	int		fd_out;
 	int		pipe_hd[2];
+	int		here_doc_quit;
 	pid_t	*child_pids;
 }				t_exec;
 

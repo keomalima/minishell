@@ -82,4 +82,5 @@ void	initialize_variables(t_ms *ms)
 	ms->exec->pipe_hd[1] = -1;
 	ms->exec->in_file_err = 0;
 	ms->exec->out_file_err = 0;
+	ms->exec->here_doc_quit = 0;
 }
