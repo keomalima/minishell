@@ -1,14 +1,5 @@
 #include "minishell.h"
 
-static void	exit_program(t_ms *ms, int exit_code)
-{
-	free_split(ms->env);
-	clean_ms(ms, 2);
-	close_fd (ms, &ms->saved_in);
-	close_fd (ms, &ms->saved_out);
-	exit (exit_code);			//exit handler ? Need to free ms->input ?
-}
-
 static int	is_str_num(char *s)
 {
 	if (*s == '-' || *s == '+')
@@ -39,14 +30,14 @@ static int	parse_and_validate_args(t_ms *ms, t_cmd *cmd, int *num_arg)
 			if (ms->exec->cmd_count == 1)
 				ms->exit_status = 1;
 			else
-				exit_program(ms, 1);
+				exit_handler(ms, 1);
 			return (0);
 		}
 		else if (!is_str_num(cmd->cmd[i]) || !ft_strcmp(cmd->cmd[i], "\0"))
 		{
 			ft_print_error("minishell: exit: ",
 				cmd->cmd[i], ": numeric argument required\n");
-			exit_program(ms, 2);
+			exit_handler(ms, 2);
 		}
 		i++;
 	}
@@ -63,7 +54,7 @@ void	exit_command(t_ms *ms, t_cmd *cmd)
 	if (parse_and_validate_args(ms, cmd, &num_arg))
 	{
 		if (num_arg > 0)
-			exit_program(ms, ft_atoi(cmd->cmd[1]));
-		exit_program(ms, ms->exit_status);
+			exit_handler(ms, ft_atoi(cmd->cmd[1]));
+		exit_handler(ms, ms->exit_status);
 	}
 }

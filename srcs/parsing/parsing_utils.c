@@ -40,7 +40,7 @@ void	ft_find_cmd_size(t_token *token, t_cmd *new)
 	size_t	redir;
 
 	redir = 0;
-	while (token && ft_strcmp(token->content, "|"))
+	while (token && !(token->type == OPP && !ft_strcmp(token->content, "|")))
 	{
 		if (token->type == OPP && !is_opp_file(token->content))
 		{

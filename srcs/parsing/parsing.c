@@ -67,12 +67,12 @@ void	parse_cmd(t_ms *ms)
 		ft_find_cmd_size(token, new);
 		ft_parsing_allocation(new, ms);
 		ft_initialize_index(&index);
-		while (token && ft_strcmp(token->content, "|"))
+		while (token && !(token->type == OPP && !ft_strcmp(token->content, "|")))
 		{
 			ft_complete_cmd(new, token, &index, ms);
 			token = token->next;
 		}
-		if (token && !ft_strcmp(token->content, "|"))
+		if (token && !ft_strcmp(token->content, "|") && token->type == OPP)
 		{
 			new->redir = PIPE;
 			token = token->next;
