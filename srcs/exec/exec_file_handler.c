@@ -14,46 +14,41 @@ static int	open_outfile(t_ms *ms, char *name, t_redir type)
 	{
 		ft_print_error("minishell: ", name, ": ");
 		ft_print_error(strerror(errno), " \n", NULL);
-		ms->exit_status = 1;
-		return (1);
+		return (ms->exit_status = 1);
 	}
-	return (0);
+	return (ms->exec->out_file_err = 0);
 }
 
 static int	open_infile(t_ms *ms, char *name, int is_lim)
 {
+	int	hd;
+
 	if (ms->exec->fd_in != -1)
 		close_fd(ms, &ms->exec->fd_in);
 	if (is_lim)
 	{
-		if (init_here_doc(ms, name))
+		hd = init_here_doc(ms, name);
+		if (hd == 1)
 			return (1);
+		else if (hd == 2)
+			return (2);
 	}
 	else
 		ms->exec->fd_in = open(name, O_RDONLY);
 	if (ms->exec->fd_in < 0)
 	{
 		if (access(name, R_OK) < 0 && access(name, F_OK) == 0)
-		{
-			ft_print_error("minishell: ", name, ": ");
-			ft_print_error(strerror(errno), " \n", NULL);
-		}
+			ft_print_error("minishell: ", name, ": Permission denied\n");
 		else
-		{
-			ft_print_error("minishell: ", name, ": ");
-			ft_print_error(strerror(errno), " \n", NULL);
-		}
-		ms->exit_status = 1;
-		return (1);
+			ft_print_error("minishell: ", name, ": No such file or directory\n");
+		return (ms->exit_status = 1);
 	}
-	ms->exec->in_file_err = 0;
-	return (0);
+	return (ms->exec->in_file_err = 0);
 }
 
-int	file_handler(t_ms *ms, t_cmd *cmd, int i)
+int	file_handler(t_ms *ms, t_cmd *cmd)
 {
 	size_t	index;
-	(void)i;
 
 	index = 0;
 	while (cmd->files_size > index)
@@ -63,20 +58,14 @@ int	file_handler(t_ms *ms, t_cmd *cmd, int i)
 		if (cmd->files[index]->type == IN)
 		{
 			if (open_infile(ms, cmd->files[index]->name,
-					cmd->files[index]->is_lim))
-			{
-				ms->exec->in_file_err = 1;
-				return (1);
-			}
+					cmd->files[index]->is_lim) == 1)
+				return (ms->exec->in_file_err = 1);
 		}
 		else
 		{
 			if (open_outfile(ms, cmd->files[index]->name,
 					cmd->files[index]->type))
-			{
-				ms->exec->in_file_err = 1;
-				return (1);
-			}
+				return (ms->exec->out_file_err = 1);
 		}
 		index++;
 	}

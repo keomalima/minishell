@@ -26,16 +26,16 @@ t_token	*ft_lstlast_tk(t_token *lst)
 
 void	ft_lstdel_last_tk(t_token **lst)
 {
-	t_token *last;
+	t_token	*last;
 
 	if (!lst || !*lst)
-		return;
+		return ;
 	last = *lst;
 	if (!last->next)
 	{
 		free(last);
 		*lst = NULL;
-		return;
+		return ;
 	}
 	while (last->next)
 		last = last->next;

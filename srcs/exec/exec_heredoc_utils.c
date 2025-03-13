@@ -43,7 +43,7 @@ int	sigquit_handler(t_ms *ms)
 	ft_printf("minishell: warning: here-document delimited by"
 		"end-of-file (wanted `EOF')\n");
 	ms->exec->here_doc_quit = 1;
-	return (1);
+	return (2);
 }
 
 void	handle_hd_fds(t_ms *ms)

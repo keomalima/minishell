@@ -91,5 +91,6 @@ void	exit_handler(t_ms *ms, int exit_code)
 		perror("Error");
 	close_fd (ms, &ms->saved_in);
 	close_fd (ms, &ms->saved_out);
+	rl_clear_history();
 	exit(exit_code);
 }

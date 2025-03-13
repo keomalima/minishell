@@ -44,14 +44,14 @@ static void	ft_complete_cmd(t_cmd *new, t_token *token, t_index *ind, t_ms *ms)
 		ft_allocate_cmd(new, token, ind, ms);
 }
 
-static void	ft_parsing_allocation(t_cmd *new, t_ms *ms)
+static void	ft_set_size_n_alloc(t_token *token, t_cmd *new, t_ms *ms)
 {
+	ft_find_cmd_size(token, new);
 	new->cmd = ft_calloc((new->cmd_size + 1), sizeof(char *));
 	new->files = ft_calloc((new->files_size + 1), sizeof(t_files *));
 	if (!new->cmd || !new->files)
 		clean_new_cmd(ms, new);
 }
-
 
 void	parse_cmd(t_ms *ms)
 {
@@ -64,10 +64,10 @@ void	parse_cmd(t_ms *ms)
 	while (token)
 	{
 		new = ft_lst_new_cmd(ms);
-		ft_find_cmd_size(token, new);
-		ft_parsing_allocation(new, ms);
+		ft_set_size_n_alloc(token, new, ms);
 		ft_initialize_index(&index);
-		while (token && !(token->type == OPP && !ft_strcmp(token->content, "|")))
+		while (token && !(token->type == OPP
+				&& !ft_strcmp(token->content, "|")))
 		{
 			ft_complete_cmd(new, token, &index, ms);
 			token = token->next;

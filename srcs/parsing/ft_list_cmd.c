@@ -9,7 +9,6 @@ void	clean_new_cmd(t_ms *ms, t_cmd *new)
 	if (tmp)
 	{
 		i = 0;
-
 		while (tmp->files && tmp->files[i])
 			free(tmp->files[i++]);
 		free(tmp->files);

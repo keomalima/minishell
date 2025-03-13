@@ -25,20 +25,16 @@ void	echo_command(t_ms *ms, t_cmd *cmd)
 	nl = 1;
 	i = 1;
 	ft_handle_n(cmd, &nl, &i);
-	//signal(SIGPIPE, SIG_IGN);
 	while (cmd->cmd[i])
 	{
 		ret = write(STDOUT_FILENO, cmd->cmd[i], ft_strlen(cmd->cmd[i]));
 		if (ret == -1)
-			return;
+			return ;
 		if (cmd->cmd[i + 1])
 		{
 			ret = write(STDOUT_FILENO, " ", 1);
 			if (ret == -1)
-			{
-				perror("write error");
-				return;
-			}
+				return (perror("write error"));
 		}
 		i++;
 	}
@@ -47,4 +43,3 @@ void	echo_command(t_ms *ms, t_cmd *cmd)
 	ft_builtins_exit(ms, NULL, 0);
 	ms->exit_status = 0;
 }
-

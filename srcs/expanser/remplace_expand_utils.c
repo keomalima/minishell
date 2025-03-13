@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 char	*exp_exit_code(char *str, t_expand *expand, t_ex_u *util)

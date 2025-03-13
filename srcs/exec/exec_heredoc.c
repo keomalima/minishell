@@ -51,6 +51,7 @@ static int	exec_here_doc(t_ms *ms, char *limiter, char *str)
 int	init_here_doc(t_ms *ms, char *limiter)
 {
 	char	*str;
+	int		hd;
 
 	rl_event_hook = check_interupt;
 	signal(SIGQUIT, SIG_IGN);
@@ -58,8 +59,11 @@ int	init_here_doc(t_ms *ms, char *limiter)
 	str = NULL;
 	if (pipe(ms->exec->pipe_hd) < 0)
 		exit_handler(ms, 1);
-	if (exec_here_doc(ms, limiter, str))
+	hd = exec_here_doc(ms, limiter, str);
+	if (hd == 1)
 		return (1);
+	else if (hd == 2)
+		return (2);
 	handle_hd_fds(ms);
 	return (0);
 }

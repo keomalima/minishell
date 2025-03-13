@@ -7,7 +7,7 @@ static void	ft_add_to_list(t_ms *ms)
 	char		*content;
 
 	content = ft_strndup(ms->lexer.str_start,
-		ms->lexer.str_ptr - ms->lexer.str_start);
+			ms->lexer.str_ptr - ms->lexer.str_start);
 	if (!content)
 		exit_handler(ms, 1);
 	new_token = ft_lstnew_tk(ms, content);

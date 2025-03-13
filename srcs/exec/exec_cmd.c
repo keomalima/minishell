@@ -84,7 +84,7 @@ static void	exec_cmd(t_ms *ms, t_cmd *current, int i)
 		if (ms->exec->cmd_count - 1 > i)
 			if (pipe(ms->exec->pipe_fd[i % 2]) < 0)
 				exit_handler(ms, 1);
-		file_handler(ms, current, i);
+		file_handler(ms, current);
 		if (g_signal > 0)
 			return ;
 		ms->exec->child_pids[i] = fork();

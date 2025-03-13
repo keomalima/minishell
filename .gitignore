@@ -2,6 +2,8 @@
 *.d
 
 # Object files
+objects/
+libft/objects
 *.o
 *.ko
 *.obj
@@ -44,7 +46,6 @@ en.subject.pdf
 *.pdb
 *.vscode
 
-
 # Kernel Module Compile Results
 *.mod*
 *.cmd
@@ -53,6 +54,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Test files
+bible.txt
+infile
 
 archive/
 42_minishell_tester
